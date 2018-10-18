@@ -1,0 +1,776 @@
+// Import custom font from Google
+//@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+
+// svgs
+
+$testsvg: "data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 20'><path d='M10,0l2,2l-8,8l8,8l-2,2L0,10L10,0z' fill='%23ff6464'/></svg>";
+$addblack: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"><path d="M91.7,57.9c-2,2-4.8,3.3-7.9,3.3H61.2v22.7c0,3.1-1.2,5.9-3.3,7.9c-2,2-4.8,3.3-7.9,3.3c-6.2,0-11.2-5-11.2-11.2l0-22.7l-22.7,0C10,61.2,5,56.2,5,50c0-6.2,5-11.2,11.2-11.2l22.7,0l0-22.7C38.8,10,43.8,5,50,5c6.2,0,11.2,5,11.2,11.2l0,22.7l22.7,0C90,38.8,95,43.8,95,50C95,53.1,93.7,55.9,91.7,57.9z"/></svg>';
+$addwhite: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" fill="#ffffff" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"><path d="M91.7,57.9c-2,2-4.8,3.3-7.9,3.3H61.2v22.7c0,3.1-1.2,5.9-3.3,7.9c-2,2-4.8,3.3-7.9,3.3c-6.2,0-11.2-5-11.2-11.2l0-22.7l-22.7,0C10,61.2,5,56.2,5,50c0-6.2,5-11.2,11.2-11.2l22.7,0l0-22.7C38.8,10,43.8,5,50,5c6.2,0,11.2,5,11.2,11.2l0,22.7l22.7,0C90,38.8,95,43.8,95,50C95,53.1,93.7,55.9,91.7,57.9z"/></svg>';
+$banners: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>Artboard 1</title> <path d="M6.1,57c-0.4-0.9-0.3-1.9,0.3-2.7l9-10.8c1-1.2,2.7-1.3,3.9-0.3c0.1,0.1,0.2,0.2,0.3,0.3l9,10.8c0.9,1.1,0.7,2.6-0.3,3.5 c-0.4,0.4-1,0.6-1.6,0.6h-3.8c0.7,16.8,14.9,29.8,31.7,29c16.8-0.7,29.8-14.9,29-31.7c-0.7-16.8-14.9-29.8-31.7-29 c-9.6,0.4-18.3,5.3-23.8,13.2c-0.1,0.2-0.3,0.3-0.6,0.3c-0.2,0-0.5-0.1-0.6-0.3l-6-7.2c-0.2-0.3-0.2-0.6,0-0.9 c6.6-8.5,16.3-14,27-15.4v-4h-4c-2.9,0.3-5.5-1.8-5.8-4.7C37.9,4.9,40,2.3,42.9,2c0.3,0,0.7,0,1,0h18.6c2.9-0.1,5.4,2.1,5.5,5 s-2.1,5.4-5,5.5c-0.2,0-0.3,0-0.5,0h-4v4c7.2,0.9,14.1,3.8,19.8,8.3l4.5-4.5c2-2.1,5.3-2.3,7.5-0.3s2.3,5.3,0.3,7.5 c-0.1,0.1-0.2,0.2-0.3,0.3l-4.5,4.5c5.5,7.1,8.4,15.8,8.4,24.8c0.4,22.6-17.7,41.2-40.3,41.6S12.7,81,12.3,58.4h-4 C7.4,58.4,6.5,57.9,6.1,57z M70.4,40c-1.2-1.2-3-1.3-4.4-0.3L54.3,49c-4.5-0.6-8.7,2.5-9.3,7s2.5,8.7,7,9.3c4.5,0.6,8.7-2.5,9.3-7 c0.1-0.8,0.1-1.5,0-2.3l9.3-11.6C71.7,43,71.6,41.1,70.4,40L70.4,40z"/> </svg>';
+$check: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 80" style="enable-background:new 0 0 64 80;" xml:space="preserve"> <path d="M61,11.2c-2.8-2.8-7.4-2.8-10.3,0L24.6,37.4L13.2,26c-1.4-1.4-3.3-2.1-5.1-2.1c-1.9,0-3.7,0.7-5.1,2.1 c-2.8,2.8-2.8,7.4,0,10.3l16.5,16.5c1.4,1.4,3.2,2.1,5.1,2.1s3.8-0.8,5.1-2.1L61,21.5C63.9,18.6,63.9,14,61,11.2z"/> </svg>';
+$company: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 52 65" style="enable-background:new 0 0 52 65;" xml:space="preserve"> <g> <path d="M26.2,13.4c3.1,0,5.5-3.5,5.5-6.5c0-3-2.5-5.5-5.5-5.5s-5.5,2.5-5.5,5.5C20.7,9.9,23.1,13.4,26.2,13.4z"/> <path d="M51,49.4c-0.1-4.2-2.5-7.9-6-9.7c-1.3,1.6-3.2,2.7-5.3,2.7c-1.2,0-2.4-0.4-3.5-1.1c-0.6-0.4-1.2-1-1.8-1.6 c-3.5,1.9-6,5.6-6,9.9c0,0.5,0.5,1,1,1H50c0,0,0,0,0,0c0.5,0,1-0.5,1-1C51,49.5,51,49.5,51,49.4z"/> <path d="M37.3,39.6c0.8,0.5,1.6,0.8,2.4,0.8c3.1,0,5.5-3.5,5.5-6.5c0-3-2.5-5.5-5.5-5.5c-3,0-5.5,2.5-5.5,5.5c0,0.4,0,0.7,0.1,1.1 C32,33.8,29.5,33.2,27,33v-9.4h9.5c0,0,0,0,0,0c0.6,0,1-0.5,1-1c0-0.1,0-0.2,0-0.2c-0.1-4.2-2.5-7.9-6-9.7 c-1.3,1.6-3.2,2.7-5.3,2.7c-2.1,0-4-1.1-5.3-2.7c-3.5,1.9-6,5.6-6,9.9c0,0.5,0.4,1,1,1H25V33c-2.5,0.1-5,0.8-7.3,1.9 c0.1-0.4,0.1-0.7,0.1-1.1c0-3-2.5-5.5-5.5-5.5c-3,0-5.5,2.5-5.5,5.5c0,3,2.4,6.5,5.5,6.5c0.8,0,1.6-0.3,2.4-0.7 c0.5-0.3,1.1-0.8,1.5-1.3c5.7-4.4,14-4.4,19.7,0C36.3,38.8,36.8,39.2,37.3,39.6z"/> <path d="M17.6,39.7c-0.5,0.6-1.2,1.2-1.8,1.6c-1.1,0.7-2.3,1-3.5,1c-2.1,0-4-1.1-5.3-2.7c-3.5,1.9-6,5.6-6,9.9c0,0.5,0.5,1,1,1 h20.5c0,0,0,0,0,0c0.5,0,1-0.5,1-1c0-0.1,0-0.1,0-0.2C23.5,45.2,21.1,41.5,17.6,39.7z"/> </g> </svg>';
+$dashboard: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>All</title> <path d="M34.8,0c1.7,0.6,3.4,1.3,4.9,2.2c3.3,2.2,4.7,5.5,4.7,9.3c0.1,7.2,0.1,14.3,0,21.5c0,4.7-2.1,8.3-6.4,10.3 c-1.6,0.7-3.4,1.1-5.2,1.1c-7.1,0.1-14.1,0.1-21.2,0c-5.9,0-10-3.3-11.4-9.1C0.2,35.1,0.1,35,0,34.8c0-8.4,0-16.7,0-25.1 C0.1,9.5,0.2,9.2,0.3,9c0.7-2.7,1.9-5.2,4.3-6.7C6.2,1.4,8,0.6,9.7,0H34.8z"/> <path d="M0,65.1c0.7-1.8,1.5-3.5,2.4-5.1c1.8-2.8,4.9-4.4,8.2-4.3c7.6-0.1,15.2,0,22.8,0c6.1,0,11,4.9,11,11c0,0.1,0,0.2,0,0.3 c0,7.2,0.1,14.5,0,21.7c-0.1,6.5-4.5,11.1-10.9,11.2c-7.5,0.2-15,0.2-22.5,0c-5.6-0.1-9.4-3.4-10.8-8.8c-0.1-0.2-0.2-0.5-0.3-0.7 C0,82,0,73.5,0,65.1z"/> <path d="M90.2,0c2,0.4,3.9,1.3,5.6,2.5c2.4,1.8,3.9,4.6,4,7.7c0.1,6.2,0.1,12.3,0.1,18.5c0,1.6,0,3.1,0,4.7c0,6.1-5,11.1-11.1,11.1 c-0.1,0-0.2,0-0.3,0c-7.2,0-14.3,0.1-21.5,0c-6.5-0.1-11.2-4.4-11.3-10.8c-0.2-7.6-0.2-15.1,0-22.7c0.1-5.5,3.5-9.3,8.9-10.6 c0.2-0.1,0.4-0.1,0.6-0.2H90.2z"/> <path d="M99.9,77.8c0,4,0.1,8,0,11.9c-0.2,5.5-4.6,10-10.2,10.1c-8,0.2-16,0.2-24,0c-5.5-0.2-9.8-4.6-10-10.1c-0.2-8-0.2-16,0-24 c0.2-5.5,4.5-9.9,10-10.1c8-0.2,16-0.2,24.1,0c5.4,0.3,9.7,4.6,10,10C100,69.7,99.8,73.7,99.9,77.8L99.9,77.8L99.9,77.8z"/> </svg>';
+$download: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 90 112.5" style="enable-background:new 0 0 90 112.5;" xml:space="preserve"> <style type="text/css"> .st0{fill:none;} </style> <title>Group</title> <desc>Created with Sketch.</desc> <g> <g> <rect class="st0" width="90" height="90"/> <path d="M6,78h78c3.3,0,6,2.7,6,6l0,0c0,3.3-2.7,6-6,6H6c-3.3,0-6-2.7-6-6l0,0C0,80.7,2.7,78,6,78z"/> <path d="M28.4,37.7c-2.5-2.5-6.5-2.5-9,0c-2.5,2.5-2.5,6.5,0,9L42,69.3c1.7,1.7,4.4,1.7,6,0l22.6-22.6c2.5-2.5,2.5-6.5,0-9 c-2.5-2.5-6.5-2.5-9,0L51.3,47.9V6.9c0-3.5-2.9-6.4-6.4-6.4c-3.5,0-6.4,2.9-6.4,6.4v40.9L28.4,37.7z"/> </g> </g> </svg> ';
+$duplicate: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>Duplicate Solid</title> <desc>Created with Sketch.</desc> <g> <g> <path d="M45.5,14h33H86v7.5v33V62h-8v8h8c4.4,0,8-3.6,8-8v-7.5v-33V14c0-4.4-3.6-8-8-8h-7.5h-33H38c-4.4,0-8,3.6-8,8v8h8v-8H45.5 L45.5,14L45.5,14z M6,38c0-4.4,3.6-8,8-8h48c4.4,0,8,3.6,8,8v48c0,4.4-3.6,8-8,8H14c-4.4,0-8-3.6-8-8V38L6,38L6,38z"/> </g> </g> </svg>';
+$edit: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>';
+$expand: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 30" x="0px" y="0px"><path d="M17 21h-10c-2.209 0-4-1.791-4-4v-10c0-2.209 1.791-4 4-4h10c2.209 0 4 1.791 4 4v10c0 2.209-1.791 4-4 4zM19 7c0-1.105-0.895-2-2-2h-10c-1.105 0-2 0.895-2 2v10c0 1.105 0.895 2 2 2h10c1.105 0 2-0.895 2-2v-10zM14.008 8l4 4-4 4v-8zM9.992 8v8l-4-4z"/><text x="0" y="39" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Travis Avery</text><text x="0" y="44" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>';
+$folder: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 96 120" style="enable-background:new 0 0 96 120;" xml:space="preserve"> <path d="M0,82.1c0,0.7,0.1,1.3,0.2,1.9c0.4,1.9,1.3,3.6,2.7,5C4.8,91,7.3,92,9.9,92c5.6,0,10.1-4.4,10.1-9.9V38c0-7.7,6.3-14,14-14 h52c3.9,0,7.4,1.6,10,4.2V28c0-8.8-7.2-16-16-16H48.2c-1.3-5.2-7.3-12-14-12h-20C6.8,0,0,7.3,0,15.3L0,82.1C0,82.1,0,82.1,0,82.1z" /> <path d="M96,38c0-5.5-4.5-10-10-10H34c-5.5,0-10,4.5-10,10v44.1c0,7-5.2,12.7-11.9,13.7c0.7,0.1,1.3,0.2,2,0.2c0.5,0,0.9,0,1.4-0.1 c0.2,0,0.3,0.1,0.5,0.1h66c7.7,0,14-6.3,14-14V40L96,38z"/> </svg>';
+$loading: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 213 91.2" style="enable-background:new 0 0 213 91.2;" xml:space="preserve"> <g> <path d="M37,0c20,0,36,16,36,37c0,20-16,36-36,36C16,73,0,57,0,37C0,16,16,0,37,0z"/> <path d="M123,8c16,0,28,13,28,29c0,15-12,28-28,28c-15,0-28-13-28-28C95,21,108,8,123,8z"/> <path d="M193,17c11,0,20,9,20,20c0,10-9,19-20,19s-19-9-19-19C174,26,182,17,193,17z"/> </g> </svg>';
+$logout: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 512 640" x="0px" y="0px"><title>l3</title><path d="M153.51,424.21c-13.29-.74-26.66-0.27-40-0.34-17-.08-25.88-9-25.88-26.11q0-142,0-284.09c0-16.74,8.88-25.72,25.61-25.84,12.8-.09,25.61.3,38.4-0.16A43.67,43.67,0,0,0,194,43.16c-0.32-23.59-19.37-42.56-43.47-43-14.4-.24-28.8-0.28-43.2,0C57.08,1.37,13.7,36.81,2.66,85.57c-1,4.47-1.78,9-2.66,13.5V412.61c0.38,1.72.89,3.41,1.13,5.15,6.69,48.12,47.18,88.2,95.55,92.9,19,1.85,38.37,1.47,57.52.75,15.75-.59,27.33-9.55,34.76-23.22C203.91,460.68,184.72,425.95,153.51,424.21Z"/><path d="M363.14,96.62c-8.18-8.18-18.29-12.09-29.8-12.26a44.31,44.31,0,0,0-41,26.53,43.15,43.15,0,0,0,9.08,47.82c18.42,18.78,37,37.54,55.54,56.23,1.29,1.3,2.47,3.06,4.44,5.06h-9.57c-59,0-118.07-.24-177.1-0.11-29.39.06-50,25.71-43.51,53.82,4.56,19.73,22.8,33.47,44.33,33.49,59.57,0,119.13-.2,178.7-0.2h6.13a20.56,20.56,0,0,0,1.53,2.43c-1.7,1-3.71,1.69-5,3-17.67,17.53-35.41,35-52.79,52.84-17,17.38-16.84,44.16-.2,61,17.21,17.42,44.38,18.28,61.83,1Q433,360.69,499.58,293.43a42.47,42.47,0,0,0-.12-60.14Q431.55,164.71,363.14,96.62Z"/><text x="0" y="527" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">Created by i cons</text><text x="0" y="532" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>';
+$more: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 250 93.8" style="enable-background:new 0 0 250 93.8;" xml:space="preserve"> <g> <path d="M0,38C0,17,17,0,38,0s37,17,37,38S59,75,38,75S0,59,0,38z"/> <path d="M87,38c0-21,17-38,38-38s38,17,38,38s-17,37-38,37S87,59,87,38z"/> <path d="M175,38c0-21,17-38,37-38c21,0,38,17,38,38s-17,37-38,37C192,75,175,59,175,38z"/> </g> </svg> ';
+$myaccount: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>All</title> <g id="Symbols"> <g id="Sidebar" transform="translate(-40.000000, -572.000000)"> <g id="noun_account_1337577" transform="translate(40.000000, 572.000000)"> <path id="Shape" d="M71.7,59.7c4.5-5,7.3-11.5,7.3-18.7c0-15.4-12.6-28-28-28S23,25.6,23,41c0,7.2,2.8,13.7,7.3,18.7 C13.6,67.5,2,84.4,2,104v7h98v-7C100,84.4,88.4,67.5,71.7,59.7z M37,41c0-7.7,6.3-14,14-14s14,6.3,14,14s-6.3,14-14,14 S37,48.7,37,41z M16.7,97C20,81,34.1,69,51,69s31,12,34.3,28H16.7z"/> </g> </g> </g> </svg>';
+$templates: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>All</title> <g id="Symbols"> <g id="Sidebar" transform="translate(-40.000000, -371.000000)"> <g id="noun_1394884_cc" transform="translate(40.000000, 371.000000)"> <g id="Group"> <g id="Shape"> <path d="M30.3,77.5H15v20c0,2.8,2.2,5,5,5h60c2.8,0,5-2.2,5-5v-20H69.7c-1.2,5.7-6.2,10-12.2,10h-15 C36.5,87.5,31.4,83.2,30.3,77.5z M69.7,67.5H85c2.8,0,5-2.2,5-5v-15c0-2.8-2.2-5-5-5H15c-2.8,0-5,2.2-5,5v15c0,2.8,2.2,5,5,5 h15.3c1.2-5.7,6.2-10,12.2-10h15C63.5,57.5,68.6,61.8,69.7,67.5z M25,32.5v-5c0-8.3,6.7-15,15-15h20c8.3,0,15,6.7,15,15v5h10 c8.3,0,15,6.7,15,15v15c0,4.4-1.9,8.4-5,11.2v23.8c0,8.3-6.7,15-15,15H20c-8.3,0-15-6.7-15-15V73.7c-3.1-2.7-5-6.7-5-11.2v-15 c0-8.3,6.7-15,15-15H25z M65,32.5v-5c0-2.8-2.2-5-5-5H40c-2.8,0-5,2.2-5,5v5H65z M42.5,67.5c-1.4,0-2.5,1.1-2.5,2.5v5 c0,1.4,1.1,2.5,2.5,2.5h15c1.4,0,2.5-1.1,2.5-2.5v-5c0-1.4-1.1-2.5-2.5-2.5H42.5z"/> </g> </g> </g> </g> </g> </svg> ';
+$search: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.69 19.35" x="0px" y="0px"><title>Search</title><g data-name="UI Elements"><path d="M15.28,12.71,11.85,9.27a6.21,6.21,0,0,0,.75-3,6.3,6.3,0,1,0-6.3,6.3,6.23,6.23,0,0,0,3.23-.9l3.39,3.39a1.39,1.39,0,0,0,2,0l.4-.4A1.4,1.4,0,0,0,15.28,12.71Zm-9-2.25a4.16,4.16,0,1,1,4.16-4.17A4.16,4.16,0,0,1,6.3,10.46Z"/></g><text x="0" y="30.48" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Brandy Bora</text><text x="0" y="35.480000000000004" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>';
+$settings: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>setng cog</title> <path d="M98.7,38.7c-0.1-0.3-0.3-0.6-0.5-0.9c-1.8-2.3-4.6-3.6-7.5-3.5h-0.5c-1.7,0-3.2-1-4-2.5c-0.1,0-0.1,0-0.1-0.1c0,0,0,0,0,0 c-0.5-0.9-1-1.7-1.5-2.6c-0.1,0-0.1-0.1-0.1-0.1c-0.9-1.5-0.9-3.3-0.1-4.8c0.1-0.1,0.2-0.2,0.2-0.4c1.5-2.6,1.8-5.7,0.8-8.6 c-0.1-0.3-0.3-0.7-0.5-0.9c-1.7-1.6-3.5-3.1-5.4-4.5c-0.2-0.1-0.5-0.2-0.9-0.4c-2.9-0.6-6,0.2-8.2,2.2c-0.1,0-0.3,0.1-0.4,0.2 c-0.8,0.7-1.8,1-2.8,1c-0.6,0-1.2-0.1-1.8-0.4c-1-0.4-1.9-0.7-2.9-1c-1.6-0.6-2.8-2-3.1-3.6c0-0.2-0.1-0.3-0.1-0.5 c-0.4-3-2.2-5.6-4.9-7c-0.3-0.2-0.6-0.2-0.9-0.2c-2.3-0.1-4.6-0.1-6.9,0c-0.3,0-0.6,0.1-0.9,0.2c-2.7,1.5-4.5,4.1-4.9,7.1 c-0.1,0.1-0.2,0.2-0.1,0.4c-0.3,1.7-1.4,3.1-3.1,3.6c-0.9,0.2-1.9,0.6-2.9,1c-0.6,0.1-1.2,0.2-1.8,0.2c-1,0-2-0.4-2.8-1 c-0.1-0.1-0.2-0.1-0.4-0.3c-2.2-2-5.3-2.8-8.2-2.2c-0.3,0-0.7,0.1-0.9,0.4c-1.9,1.3-3.7,2.8-5.4,4.5c-0.2,0.3-0.4,0.6-0.5,0.9 c-1.1,2.8-0.8,6,0.8,8.6c0.1,0.1,0.2,0.3,0.2,0.4c0.8,1.5,0.7,3.3-0.1,4.8c-0.1,0-0.1,0-0.1,0.1c0,0,0,0,0,0c-0.5,0.8-1,1.7-1.5,2.6 c-0.1,0-0.1,0-0.1,0.1c0,0,0,0,0,0c-0.8,1.5-2.3,2.5-4,2.5H9.3c-2.9-0.1-5.7,1.2-7.5,3.5c-0.2,0.3-0.4,0.6-0.5,0.9 c-0.6,2.4-1,4.8-1.3,7.3c0,0.3,0,0.7,0.1,1c0.9,2.8,3.1,4.9,5.9,5.9c0.2,0,0.3,0.1,0.5,0.1c1.6,0.6,2.7,2,2.9,3.6v0.1 c0.1,1,0.3,2,0.5,3v0.1c0.3,1.7-0.3,3.4-1.5,4.5c-0.1,0-0.3,0.1-0.4,0.2c-2.2,1.8-3.5,4.5-3.6,7.4c0,0.3,0.1,0.7,0.2,1 c1.1,2.3,2.4,4.5,3.8,6.6C8.7,80,9,80.3,9.3,80.4c2.5,1.4,5.4,1.6,8,0.5c0.2,0,0.4,0,0.5-0.1c0.5-0.2,1-0.3,1.5-0.2 c0.6,0,1.1,0.1,1.6,0.3c0.6,0.2,1.1,0.5,1.5,0.9l2.3,2l0.1,0.1c1.3,1.1,1.9,2.7,1.7,4.4c-0.1,0.2-0.1,0.3-0.1,0.5 c-0.6,2.8,0.1,5.7,1.8,7.9c0.2,0.3,0.6,0.5,0.9,0.6c2.3,1.2,4.8,2.1,7.3,2.7c0.4,0.1,0.8,0.1,1.2,0c2.7-0.6,5.1-2.3,6.4-4.8 c0.1-0.1,0.2-0.3,0.2-0.4c0.8-1.5,2.4-2.5,4.1-2.3h3.2c1.7,0,3.3,0.8,4.1,2.3c0.1,0.1,0.2,0.3,0.2,0.4c1.3,2.5,3.6,4.2,6.4,4.8h0.5 c0.1,0,0.4,0,0.2-0.3c2.5-0.8,4.9-1.7,7.3-2.7c0.3-0.1,0.7-0.4,0.9-0.6c1.4-1.6,2.1-3.7,2.1-5.8c0-0.6-0.1-1.2-0.2-1.8 c0-0.3,0-0.5-0.1-0.8c-0.2-1.6,0.5-3.3,1.8-4.3c-0.1-0.1-0.1-0.1,0-0.2s0.1-0.1,0.2,0c0.8-0.6,1.6-1.3,2.3-2h0.1 c0.8-0.8,1.9-1.2,3.1-1.2c0.4,0,0.7,0,1.1,0.1c0.1,0,0.3,0.1,0.4,0.1c0.2,0,0.3,0.1,0.5,0.1c0.5,0.2,1.1,0.4,1.7,0.5 c0.6,0.1,1.2,0.2,1.8,0.2c1.6,0,3.2-0.4,4.6-1.2l0.8-0.8c1.5-2.1,2.8-4.3,3.8-6.6c0.2-0.3,0.2-0.7,0.2-1c-0.1-2.9-1.4-5.6-3.6-7.4 c-0.1-0.1-0.2-0.2-0.4-0.4c-1.2-1-1.8-2.5-1.5-4v-0.1c0.2-1,0.4-2,0.5-3v-0.1c0.5-3,2.7-3.7,2.9-3.7c0.2,0,0.4,0,0.6-0.2 c2.7-0.9,4.9-3.1,5.8-5.8c0.1-0.3,0.2-0.7,0.1-1C99.8,43.5,99.3,41.1,98.7,38.7z M50,71.1c-11.3,0.1-20.6-9-20.7-20.4 c-0.1-11.3,9-20.6,20.4-20.7c11.3-0.1,20.6,9,20.7,20.4c0,0,0,0.1,0,0.1c0.1,11.3-8.9,20.5-20.2,20.6C50.1,71.1,50.1,71.1,50,71.1z" /> </svg>';
+$trash: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>';
+$viewallwhite: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch --> <title>image-gallery copy 2</title> <desc>Created with Sketch.</desc> <defs></defs> <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Templates"  fill="#ffffff" fill-rule="nonzero"> <g id="image-gallery-copy-2" > <path d="M3.07434783,13.406087 L3.07434783,4.80956522 L1.7573913,4.80956522 C0.783913043,4.80956522 0,5.60565217 0,6.57826087 L0,18.2008696 C0,19.1747826 0.783913043,19.9621739 1.7573913,19.9621739 L13.3804348,19.9621739 C14.3534783,19.9621739 15.1526087,19.1747826 15.1526087,18.2008696 L15.1526087,16.9313043 L6.59956522,16.9313043 C4.66652174,16.9317391 3.07434783,15.3395652 3.07434783,13.406087 Z" id="Shape"></path> <path d="M18.2230435,0.0217391304 L6.59956522,0.0217391304 C5.62652174,0.0217391304 4.83173913,0.81 4.83173913,1.78304348 L4.83173913,13.406087 C4.83173913,14.3804348 5.62695652,15.1743478 6.59956522,15.1743478 L18.2230435,15.1743478 C19.1956522,15.1743478 19.9843478,14.3804348 19.9843478,13.406087 L19.9843478,1.78347826 C19.9843478,0.809565217 19.1956522,0.0217391304 18.2230435,0.0217391304 Z M17.983913,12.43 C17.8869565,12.6091304 17.7004348,12.7152174 17.4969565,12.7152174 L7.5373913,12.7152174 C7.36217391,12.7152174 7.1973913,12.6369565 7.09304348,12.4969565 C6.98869565,12.356087 6.95695652,12.1769565 7.0073913,12.0086957 L8.43217391,7.29608696 C8.52608696,6.98608696 8.78782609,6.75695652 9.10782609,6.70434783 C9.42782609,6.65217391 9.74956522,6.78695652 9.9373913,7.05086957 L11.9295652,9.84956522 C12.1978261,10.2265217 12.7173913,10.32 13.0986957,10.06 L14.9330435,8.81434783 C15.1217391,8.68608696 15.3534783,8.63956522 15.5765217,8.68434783 C15.8004348,8.72869565 15.9965217,8.86173913 16.1213043,9.05304348 L17.96,11.8669565 C18.0713043,12.0378261 18.0804348,12.2517391 17.983913,12.43 Z" id="Shape"></path> </g> </g> </g></svg>';
+$viewallblack: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch --> <title>image-gallery copy 2</title> <desc>Created with Sketch.</desc> <defs></defs> <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Templates" transform="translate(-1270.000000, -689.000000)" fill="#000000" fill-rule="nonzero"> <g id="image-gallery-copy-2" transform="translate(1270.000000, 689.000000)"> <path d="M3.07434783,13.406087 L3.07434783,4.80956522 L1.7573913,4.80956522 C0.783913043,4.80956522 0,5.60565217 0,6.57826087 L0,18.2008696 C0,19.1747826 0.783913043,19.9621739 1.7573913,19.9621739 L13.3804348,19.9621739 C14.3534783,19.9621739 15.1526087,19.1747826 15.1526087,18.2008696 L15.1526087,16.9313043 L6.59956522,16.9313043 C4.66652174,16.9317391 3.07434783,15.3395652 3.07434783,13.406087 Z" id="Shape"></path> <path d="M18.2230435,0.0217391304 L6.59956522,0.0217391304 C5.62652174,0.0217391304 4.83173913,0.81 4.83173913,1.78304348 L4.83173913,13.406087 C4.83173913,14.3804348 5.62695652,15.1743478 6.59956522,15.1743478 L18.2230435,15.1743478 C19.1956522,15.1743478 19.9843478,14.3804348 19.9843478,13.406087 L19.9843478,1.78347826 C19.9843478,0.809565217 19.1956522,0.0217391304 18.2230435,0.0217391304 Z M17.983913,12.43 C17.8869565,12.6091304 17.7004348,12.7152174 17.4969565,12.7152174 L7.5373913,12.7152174 C7.36217391,12.7152174 7.1973913,12.6369565 7.09304348,12.4969565 C6.98869565,12.356087 6.95695652,12.1769565 7.0073913,12.0086957 L8.43217391,7.29608696 C8.52608696,6.98608696 8.78782609,6.75695652 9.10782609,6.70434783 C9.42782609,6.65217391 9.74956522,6.78695652 9.9373913,7.05086957 L11.9295652,9.84956522 C12.1978261,10.2265217 12.7173913,10.32 13.0986957,10.06 L14.9330435,8.81434783 C15.1217391,8.68608696 15.3534783,8.63956522 15.5765217,8.68434783 C15.8004348,8.72869565 15.9965217,8.86173913 16.1213043,9.05304348 L17.96,11.8669565 C18.0713043,12.0378261 18.0804348,12.2517391 17.983913,12.43 Z" id="Shape"></path> </g> </g> </g></svg>';
+$templategallery: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>All</title> <g id="Desktop"> <g id="Templates" transform="translate(-1270.000000, -689.000000)"> <g id="image-gallery-copy-2" transform="translate(1270.000000, 689.000000)"> <path id="Shape" d="M17.1,78.7V36.6h-6.5c-4.8,0-8.6,3.9-8.6,8.7v57c0,4.8,3.8,8.6,8.6,8.6h57c4.8,0,8.7-3.9,8.7-8.6V96H34.4 C24.9,96,17.1,88.2,17.1,78.7z"/> <path d="M91.4,13.1h-57c-4.8,0-8.7,3.9-8.7,8.6v57c0,4.8,3.9,8.7,8.7,8.7h57c4.8,0,8.6-3.9,8.6-8.7v-57 C100,17,96.1,13.1,91.4,13.1z M90.2,73.9c-0.5,0.9-1.4,1.4-2.4,1.4H39c-0.9,0-1.7-0.4-2.2-1.1c-0.5-0.7-0.7-1.6-0.4-2.4l7-23.1 c0.5-1.5,1.7-2.6,3.3-2.9c1.6-0.3,3.1,0.4,4.1,1.7l9.8,13.7c1.3,1.8,3.9,2.3,5.7,1l9-6.1c0.9-0.6,2.1-0.9,3.2-0.6 c1.1,0.2,2.1,0.9,2.7,1.8l9,13.8C90.6,72,90.7,73.1,90.2,73.9z"/> </g> </g> </g> </svg> ';
+$templategallerywhite: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>All</title> <g id="Desktop"> <g id="Templates" transform="translate(-1270.000000, -689.000000)"> <g id="image-gallery-copy-2" transform="translate(1270.000000, 689.000000)"> <path id="Shape" d="M17.1,78.7V36.6h-6.5c-4.8,0-8.6,3.9-8.6,8.7v57c0,4.8,3.8,8.6,8.6,8.6h57c4.8,0,8.7-3.9,8.7-8.6V96H34.4 C24.9,96,17.1,88.2,17.1,78.7z"/> <path d="M91.4,13.1h-57c-4.8,0-8.7,3.9-8.7,8.6v57c0,4.8,3.9,8.7,8.7,8.7h57c4.8,0,8.6-3.9,8.6-8.7v-57 C100,17,96.1,13.1,91.4,13.1z M90.2,73.9c-0.5,0.9-1.4,1.4-2.4,1.4H39c-0.9,0-1.7-0.4-2.2-1.1c-0.5-0.7-0.7-1.6-0.4-2.4l7-23.1 c0.5-1.5,1.7-2.6,3.3-2.9c1.6-0.3,3.1,0.4,4.1,1.7l9.8,13.7c1.3,1.8,3.9,2.3,5.7,1l9-6.1c0.9-0.6,2.1-0.9,3.2-0.6 c1.1,0.2,2.1,0.9,2.7,1.8l9,13.8C90.6,72,90.7,73.1,90.2,73.9z"/> </g> </g> </g> </svg> ';
+$templategallerygray: 'data:image/svg+xml;charset=utf-8,<svg version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>All</title> <g id="Desktop"> <g id="Templates" transform="translate(-1270.000000, -689.000000)"> <g id="image-gallery-copy-2" transform="translate(1270.000000, 689.000000)"> <path id="Shape" d="M17.1,78.7V36.6h-6.5c-4.8,0-8.6,3.9-8.6,8.7v57c0,4.8,3.8,8.6,8.6,8.6h57c4.8,0,8.7-3.9,8.7-8.6V96H34.4 C24.9,96,17.1,88.2,17.1,78.7z"/> <path d="M91.4,13.1h-57c-4.8,0-8.7,3.9-8.7,8.6v57c0,4.8,3.9,8.7,8.7,8.7h57c4.8,0,8.6-3.9,8.6-8.7v-57 C100,17,96.1,13.1,91.4,13.1z M90.2,73.9c-0.5,0.9-1.4,1.4-2.4,1.4H39c-0.9,0-1.7-0.4-2.2-1.1c-0.5-0.7-0.7-1.6-0.4-2.4l7-23.1 c0.5-1.5,1.7-2.6,3.3-2.9c1.6-0.3,3.1,0.4,4.1,1.7l9.8,13.7c1.3,1.8,3.9,2.3,5.7,1l9-6.1c0.9-0.6,2.1-0.9,3.2-0.6 c1.1,0.2,2.1,0.9,2.7,1.8l9,13.8C90.6,72,90.7,73.1,90.2,73.9z"/> </g> </g> </g> </svg> ';
+$dropdownarrow: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="255px" height="255px" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255;" xml:space="preserve"> <g> <g id="arrow-drop-down"> <polygon points="0,63.75 127.5,191.25 255,63.75 "/> </g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </svg> ';
+$dropdownarrowgray: 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" fill="#3f3f3f" width="255px" height="255px" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255;" xml:space="preserve"> <g> <g id="arrow-drop-down"> <polygon points="0,63.75 127.5,191.25 255,63.75 "/> </g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </svg> ';
+
+// Override / set color variables
+$white: #fff;
+$black: #000;
+$green: #00e389;
+$blue: #3399ff;
+$orange: #f26c22;
+$yellow: #ffd925;
+$red: #e5001e;
+
+$ahovercolor: #3a465e;
+$paleblue: #94c5da;
+$bgcolor: #f5f6fa;
+$bluebutton :#6ccdf5;
+$darkerbluebutton :#89D7F4;
+$blueshadow : #6ccdf5b0;
+$textcolor: #81899a;
+$focused : #e7e9ec;
+$newbgcolor: #fefefe;
+// Create grayscale
+$gray-dark: #292b2c;
+$gray: #3f3f3f;
+$gray-light: #acb2bc;
+$gray-lighter: #ededed;
+$gray-lightest: #fafafa;
+$properpaleblue: #f1fafe;
+// Set brand colors
+$primary: $blue;
+$success: $green;
+$info: $yellow;
+$warning: $orange;
+$danger: $red;
+
+// Override button colors
+$btn-info-color: darken($info, 45);
+
+// Override alert background colors
+$state-success-bg: lighten($success, 30);
+$state-info-bg: lighten($info, 30);
+$state-warning-bg: lighten($warning, 30);
+$state-danger-bg: lighten($danger, 45);
+
+// Override alert text colors
+$state-success-text: darken($success, 30);
+$state-info-text: darken($info, 30);
+$state-warning-text: darken($warning, 30);
+$state-danger-text: darken($danger, 10);
+
+// Override badges padding (doubled because otherwise too crammed)
+$badge-padding-x: 0.8em;
+$badge-padding-y: 0.4em;
+
+// Don't make badges normal instead of bold
+$badge-font-weight: normal;
+
+// Override fonts
+$font-family-sans-serif: 'Open Sans', sans-serif;
+$font-family-serif: Georgia, 'Times New Roman', Times, serif;
+$font-family-monospace: Menlo, Monaco, Consolas, 'Liberation Mono',
+  'Courier New', monospace;
+$font-family-base: $font-family-sans-serif;
+
+// Set global options
+$enable-shadows: false;
+$enable-gradients: true;
+
+#app, body, html{
+    background-color: $bgcolor;
+    color: $textcolor;
+    font-size: 1em;
+}
+
+.login{
+    span{
+        text-align: center;
+        display: block;
+        margin: 1rem auto;
+    }
+    h1{
+        text-align: center;
+        display: block;
+        margin: 5rem 0 2rem 0;
+        font-size: 2em;
+
+    }
+    
+    .block{
+        position: relative;
+        background-color: white;
+        border: 1px solid #f1f1f1;
+        padding: 3rem; 
+        border-radius: 15px;
+        transition: 1s;
+        &:hover{
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1), 0 2px 10px rgba(0,0,0,0.1);
+        }
+       .input-block{
+           background-color: #fafafb;
+           margin: 1rem 0;
+           padding: 1rem; 
+           border-radius: 7px;
+           &.half-width{
+               margin: 1rem auto 0 auto;
+           }
+           &.focused{
+               background-color: $focused;
+           }
+           .fake-label{
+               text-align: left;
+               font-size: 0.8em;
+               margin: 0;
+           }
+          
+           input{
+               width: 100%;
+               background-color: transparent;
+               border: none;
+               font-weight: bold;
+               color: $textcolor;
+               &:focus{
+                outline: none;
+                background-color: $focused;
+                }
+                &:-webkit-autofill{
+                    //background-color: red !important;
+                }
+           }
+           
+       }
+       button{
+            display: block;
+            margin: 1.5rem auto;
+            padding: 0.4em 2em;
+            transition: 1s;
+            &.roundedd{
+                border-radius: 50px;
+            }
+            &:focus{
+                outline: none;
+            }
+            &.blue{
+                transition: 1s;
+               background-color: $bluebutton;
+               -webkit-box-shadow: 0 11px 10px -6px $blueshadow;
+               -moz-box-shadow: 0 11px 10px -6px $blueshadow;
+                    box-shadow: 0 11px 10px -6px $blueshadow;
+               color: white;
+               font-weight: bold;
+               border: none;
+               &:hover{
+                   background-color: $darkerbluebutton;
+                   -webkit-box-shadow: 0 11px 15px -6px $blueshadow;
+               -moz-box-shadow: 0 11px 15px -6px $blueshadow;
+                    box-shadow: 0 11px 15px -6px $blueshadow;
+                   cursor: pointer;
+               }
+            }
+       }
+
+       a{
+            display: block;
+            text-align: center;
+            color: $textcolor;
+            margin: 1.5rem auto;
+       }
+
+       .checkbox-group{
+           input[type="checkbox"]{
+               display: none;
+           }
+           label{
+            display: inline-block;
+            vertical-align: middle;
+            min-height: 60px;
+            margin-left: 40px;
+            max-width: 90%;
+            margin-top: 15px;
+            }
+            a{
+                display: inline; 
+                text-decoration: underline;
+            }
+           span{
+            border: 1px solid #fafafb;
+            width: 27px;
+            height: 27px;
+            background: #fafafb;
+            cursor: pointer;
+            position: absolute;
+            margin: 10px 0px;
+           
+                &.checked:before{
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        border-radius: 4px;
+                        -webkit-transition: all .1s ease-in-out;
+                        -moz-transition: all .1s ease-in-out;
+                        transition: all .1s ease-in-out;
+                        border: 7px solid #fafafb;
+                        border-radius: 4px;
+                        background: $bluebutton;
+                }
+                &:first-child:hover{
+                    cursor: pointer;    
+                }
+            }
+       }
+    }
+}
+
+.sidebar{
+    background-color: #f7f9fa;
+    width: 15%;
+    float: left;
+    min-width: 200px;
+    padding: 3rem 2rem;
+    height: 100vh;
+    .name-block{
+        margin: 0 auto;
+        font-size: 0.8em;
+        font-weight: bold;
+        text-align: center;
+        .round{
+            display: inline-block;
+            color: white;
+            text-transform: uppercase;
+            padding: 1em;
+            border-radius: 50%;
+            background-color: $paleblue;
+        }
+        .name{
+            display: inline;
+            margin-left: 0.5rem;
+            color: black;
+            
+            text-transform: capitalize;
+        }
+    }
+    .fake-dropdown{
+        position:  relative;
+
+        .selected{
+            margin: 2rem auto 0 auto;
+            border-radius: 40px;
+            width: 100%;
+            padding: 0.5rem;
+            text-align: center;
+            border: 1px solid $gray-light;
+
+            &.open{
+                background-color: white;
+                border-radius: 40px 40px 0 0;
+                border-bottom: none;
+            }
+
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        .the-rest{
+            display: none;
+            position: absolute;
+            background-color: white;
+            width: 100%;
+            border-radius: 0 0 40px 40px;
+            border: 1px solid $gray-light;
+            border-top: none;
+
+            &.open-list{
+                display: block;
+            }
+
+            ul{
+                list-style-type: none;
+                width: 100%;
+                text-align: center;
+                padding: 0;
+                text-transform: uppercase;
+                margin: 0 auto;
+                
+                li{
+                    padding: 0.5rem 0;
+
+                    &:last-child{
+                        border-radius: 0 0 40px 40px;
+                    }
+
+                    &:hover{
+                        background-color: $paleblue;
+                        color: white;
+                        cursor: pointer;
+                    }
+                }
+
+            }
+        }
+    }
+    .menu-options{
+        margin: 3rem auto;
+
+        .menu-option{
+            margin: 2rem auto;
+
+            svg{
+                display: inline-block;
+                width: 20px;
+                text-align: left;
+            }
+
+            a{
+                font-size: 0.85em;
+                display: block;
+                color: $textcolor;
+
+                &:hover{
+                    color: $ahovercolor;
+                    text-decoration: none;
+                    svg{
+                        fill: $ahovercolor;
+                    }
+                }
+
+                span{
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
+}
+
+.fullpage{
+    background-color: white;
+    width: 100vw;
+
+    .main-view{
+        padding: 3rem;
+        width: 85%;
+        background-color: $newbgcolor;
+        float: right;
+        height: 100vh;
+        overflow: scroll;
+        h1{
+            font-size: 1.5em;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .linebreak{
+            height: 1px;
+            background: $gray-lighter;
+            width: 100%;
+        }
+        .banners-by-company{
+            margin: 1rem auto;
+            .banner-by-company{
+                background-color: white;
+                border: 1px solid $gray-lighter;
+                margin: 0 1rem 0 0;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                transition: 0.5s;
+                &:hover{
+                    cursor: pointer;
+                    border-color: rgba(163,231,251,1);
+                    background: rgb(111,206,245);
+                    background: -moz-linear-gradient(90deg, rgba(111,206,245,1) 0%, rgba(163,231,251,1) 100%);
+                    background: -webkit-linear-gradient(90deg, rgba(111,206,245,1) 0%, rgba(163,231,251,1) 100%);
+                    background: linear-gradient(90deg, rgba(111,206,245,1) 0%, rgba(163,231,251,1) 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#6fcef5",endColorstr="#a3e7fb",GradientType=1);
+                    color: white;   
+
+                }
+
+                .allcaps{
+                    text-transform: uppercase;
+                }
+
+            }
+
+        }
+        .header{
+            
+            margin: 2rem auto;
+            .right{
+                position: relative;
+                button{
+                    padding: 0.7rem 1rem 0.7rem 3rem;
+                    background-position: 10% center;
+                    background-repeat: no-repeat;
+                    background-size: 20px;
+                    font-size: 0.8em;
+                    &.roundedd{
+                        border-radius: 50px;
+                    }
+
+                    &:focus{
+                        outline: none;
+                    }
+
+                    &.blue{
+                        transition: 1s;
+                        background-color: $bluebutton;
+                        -webkit-box-shadow: 0 11px 10px -6px $blueshadow;
+                        -moz-box-shadow: 0 11px 10px -6px $blueshadow;
+                        box-shadow: 0 11px 10px -6px $blueshadow;
+                        color: white;
+                        font-weight: bold;
+                        border: none;
+                        &:hover{
+                            background-color: $darkerbluebutton;
+                            -webkit-box-shadow: 0 11px 15px -6px $blueshadow;
+                            -moz-box-shadow: 0 11px 15px -6px $blueshadow;
+                            box-shadow: 0 11px 15px -6px $blueshadow;
+                           cursor: pointer;
+                       }
+                    }
+
+                    &.view{
+                        background-image: url($templategallerywhite);
+                    }
+                    
+                    &.create{
+                        background-position-y: 70%;
+                        background-image: url($addwhite);                         
+                    }
+
+                    &:first-child{
+                        margin-right: none;
+                    }
+                }
+                
+                
+            }
+
+            .left{
+
+                text-align: right;
+                
+                .input-bubble{
+                    font-size: 0.8em;
+                    background-color: $properpaleblue;
+                    display: inline-block;
+                    vertical-align: middle;
+                    border-radius: 50px;
+                    background-repeat: no-repeat;
+                    background-size: 15px;
+                    background-position-y: 60%;
+                    &.open{
+                        border-radius: 20px 20px 0 0;
+                    }
+                    &.search{
+                        min-width: 20rem;
+                        padding: 0.7rem 0.7rem 0.7rem 3rem;
+                        background-image: url($search);
+                        background-position-x: 7%;
+                        input{
+                            width: 100%;
+                            background-color: $properpaleblue;
+                            border:none;
+                            &:focus{
+                                outline: none;
+                            }
+                        }
+                    }
+                    &.dropdown{
+                        
+                       
+                        text-align: left;
+                        
+                        
+                        span{
+                            display: inline-block;
+                            padding: 0.7rem 3rem 0.7rem 0.7rem;
+                            background-size: 10px;
+                            background-image: url($dropdownarrowgray);
+                            background-repeat: no-repeat;
+                            background-position-x: 85%;
+                            background-position-y: 50%;
+                            &:hover{
+                                color: $gray;
+                                cursor: pointer;
+                            }
+                        }
+                       
+                        .hidden{
+                            width: 100%;
+                            background-color: $properpaleblue;
+                            display: none;
+                            position: absolute;
+                            z-index: 2;
+                            border-radius: 0 0 20px 20px;
+                            &.visible{
+                                display: block;
+                            }
+                            ul{
+                                list-style-type: none;
+                                padding: 0;
+                                margin: 0;
+                                width: 100%;
+                                li{
+                                    padding: 1em;
+                                    &:hover{
+                                       color: $gray;
+                                       cursor: pointer;
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+        }
+        .recent-banners{
+            margin: 1rem auto; 
+
+            .banner-slide{
+                margin: 1rem auto;
+                .preview{
+                    background-color: white;
+                    border: 1px solid $gray-lighter;
+                    padding: 1rem 2rem;
+                    border-radius: 10px;
+                }
+            }
+            .header{
+
+                margin: 2rem auto;
+                .left{
+                    position: relative;
+                    h1{
+                        font-size: 1.5em;
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                    
+                }
+
+                .right{
+
+                    text-align: right;
+                    button{
+                        margin: 0.5em 0 0.5rem 1rem;
+                        padding: 0.7rem 1rem 0.7rem 3rem;
+                        background-position: 10% center;
+                        background-repeat: no-repeat;
+                        background-size: 20px;
+                        font-size: 0.8em;
+                        &.roundedd{
+                            border-radius: 50px;
+                        }
+
+                        &:focus{
+                            outline: none;
+                        }
+
+                        &.blue{
+                            transition: 1s;
+                            background-color: $bluebutton;
+                            -webkit-box-shadow: 0 11px 10px -6px $blueshadow;
+                            -moz-box-shadow: 0 11px 10px -6px $blueshadow;
+                            box-shadow: 0 11px 10px -6px $blueshadow;
+                            color: white;
+                            font-weight: bold;
+                            border: none;
+                            &:hover{
+                                background-color: $darkerbluebutton;
+                                -webkit-box-shadow: 0 11px 15px -6px $blueshadow;
+                                -moz-box-shadow: 0 11px 15px -6px $blueshadow;
+                                box-shadow: 0 11px 15px -6px $blueshadow;
+                               cursor: pointer;
+                           }
+                        }
+
+                        &.view{
+                            background-image: url($templategallerywhite);
+                        }
+                        
+                        &.create{
+                            background-position-y: 70%;
+                            background-image: url($addwhite);                         
+                        }
+
+                        &:first-child{
+                            margin-right: none;
+                        }
+                    }
+                }
+
+            }
+        }
+        .recent-templates{
+            .header{
+
+                .left{
+                    text-align: left;
+                    .grey-dd{
+                        font-weight: bold;
+                        font-size: 0.8em;
+                        background-position: 80% center;
+                        background-image: url($dropdownarrowgray);
+                        background-size: 10px;
+                        background-repeat: no-repeat;
+                        span{
+                            padding-right: 2rem;
+                            &:hover{
+                                cursor: pointer;
+                                color: $gray;
+                            }
+                        }
+                        .hidden{
+                            display: none;
+                            position: absolute;
+                            top: 3rem;
+                            z-index: 2;
+                            border: 1px solid $gray-lighter;
+                            border-radius: 5px;
+                            padding: 1rem 3rem 1rem 2rem;
+                            background-color: white;
+                            &.visible{
+                                display: block;
+                            }
+                            ul{
+                                list-style-type: none;
+                                margin: 0 auto;
+                                padding: 0;
+                                text-align: left;
+                                li{
+                                    padding: 0.5rem 0;
+                                    &:hover{
+                                        cursor: pointer;
+                                        color: $gray-light;
+                                    }
+                                }
+                            }
+                            
+                        }
+
+                    }
+                }
+                
+            }
+
+            .template-list{
+                
+                
+                .template{
+                    background-color: white;
+                    border: 1px solid $gray-lighter;
+                    padding: 2rem;
+                    border-radius: 10px;
+                    margin: 1rem auto;
+
+                    .left{
+                        .bold{
+                            display: block;
+                            margin-bottom: 1rem;
+                        }
+                        .dimension{
+                            background-color: $properpaleblue;
+                            padding: 0.6rem 0.8rem; 
+                            border-radius: 5px;
+                            font-size: 0.6em;
+                            margin-right: 0.5rem;
+                            line-height: 3em;
+                            font-weight: bold;
+                            &:hover{
+                                background-color: $bluebutton;
+                                cursor: pointer;
+                            }
+                            &.green{
+                                background-color: #f0f6eb;
+                                &:hover{
+                                    background-color: #dbe9ce;
+                                    cursor: pointer;
+                                }
+                            }
+                            &.orange{
+                                background-color: #fceee6;
+                                &:hover{
+                                    background-color: #f9ddcc;
+                                    cursor: pointer;
+                                }
+                            }
+                            &.purple{
+                                background-color: #eceff9;
+                                &:hover{
+                                    background-color: #d0d6f0;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                        
+                    }
+                    
+                    .right{
+                        
+                        .images{
+                            width: 100%;
+                            text-align: right;
+                            svg{
+                                max-width: 25px;
+                                margin: 0 0 2rem 2rem;
+                                fill: $gray-light;
+                                transition: 1s;
+                                &:hover{
+                                    fill: $ahovercolor;
+                                    cursor: pointer;
+                                }
+                            }
+
+                        }
+
+                        .text{
+                            text-align: right;
+
+                            span{
+                                margin-left: 1rem;
+                                span{
+                                    margin: 0;
+                                    font-weight: bold;
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+        }
+
+    }
+}
+
+.dropdown{
+
+
+}
