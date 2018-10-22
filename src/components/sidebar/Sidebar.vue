@@ -63,8 +63,8 @@
                     <title>noun_1394884_cc</title>
                     <desc>Created with Sketch.</desc>
                     <defs></defs>
-                    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="Sidebar" transform="translate(-40.000000, -371.000000)" fill="#000000" fill-rule="nonzero">
+                    <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                        <g id="Sidebar" transform="translate(-40.000000, -371.000000)" >
                             <g id="noun_1394884_cc" transform="translate(40.000000, 371.000000)">
                                 <g id="Group">
                                     <g id="Shape">
@@ -82,7 +82,7 @@
         <hr>
         <div class="menu-options level2">
             <div class="menu-option">
-                <a href="#">
+               <router-link to="/edit-company">
                     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                         viewBox="0 0 52 65" style="enable-background:new 0 0 52 65;" xml:space="preserve">
                     <g>
@@ -99,7 +99,7 @@
                     </g>
                     </svg>
                     <span>Edit Company</span>
-                </a>
+               </router-link>
             </div>
             <div class="menu-option">
                  <a href="#">
@@ -108,8 +108,8 @@
                     <title>Shape</title>
                     <desc>Created with Sketch.</desc>
                     <defs></defs>
-                    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="Sidebar" transform="translate(-40.000000, -572.000000)" fill="#000000" fill-rule="nonzero">
+                    <g id="Symbols" stroke="none" stroke-width="1"  fill-rule="evenodd">
+                        <g id="Sidebar" transform="translate(-40.000000, -572.000000)" >
                             <g id="noun_account_1337577" transform="translate(40.000000, 572.000000)">
                                 <path d="M14.2285714,9.52285714 C15.1428571,8.51 15.7142857,7.18285714 15.7142857,5.71428571 C15.7142857,2.56285714 13.1514286,0 10,0 C6.84857143,0 4.28571429,2.56285714 4.28571429,5.71428571 C4.28571429,7.18285714 4.85714286,8.51 5.77142857,9.52285714 C2.36714286,11.12 0,14.57 0,18.5714286 L0,20 L20,20 L20,18.5714286 C20,14.57 17.6328571,11.12 14.2285714,9.52285714 Z M7.14285714,5.71428571 C7.14285714,4.13857143 8.42428571,2.85714286 10,2.85714286 C11.5757143,2.85714286 12.8571429,4.13857143 12.8571429,5.71428571 C12.8571429,7.29 11.5757143,8.57142857 10,8.57142857 C8.42428571,8.57142857 7.14285714,7.29 7.14285714,5.71428571 Z M3.00142857,17.1428571 C3.66428571,13.8871429 6.55142857,11.4285714 10,11.4285714 C13.4485714,11.4285714 16.3357143,13.8871429 16.9985714,17.1428571 L3.00142857,17.1428571 Z" id="Shape"></path>
                             </g>
@@ -120,10 +120,10 @@
                 </a>
             </div>
             <div class="menu-option">
-                 <a href="#">
+                 <router-link to="/login">
                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 512 640" x="0px" y="0px"><title>l3</title><path d="M153.51,424.21c-13.29-.74-26.66-0.27-40-0.34-17-.08-25.88-9-25.88-26.11q0-142,0-284.09c0-16.74,8.88-25.72,25.61-25.84,12.8-.09,25.61.3,38.4-0.16A43.67,43.67,0,0,0,194,43.16c-0.32-23.59-19.37-42.56-43.47-43-14.4-.24-28.8-0.28-43.2,0C57.08,1.37,13.7,36.81,2.66,85.57c-1,4.47-1.78,9-2.66,13.5V412.61c0.38,1.72.89,3.41,1.13,5.15,6.69,48.12,47.18,88.2,95.55,92.9,19,1.85,38.37,1.47,57.52.75,15.75-.59,27.33-9.55,34.76-23.22C203.91,460.68,184.72,425.95,153.51,424.21Z"/><path d="M363.14,96.62c-8.18-8.18-18.29-12.09-29.8-12.26a44.31,44.31,0,0,0-41,26.53,43.15,43.15,0,0,0,9.08,47.82c18.42,18.78,37,37.54,55.54,56.23,1.29,1.3,2.47,3.06,4.44,5.06h-9.57c-59,0-118.07-.24-177.1-0.11-29.39.06-50,25.71-43.51,53.82,4.56,19.73,22.8,33.47,44.33,33.49,59.57,0,119.13-.2,178.7-0.2h6.13a20.56,20.56,0,0,0,1.53,2.43c-1.7,1-3.71,1.69-5,3-17.67,17.53-35.41,35-52.79,52.84-17,17.38-16.84,44.16-.2,61,17.21,17.42,44.38,18.28,61.83,1Q433,360.69,499.58,293.43a42.47,42.47,0,0,0-.12-60.14Q431.55,164.71,363.14,96.62Z"/><text x="0" y="527" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by i cons</text><text x="0" y="532" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
                     <span>Log out</span>
-                </a>
+                 </router-link>
             </div>
         </div>    
   </div>

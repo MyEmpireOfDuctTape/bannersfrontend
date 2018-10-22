@@ -54,4 +54,59 @@ $(document).ready(function(){
         $(e.target).next().toggleClass('visible');
         $(e.target).parent().toggleClass('open');
     });
+
+    let popoverstart = '<div class="popoover">';
+    let popoverclose = '<a href="#" class="close">dismiss</a>';
+    let popoverend = '</div>';
+
+    $('.popover-wrapper').hover(
+        function() {
+            let popoverspan = '<span>' + $( this ).attr('data-popover') + '</span>';
+            $( this ).append( $( popoverstart + popoverspan + popoverend) );
+
+          }, function() {
+            $( this ).find( ".popoover" ).remove();
+          }
+    );
+
+    $('.edit-overlay .check').click(function(e){
+        $(e.target).toggleClass('selected');
+        $(e.target).parent().toggleClass('selected');
+    });
+
+    $('.edit-overlay .edit').click(function(e){
+        $(this).next().toggleClass('visible');
+
+    });
+
+    /* $('.popover-wrapper .close').click(function(e){
+        e.preventDefault();
+        //console.log($(this));
+        console.log('dfsdfsd');
+       // $(this).fadeOut();
+    }); */
+    
+    /* var base_uri = 'api.banners.ee';
+    var form = new FormData();
+    form.append("email", "priit.kuuseorg@gmail.com");
+    form.append("password", "Parool");
+
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://"+base_uri+ "/auth/login",
+  "method": "POST",
+  "headers": {
+    "Accept": "application/json"
+  },
+  "processData": false,
+  "contentType": false,
+  "mimeType": "multipart/form-data",
+  "data": form
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+}); */
 }); // doc ready
+
