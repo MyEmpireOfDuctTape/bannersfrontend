@@ -18,7 +18,7 @@ import SingleTemplate from '@/components/templates/Single-Template'
 
 import EditCompany from '@/components/company/Edit-Company'
 import AddTemplate from '@/components/templates/Add-Template'
-
+import ace from "ace-builds"
 
 
 Vue.use(Router)

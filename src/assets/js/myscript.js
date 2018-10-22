@@ -29,6 +29,14 @@ $(document).ready(function(){
         $(e.target).parent().removeClass('focused');    
     });
 
+    $('.input-block textarea').on('focus', function(e){
+        console.log($(e.target).parent());
+        $(e.target).parent().addClass('focused');    
+    });
+    $('.input-block textarea').on('focusout', function(e){
+        console.log($(e.target).parent());
+        $(e.target).parent().removeClass('focused');    
+    });
 
     //dropdown logic
     $('.selected').click(function(e){

@@ -1361,7 +1361,17 @@ $enable-gradients: true;
         font-size: 0.8em;
         margin: 0;
     }
-   
+    
+    textarea{
+        width: 100%;
+        background: transparent;
+        border: none;
+        min-height: 10rem;
+        &:focus{
+            outline: none;
+            background-color: $focused;
+            }
+    }
     input{
         width: 100%;
         background-color: transparent;

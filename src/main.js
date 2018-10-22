@@ -8,7 +8,9 @@ import Router from 'vue-router'
 
 /* require('../node_modules/bootstrap/scss/bootstrap.scss');
 require('./assets/css/style.css'); */
+require('./assets/js/functions.js');
 require('./assets/js/myscript.js');
+//require('./assets/ace/src-noconflict/ace.js');
 
 
 
