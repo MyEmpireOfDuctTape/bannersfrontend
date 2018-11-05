@@ -18,6 +18,7 @@ import SingleTemplate from '@/components/templates/Single-Template'
 
 import EditCompany from '@/components/company/Edit-Company'
 import AddTemplate from '@/components/templates/Add-Template'
+import EditBanner from '@/components/banners/Edit-Banner'
 import ace from "ace-builds"
 
 
@@ -87,6 +88,11 @@ export default new Router({
       path: '/edit-company',
       name: 'EditCompany',
       component: EditCompany
+    },
+    {
+      path: '/banners/edit-banner/:bannerid',
+      name: 'EditBanner',
+      component: EditBanner
     },
 
 

@@ -1,10 +1,9 @@
 <template>
     <div class="fullpage container-fluid">
         <div class="row">
-            <div class="col-lg-2">
+
                 <sidebar></sidebar>
-            </div>
-            <div class="col-lg-10">
+
 		<div class="dashboard main-view container-fluid">
                 <div class="banners-by-company row">
                     <div class="banner-by-company colorful col-lg-3">
@@ -149,7 +148,6 @@
                     </div>    
    
                 </div>
-			</div>
 			</div>
 			</div>
 

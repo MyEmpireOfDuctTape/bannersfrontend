@@ -1,15 +1,14 @@
 <template>
     <div class="fullpage container-fluid">
         <div class="row">
-            <div class="col-lg-2">
+
                 <sidebar></sidebar>
-            </div>
-            <div class="col-lg-10">
+
                 <div class="templates main-view container-fluid">
                     <h1>Templates</h1>
                         <div class="header row">
                             <div class="left col-lg-3 col-md-4">
-                                <button class="blue create roundedd">Create template</button>
+                                <router-link to="/add-template"><button class="blue create roundedd">Create template</button></router-link>
                             </div>
                             <div class="right col-lg-9 col-md-8">
                                 <div class="input-bubble search">
@@ -135,7 +134,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
 </template>
 

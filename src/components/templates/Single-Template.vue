@@ -1,10 +1,10 @@
 <template>
     <div class="fullpage container-fluid">
         <div class="row">
-            <div class="col-lg-2">
+
                 <sidebar></sidebar>
-            </div>
-            <div class="col-lg-10">
+
+
                 <div class="template-single main-view container-fluid">
                     <span class="before">Templates </span>
                     <svg class="subset" version="1.1" id="Layer_1" fill="#acb2bc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <path id="Shape" d="M369.1,518.3L194.2,343.5c-8.5-8.5-12.8-19.7-12.8-30.9s4.3-22.4,12.8-30.9c17.1-17.1,44.8-17.1,61.8,0 L400,425.6l143.9-143.9c17.1-17.1,44.8-17.1,61.8,0c17.1,17.1,17.1,44.7,0,61.8L430.9,518.3C413.8,535.4,386.2,535.4,369.1,518.3z" /> </svg>
@@ -161,7 +161,6 @@
                             </div> 
                         </div>
                     </div>
-                </div>
           
 
 </template>

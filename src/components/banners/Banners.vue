@@ -1,12 +1,25 @@
 <template>
     <div class="fullpage container-fluid">
         <div class="row">
-            <div class="col-lg-2">
+
                 <sidebar></sidebar>
-            </div>
-            <div class="col-lg-10">
-                <div class="banners main-view container-fluid">
+                <div class="overlay Aligner">
+
+                            <div class="form-wrapper Aligner-item">
+                                <div class="input-block">
+                                    <span class="fake-label">Folder name</span>
+                                    <input type="text" placeholder="Skyscraper tempate">
+                                </div>
+                                <div class="input-block">
+                                    <span class="fake-label">Folder Description</span>
+                                    <textarea class="comment"></textarea>
+                                </div>
+                                <button class="blue roundedd save">Save</button>
+                            </div>    
+                </div> 
+                <div class="banners main-view">
                     <h1>Banners</h1>
+                    <div class="container-fluid">
                         <div class="header row">
                             <div class="left col-lg-5 col-md-4">
                                 <button class="blue create-folder roundedd">Create folder</button>
@@ -167,6 +180,7 @@
                         
                         <div class="col-lg-3">
                             <div class="preview">
+                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
                                         <button class="check"></button>
@@ -187,13 +201,15 @@
                                         </div>    
                                          <img class="Aligner-item land" src="../../assets/img/banner.jpg">
                                     </div>   
-                                </div>     
-                                <span class="name">Telia skyscraper campaginr name long</span>
+                                </div>   
+                                </router-link>  
+                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">Telia skyscraper campaginr name long</span></router-link>
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
                          <div class="col-lg-3">
                             <div class="preview">
+                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
                                         <button class="check"></button>
@@ -215,12 +231,14 @@
                                          <img class="Aligner-item land" src="../../assets/img/banner.jpg">
                                     </div>   
                                 </div>     
-                                <span class="name">Telia skyscraper campaginr name long</span>
+                                </router-link>
+                                <router-link to="banners/edit-banner/Telia skyscraper campaginr name long"> <span class="name">Telia skyscraper campaginr name long</span></router-link>
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
                          <div class="col-lg-3">
                             <div class="preview">
+                                <router-link to="banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
                                         <button class="check"></button>
@@ -241,8 +259,9 @@
                                         </div>    
                                          <img class="Aligner-item land" src="../../assets/img/banner.jpg">
                                     </div>   
-                                </div>     
-                                <span class="name">Telia skyscraper campaginr name long</span>
+                                </div>  
+                                </router-link>   
+                                <router-link to="banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">Telia skyscraper campaginr name long</span></router-link>
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
@@ -251,7 +270,7 @@
                                 </div> 
                         </div>
                     </div>
-                </div>
+                </div>    
             </div>
 
 </template>

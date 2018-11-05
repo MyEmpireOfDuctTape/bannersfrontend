@@ -1,10 +1,7 @@
 <template>
     <div class="fullpage container-fluid">
         <div class="row">
-            <div class="col-lg-2">
                 <sidebar></sidebar>
-            </div>
-            <div class="col-lg-10">
 		        <div class="edit-company main-view container-fluid">
                     <div class="row">
                         <div class="col-lg-5 col-md-12 edit-form">
@@ -34,7 +31,8 @@
                                     <span class="fake-label">Email</span>
                                     <input type="text" placeholder="Email">
                                 </div>
-                            </div>    
+                            </div>  
+                            <button class="blue save roundedd">Save</button>  
                         </div>
                         <div class="col-lg-7 col-md-12 users">
                             <div class="row top">
@@ -179,7 +177,6 @@
                 </div>
 			</div>
 		</div>
-	</div>
 
 </template>
 
