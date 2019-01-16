@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 
 //login forms 
 import Login from '@/components/login/Login'
+import Logout from '@/components/login/Logout'
 import Register from '@/components/login/Register'
 import Reminder from '@/components/login/Reminder'
 import NewPassword from '@/components/login/NewPassword'
@@ -31,68 +32,119 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: Login
+      name: 'LoginBase',
+      component: Login,
+      meta: {
+        requiresVisitor: true
+      }
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        requiresVisitor: true
+      }
+    },
+    {
+      path: '/logout',
+      name: 'Logout',
+      component: Logout,
+      meta: {
+        requiresVisitor: false
+      }
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: {
+        requiresVisitor: false
+      }
     },
     {
       path: '/reminder',
       name: 'Reminder',
-      component: Reminder
+      component: Reminder,
+      meta: {
+        requiresVisitor: true
+      }
     },
     {
-    path: '/newpassword',
-    name: 'NewPassword',
-    component: NewPassword
+      path: '/newpassword/:token',
+      name: 'NewPassword',
+      component: NewPassword,
+      meta: {
+        requiresVisitor: true
+      }
+    },
+    {
+      path: '/newpassword/',
+      redirect: '/login',
     },
     {
       path: '/dashboard',
       name: 'Dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
         path: '/banners',
         name: 'Banners',
-        component: Banners
+        component: Banners,
+        meta: {
+          requiresAuth: true
+        }
     },
     {
       path: '/banners/:folderName',
       name: 'BannerFolder',
-      component: BannerFolder
+      component: BannerFolder,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/templates',
       name: 'Templates',
-      component: Templates
+      component: Templates,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/add-template',
       name: 'AddTemplate',
-      component: AddTemplate
+      component: AddTemplate,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/templates/:id',
       name: 'SingleTemplate',
-      component: SingleTemplate
+      component: SingleTemplate,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/edit-company',
       name: 'EditCompany',
-      component: EditCompany
+      component: EditCompany,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/banners/edit-banner/:bannerid',
       name: 'EditBanner',
-      component: EditBanner
+      component: EditBanner,
+      meta: {
+        requiresAuth: true
+      }
     },
 
 

@@ -2,7 +2,6 @@
     <div class="fullpage container-fluid">
         <div class="row">
                 <sidebar></sidebar>
-                <div class="col-lg-10 col-md-12">
 		        <div class="edit-banner main-view container-fluid">
                     <div class="row">
                         <div class="col-lg-9 col-sm-12">
@@ -17,30 +16,30 @@
                     <div class="row contentrow">
                         <div class="col-lg-9">
                             <div class="big-dd">
-                                <span> Template </span>
+                                <span v-on:click="dropdownToggle"> Template </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li>Template 1</li>
-                                        <li>Template 2</li>
-                                        <li>Template 3</li>
-                                        <li>Template 4</li>
-                                        <li>Template 5</li>
-                                        <li>Template 6</li>
+                                        <li v-on:click="dropDownElementClicked">Template 1</li>
+                                        <li v-on:click="dropDownElementClicked">Template 2</li>
+                                        <li v-on:click="dropDownElementClicked">Template 3</li>
+                                        <li v-on:click="dropDownElementClicked">Template 4</li>
+                                        <li v-on:click="dropDownElementClicked">Template 5</li>
+                                        <li v-on:click="dropDownElementClicked">Template 6</li>
                                     </ul>
                                 </div>   
                             </div>    
                         </div>
                         <div class="col-lg-3">
                             <div class="big-dd">
-                                <span> Size </span>
+                                <span v-on:click="dropdownToggle"> Size </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li>Size 1</li>
-                                        <li>Size 2</li>
-                                        <li>Size 3</li>
-                                        <li>Size 4</li>
-                                        <li>Size 5</li>
-                                        <li>Size 6</li>
+                                        <li v-on:click="dropDownElementClicked">Size 1</li>
+                                        <li v-on:click="dropDownElementClicked">Size 2</li>
+                                        <li v-on:click="dropDownElementClicked">Size 3</li>
+                                        <li v-on:click="dropDownElementClicked">Size 4</li>
+                                        <li v-on:click="dropDownElementClicked">Size 5</li>
+                                        <li v-on:click="dropDownElementClicked">Size 6</li>
                                     </ul>
                                 </div>   
                             </div>    
@@ -53,42 +52,42 @@
                             <div class="form-wrapper">
                                 <div class="input-block">
                                     <span class="fake-label">Banner name</span>
-                                    <input type="text" placeholder="Skyscraper tempate">
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Skyscraper tempate">
                                 </div>
                                 <div class="input-block">
                                     <span class="fake-label">Banner Description</span>
-                                    <textarea class="comment"></textarea>
+                                    <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" class="comment"></textarea>
                                 </div>
                             </div> 
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
                                 <div class="input-block">
-                                    <input type="text" placeholder="Background image">
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Background image">
                                 </div>
                                 <div class="input-block">
-                                    <input type="text" placeholder="Button text">
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Button text">
                                 </div>
                                 <div class="select-row">
                                     <div class="input-block half-width select">
-                                                        <span>Button color</span>
+                                                        <span v-on:click="dropdownToggle">Button color</span>
                                                         <div class="options">
                                                             <ul>
-                                                                <li>red</li>
-                                                                <li>black</li>
-                                                                <li>pink</li>
-                                                                <li>#f1f1f1</li>
+                                                                <li v-on:click="dropDownElementClicked">red</li>
+                                                                <li v-on:click="dropDownElementClicked">black</li>
+                                                                <li v-on:click="dropDownElementClicked">pink</li>
+                                                                <li v-on:click="dropDownElementClicked">#f1f1f1</li>
                                                             </ul>
                                                         </div>
                                     </div>
                                     <div class="input-block half-width select">
-                                                        <span>Button animation</span>
+                                                        <span v-on:click="dropdownToggle">Button animation</span>
                                                         <div class="options">
                                                             <ul>
-                                                                <li>fadein</li>
-                                                                <li>bounce</li>
-                                                                <li>slidein</li>
-                                                                <li>wobble</li>
+                                                                <li v-on:click="dropDownElementClicked">fadein</li>
+                                                                <li v-on:click="dropDownElementClicked">bounce</li>
+                                                                <li v-on:click="dropDownElementClicked">slidein</li>
+                                                                <li v-on:click="dropDownElementClicked">wobble</li>
                                                             </ul>
                                                         </div>
                                     </div>
@@ -98,7 +97,7 @@
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="slider-wrapper">
                                 <div class="slidecontainer">
-                                    <input type="range" min="1" max="100" value="1" class="styles slider" id="myRange" draggable="false">
+                                    <input v-on:click="sliderToggle" type="range" min="1" max="100" value="1" class="styles slider" id="myRange" draggable="false">
                                     <span>Manual styles mode</span>
                                 </div>
                             </div>
@@ -106,7 +105,7 @@
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="slider-wrapper">
                                 <div class="slidecontainer">
-                                    <input type="range" min="1" max="100" value="1" class="slider html" id="myRange" draggable="false">
+                                    <input v-on:click="sliderToggle" type="range" min="1" max="100" value="1" class="slider html" id="myRange" draggable="false">
                                     <span>Template HTML overwrite</span>
                                 </div>
                             </div>
@@ -192,7 +191,6 @@
                 </div>
             </div> 
 		</div>
-	</div>
 
 </template>
 
@@ -208,6 +206,42 @@ export default {
     return {
       msg: 'Dashboard yo'
     }
+  },
+  methods: {
+      dropdownToggle(e){
+          console.log('click')
+        //console.log($(e.target).parent());
+        if(!$(e.target).next().is(':visible')){
+            $(e.target).next().slideDown();
+        }
+        else{
+            $(e.target).next().slideUp();
+        }   
+      },
+        dropDownElementClicked(e){
+            $(e.target).parent().parent().prev().text($(e.target).text())
+            $(e.target).parent().parent().slideUp()
+        },
+        highLightParent(event){
+			event.target.parentNode.classList.remove('input-error');
+			event.target.parentNode.classList.add('highlighted');
+		},
+	    unHighLightParent(event){
+			event.target.parentNode.classList.remove('highlighted');
+        },
+        sliderToggle(event){
+            let slidertype = event.target.classList.contains('html') ? '' : 'manual-styles'
+            if(event.target.value > 50){
+                event.target.value = 1;
+                event.target.classList.remove('on')
+                $('.' + slidertype).slideUp()
+            }
+            else{
+                event.target.value = 100;
+                event.target.classList.add('on')
+                $('.' + slidertype).slideDown()
+            }
+        }
   }
 }
 </script>

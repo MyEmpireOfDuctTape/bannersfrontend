@@ -1,6 +1,6 @@
 <template>
-  <div class="sidebar col-lg-2">
-      <div class="close-sidebar">
+  <div class="sidebar col-lg-2 sidebar-hidden closed">
+      <div class="close-sidebar" v-on:click="toggleSidebar">
           <svg xmlns="http://www.w3.org/2000/svg" fill="#ededed" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 30" x="0px" y="0px"><path d="M17 21h-10c-2.209 0-4-1.791-4-4v-10c0-2.209 1.791-4 4-4h10c2.209 0 4 1.791 4 4v10c0 2.209-1.791 4-4 4zM19 7c0-1.105-0.895-2-2-2h-10c-1.105 0-2 0.895-2 2v10c0 1.105 0.895 2 2 2h10c1.105 0 2-0.895 2-2v-10zM14.008 8l4 4-4 4v-8zM9.992 8v8l-4-4z"/><text x="0" y="39" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Travis Avery</text><text x="0" y="44" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
       </div>    
 		<div class="name-block">
@@ -8,7 +8,7 @@
             <span class="name">Michael Spencer</span>
         </div>
         <div class="fake-dropdown">
-            <div class="selected">
+            <div class="selected" v-on:click="toggleDropdown">
                 <span>IDEA AD</span>
             </div>   
             <div class="the-rest">
@@ -122,8 +122,8 @@
                     <span>My account</span>
                 </a>
             </div>
-            <div class="menu-option">
-                 <router-link to="/login">
+            <div v-if="loggedIn" class="menu-option">
+                 <router-link to="/logout">
                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 512 640" x="0px" y="0px"><title>l3</title><path d="M153.51,424.21c-13.29-.74-26.66-0.27-40-0.34-17-.08-25.88-9-25.88-26.11q0-142,0-284.09c0-16.74,8.88-25.72,25.61-25.84,12.8-.09,25.61.3,38.4-0.16A43.67,43.67,0,0,0,194,43.16c-0.32-23.59-19.37-42.56-43.47-43-14.4-.24-28.8-0.28-43.2,0C57.08,1.37,13.7,36.81,2.66,85.57c-1,4.47-1.78,9-2.66,13.5V412.61c0.38,1.72.89,3.41,1.13,5.15,6.69,48.12,47.18,88.2,95.55,92.9,19,1.85,38.37,1.47,57.52.75,15.75-.59,27.33-9.55,34.76-23.22C203.91,460.68,184.72,425.95,153.51,424.21Z"/><path d="M363.14,96.62c-8.18-8.18-18.29-12.09-29.8-12.26a44.31,44.31,0,0,0-41,26.53,43.15,43.15,0,0,0,9.08,47.82c18.42,18.78,37,37.54,55.54,56.23,1.29,1.3,2.47,3.06,4.44,5.06h-9.57c-59,0-118.07-.24-177.1-0.11-29.39.06-50,25.71-43.51,53.82,4.56,19.73,22.8,33.47,44.33,33.49,59.57,0,119.13-.2,178.7-0.2h6.13a20.56,20.56,0,0,0,1.53,2.43c-1.7,1-3.71,1.69-5,3-17.67,17.53-35.41,35-52.79,52.84-17,17.38-16.84,44.16-.2,61,17.21,17.42,44.38,18.28,61.83,1Q433,360.69,499.58,293.43a42.47,42.47,0,0,0-.12-60.14Q431.55,164.71,363.14,96.62Z"/><text x="0" y="527" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by i cons</text><text x="0" y="532" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
                     <span>Log out</span>
                  </router-link>
@@ -139,7 +139,25 @@ export default {
     return {
       msg: 'Sidebar yo'
     }
-  }
+  },
+  computed: {
+      loggedIn(){
+          return this.$store.getters.loggedIn
+      }
+  },
+  methods : {
+      toggleSidebar: function(e){
+            document.querySelector('.sidebar').classList.toggle('closed');
+            document.querySelector('.main-view').classList.toggle('wider');
+      },
+      toggleDropdown: function(e){
+            document.querySelector('.selected').classList.toggle('open');
+            document.querySelector('.selected').nextElementSibling.classList.add('animated', 'fadeInUp')
+            setTimeout(function(){ 
+                document.querySelector('.selected').nextElementSibling.classList.remove('animated', 'fadeInUp')
+			}, 3000);
+      }
+    }
 }
 </script>
 

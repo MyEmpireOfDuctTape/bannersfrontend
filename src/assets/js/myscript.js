@@ -1,3 +1,5 @@
+//DEPRECATED
+
 function renderEditor () {
     if($('#editor').length > 0){
         var editor = ace.edit("editor");
@@ -393,10 +395,10 @@ $('#cssInputs .row.1 .trash').click(function(e){
 $( window ).resize(function() {
    let width = $(this).width();
    if(width < 992){
-        $('.sidebar').addClass('sidebar-hidden');
+        //$('.sidebar').addClass('sidebar-hidden');
    }
    else{
-        $('.sidebar').removeClass('sidebar-hidden');
+        //$('.sidebar').removeClass('sidebar-hidden');
 
    }
   });

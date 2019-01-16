@@ -159,7 +159,7 @@ $enable-gradients: true;
        button{
             display: block;
             margin: 1.5rem auto;
-            padding: 0.4em 2em;
+            padding: 1em 4em;
             transition: 1s;
             &.roundedd{
                 border-radius: 50px;
@@ -246,9 +246,8 @@ $enable-gradients: true;
         //display: none;
         position: absolute;
         z-index: 3000;
-        width: 100vw;
         .close-sidebar{
-            display: none;
+            //display: none;
         }
     }
     max-width: 15rem;
@@ -347,7 +346,7 @@ $enable-gradients: true;
             }
         }
         .the-rest{
-            display: none;
+            //display: none;
             position: absolute;
             background-color: white;
             width: 100%;
@@ -421,14 +420,17 @@ $enable-gradients: true;
 .fullpage{
     background-color: white;
     .main-view{
-        margin: 0 auto;
+        //width: 80rem;
+        margin-left: 5rem;
         padding: 2rem 1rem !important;
         background-color: $newbgcolor;
         float: right;
         height: 100vh;
         overflow: scroll;
         &.wider{
-            width: 90%;
+            /* width: 90%; */
+            /* width: 80rem;
+            margin-left: 5rem; */
         }
        
         .edit-form{
@@ -922,6 +924,16 @@ $enable-gradients: true;
                 padding: 1rem 2rem;
                 border-radius: 10px;
                 transition: 0.5s;
+                &.active{
+                    box-shadow: 0 0 10px 0 rgba(163,231,251,1);
+                    border-color: rgba(163,231,251,1);
+                    background: rgb(111,206,245);
+                    background: -moz-linear-gradient(90deg, rgba(111,206,245,1) 0%, rgba(163,231,251,1) 100%);
+                    background: -webkit-linear-gradient(90deg, rgba(111,206,245,1) 0%, rgba(163,231,251,1) 100%);
+                    background: linear-gradient(90deg, rgba(111,206,245,1) 0%, rgba(163,231,251,1) 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#6fcef5",endColorstr="#a3e7fb",GradientType=1);
+                    color: white; 
+                }
                 &:hover{
                     cursor: pointer;
                     box-shadow: 0 0 10px 0 rgba(163,231,251,1);
@@ -947,12 +959,21 @@ $enable-gradients: true;
             margin: 2rem auto;
             .left{
                 position: relative;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
                 button{
+                    width: 50%;
+                    margin: 1rem 1rem 0 0;
                     padding: 0.7rem 1rem 0.7rem 3rem;
                     background-position: 10% center;
                     background-repeat: no-repeat;
                     background-size: 20px;
                     font-size: 0.8em;
+
+                    &:last-child{
+                        margin-right: 0;
+                    }
                     &.roundedd{
                         border-radius: 50px;
                     }
@@ -1004,9 +1025,15 @@ $enable-gradients: true;
             }
 
             .right{
-
+                display: flex;
+                justify-content: flex-end;
+                align-items: flex-end;
                 text-align: right;
-                
+                @media(max-width: 772px){
+                    flex-direction: column;
+                    justify-content: center;
+                align-items: center;
+                }
 
             }
 
@@ -1431,10 +1458,19 @@ $enable-gradients: true;
     }
 }
   .input-block{
+    border: 2px solid #fafafb;
     background-color: #fafafb;
     margin: 1rem 0;
-    padding: 1rem; 
+    padding: 0.5rem 1rem; 
     border-radius: 7px;
+    
+    &.highlighted{
+        background-color: #e7e9ec;
+    }
+    &.input-error{
+        border: 2px solid red;
+        background-color: #ffe2e2;
+    }
     &.half-width{
         margin: 1rem auto 0 auto;
     }
@@ -1447,13 +1483,31 @@ $enable-gradients: true;
         margin: 0;
     }
     &.select{
+            width: 100%;
+            background-size: 20px;
+            background-image: url($dropdownthingray);
+            background-repeat: no-repeat;
+            background-position-x: 95%;
+            background-position-y: 50%;
+            &:hover{
+                cursor: pointer;
+                color: black;
+                background-image: url($dropdownthin);
+            }
+        .fake-label{
+            background-image: none;
+            &:hover{
+                background-image: none;
+                color: #81899a;
+            }
+        }
         &.half-width{
             flex: 2;
         }
         position: relative;
         span{
-            display: inline-block;
-            width: 100%;
+             display: inline-block; 
+            width: 100%;/*
             background-size: 20px;
             background-image: url($dropdownthingray);
             background-repeat: no-repeat;
@@ -1463,17 +1517,26 @@ $enable-gradients: true;
                 cursor: pointer;
                 color: black;
                 background-image: url($dropdownthin);
-            }
+            } */
         }    
         .options{
             background-color: #fafafb;
-            width: 100%;
-            padding: 0 1rem;
-            left: 0;
-            border-radius: 0 0 7px 7px;
+            border: 2px solid #fafafb;
+            border-bottom-color: white;
+            border-top-color: white;
+            width: calc(100% + 4px);
+            padding: 1rem;
+            left: -2px;
+            top: 4rem;
+            border-radius: 7px;
             position: absolute;
             display: none;
             z-index: 20;
+            max-height: 12rem;
+            overflow-y: scroll;
+            overflow-x: visible;
+            box-shadow: 0 3px 10px -1px #fafafb;
+
             ul{
                 
                 list-style-type: none;
@@ -1643,14 +1706,19 @@ button{
     background-repeat: no-repeat;
     background-size: 15px;
     background-position-y: 60%;
+    margin: 1rem 1rem 0 0 ;
+    
     &.open{
         border-radius: 20px 20px 0 0;
     }
     &.search{
-        min-width: 20rem;
+        width: 50%;
         padding: 0.7rem 0.7rem 0.7rem 3rem;
         background-image: url($search);
         background-position-x: 7%;
+        @media(max-width: 772px){
+            width: 100%;
+        }
         input{
             width: 100%;
             background-color: $properpaleblue;
@@ -1662,14 +1730,10 @@ button{
     }
     &.dropdown{
         
-       
+        min-width: 25%;
+        padding: 0.7rem 0rem 0.7rem 1.5rem;
         text-align: left;
-        
-        
-        span{
-            display: inline-block;
-            padding: 0.7rem 3rem 0.7rem 1.5rem;
-            background-size: 20px;
+        background-size: 20px;
             background-image: url($dropdownthingray);
             background-repeat: no-repeat;
             background-position-x: 85%;
@@ -1678,6 +1742,14 @@ button{
                 color: $gray;
                 cursor: pointer;
             }
+            @media(max-width: 772px){
+                width: 50%;
+            }
+        
+        span{
+            display: inline;
+            overflow: hidden;
+            
         }
        
         .hidden{
@@ -2069,3 +2141,139 @@ button{
 .slider:hover {
     opacity: 1; /* Fully shown on mouse-over */
 }
+
+
+input{
+    animation-duration: 3s;
+  animation-delay: 2s;
+  animation-iteration-count: 1;
+}
+
+.the-rest{
+    animation-duration: 1s;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+}
+
+#error{
+    margin: 0 auto;
+    color: red;
+}
+
+.edit-box{
+    text-align: left;
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    background-color: white;
+    border: 1px solid $gray-lighter;
+    border-radius: 7px;
+    min-width: 10rem;
+    &.visible{
+        display: block;
+    }
+    ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        li{
+            padding: 0.5rem 1rem;
+            a{
+                color: $textcolor;
+                svg{
+                    max-width: 20px;
+                    display: inline-block;
+                    margin-right: 1rem;
+                }
+                &:hover{
+                    text-decoration: none;
+                    color: black;
+                    svg{
+                        fill: black;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#success{
+    color: #4F8A10;
+    
+    border-radius: 3px;
+}
+
+.popup{
+    overflow: scroll;
+    max-height:80vh;
+    position: relative;
+    button[type="submit"]{
+        transition: 1s;
+        background-color: $bluebutton;
+        -webkit-box-shadow: 0 11px 10px -6px $blueshadow;
+        -moz-box-shadow: 0 11px 10px -6px $blueshadow;
+             box-shadow: 0 11px 10px -6px $blueshadow;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 50px;
+        text-align: center;
+        padding: 0.5rem 2rem;
+        display: block;
+        margin: 0 auto;
+        &:hover{
+            background-color: $darkerbluebutton;
+            -webkit-box-shadow: 0 11px 15px -6px $blueshadow;
+        -moz-box-shadow: 0 11px 15px -6px $blueshadow;
+             box-shadow: 0 11px 15px -6px $blueshadow;
+            cursor: pointer;
+        }
+        &:focus{
+            outline: none;
+        }
+    }
+}
+
+/* .popup-header{
+    position: fixed;
+    text-align: center;
+    width: 100%;
+} */
+
+.input-block{
+    
+    &.checkbox{
+        position: relative;
+        background-color: white;
+        border: none;
+        span{
+            left: 30px;
+            position: relative;
+        }
+        .check{
+            position: absolute;
+            top: 10px;
+            padding: 0;
+            background-repeat: no-repeat;
+            background-size: 15px;
+            border: 1px solid #ededed;
+            height: 20px;
+            width: 20px;
+            border-radius: 5px;
+            z-index: 1;
+            left: 10px;
+            background-position:center -80%;
+            &.selected{
+                background-image: url($checkbluu);
+           }
+           &:focus{
+               outline: none;
+           }
+        }
+        input{
+            display: none;
+        }
+    }
+}
+

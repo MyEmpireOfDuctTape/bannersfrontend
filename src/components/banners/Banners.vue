@@ -17,7 +17,7 @@
                                 <button class="blue roundedd save">Save</button>
                             </div>    
                 </div> 
-                <div class="banners main-view">
+                <div class="banners container-fluid main-view">
                     <h1>Banners</h1>
                     <div class="container-fluid">
                         <div class="header row">
@@ -88,7 +88,7 @@
                                     
                                
                         
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <router-link to="/banners/Folder Name 1">
@@ -117,7 +117,7 @@
                                 <span class="dimensions">20 banners</span>
                             </div>    
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <router-link to="/banners/Folder Name 2">
@@ -148,7 +148,7 @@
                             </div>    
                            
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <router-link to="/banners/Folder Name 3">
@@ -178,7 +178,7 @@
                             </div>    
                         </div>
                         
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
@@ -207,7 +207,7 @@
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
-                         <div class="col-lg-3">
+                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
@@ -236,7 +236,7 @@
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
-                         <div class="col-lg-3">
+                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
