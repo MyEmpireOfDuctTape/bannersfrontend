@@ -10,24 +10,29 @@
                         <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
                                 <div class="input-block">
-                                    <span class="fake-label">Template name</span>
-                                    <input type="text" placeholder="Skyscraper tempate">
+                                    <span class="fake-label" data-initial="Template name">Template name</span>
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" name="name" type="text" placeholder="Skyscraper tempate">
                                 </div>
                                 <div class="input-block">
-                                    <span class="fake-label">Description</span>
-                                    <textarea class="comment"></textarea>
+                                    <span class="fake-label" data-initial="Description">Description</span>
+                                    <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="description" name="description" class="comment"></textarea>
                                 </div>
                             </div>    
                         </div>
                         <div class="col-lg-6 col-md-12">
                             <div class="editor-wrapper">
-                                <pre id="editor">
+                                <span class="fake-label error" data-initial=""></span>
+                                <input type="hidden" name="html">
+                               <!--  <pre id="editor">
 &lt;!DOCTYPE html&gt;
-                                </pre>
+                                </pre> -->
+                                <editor id="editor" v-model="html" @init="editorInit" lang="html" theme="dreamweaver"></editor>
                             </div>    
                         </div>
                     </div>  
-                    <button class="blue save roundedd">Save</button>  
+                    <button @click="createTemplate" class="blue save roundedd">Save</button>  
+                    <span id="error"></span>
+                    <span id="success"></span>
                     <div class="header row">
                         <div class="col-lg-4 col-md-6">
                             <h1>Form Preview</h1>
@@ -142,15 +147,100 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import axios from 'axios'
+const Editor = require('vue2-ace-editor')
+
 export default {
   name: 'AddTemplate',
   components: {
-      Sidebar
+      Sidebar,
+      editor: Editor,
   },
   data () {
     return {
-      msg: 'Dashboard yo'
+      msg: 'AddTemplate',
+      name: '',
+      description: '',
+      html: '',
     }
+  },
+  created(){
+      if(this.$store.getters.getCurrentCompany == null){
+        this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0].id)
+      }
+  },
+  methods:{
+        highLightParent(event){
+			event.target.parentNode.classList.remove('input-error');
+            event.target.parentNode.classList.add('highlighted');
+            event.stopPropagation();
+		},
+		unHighLightParent(event){
+			event.target.parentNode.classList.remove('highlighted');
+        },
+        /* renderEditor(){
+            var editor = ace.edit("editor")
+            console.log(ace.config.get('themePath'))
+            console.log(ace.config)
+            console.log(editor)
+            editor.setTheme("ace/theme/github")
+            editor./* session getSession().setMode("ace/mode/html")
+        }, */
+         editorInit() {
+            require('brace/ext/language_tools') //language extension prerequsite...
+            require('brace/mode/html')                
+            require('brace/mode/javascript')    //language
+            require('brace/mode/less')
+            require('brace/theme/dreamweaver')
+            require('brace/snippets/javascript') //snippet
+        },
+       createTemplate(){
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                /* let timeout
+                clearTimeout(timeout) */
+                const response = axios.post('/templates', {
+                    name: this.name,
+                    description: this.description,
+                    html: this.html,
+                }).then(response => {
+                    console.log(response.data)
+					if(typeof response.data.messages != 'undefined'){
+                       document.getElementById('success').innerHTML = response.data.messages[0].message  
+                    }
+                }).catch(error => {
+                    console.log(error.response)
+                    if(error.response.status == 422){
+						if(typeof error.response.data.errors != 'undefined'){
+                            if(typeof error.response.data.message != 'undefined'){
+                                document.getElementById('error').innerHTML = error.response.data.message
+                            }
+							let errors = error.response.data.errors;
+							for (var key in errors) {
+								if (errors.hasOwnProperty(key)) {
+									console.log(key + " -> " + errors[key]);
+									document.querySelector('input[name="'+key+'"]').parentNode.classList.add('input-error', 'animated', 'shake' )
+									document.querySelector('input[name="'+key+'"]').parentNode.children[0].innerHTML = errors[key]
+								}
+							}
+                            setTimeout(function(){ 
+								document.querySelector('.input-block').classList.remove('input-error','animated', 'shake');
+                                document.querySelector('.editor-wrapper').classList.remove('input-error','animated', 'shake')
+                                for (var key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        document.querySelector('input[name="'+key+'"]').parentNode.classList.remove('input-error', 'animated', 'shake' )
+                                        document.querySelector('input[name="'+key+'"]').parentNode.children[0].innerHTML = document.querySelector('input[name="'+key+'"]').parentNode.children[0].dataset.initial
+                                    }
+                                }
+                                if(typeof error.response.data.message != 'undefined'){
+								    document.getElementById('error').innerHTML = ''
+						        }
+							}, 10000);
+						}
+					}
+                })
+			    
+        },
   },
 }
 

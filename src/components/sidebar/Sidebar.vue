@@ -4,20 +4,25 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="#ededed" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 30" x="0px" y="0px"><path d="M17 21h-10c-2.209 0-4-1.791-4-4v-10c0-2.209 1.791-4 4-4h10c2.209 0 4 1.791 4 4v10c0 2.209-1.791 4-4 4zM19 7c0-1.105-0.895-2-2-2h-10c-1.105 0-2 0.895-2 2v10c0 1.105 0.895 2 2 2h10c1.105 0 2-0.895 2-2v-10zM14.008 8l4 4-4 4v-8zM9.992 8v8l-4-4z"/><text x="0" y="39" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Travis Avery</text><text x="0" y="44" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
       </div>    
 		<div class="name-block">
-            <span class="round">MS</span>
-            <span class="name">Michael Spencer</span>
+            <span class="round">{{ user.firstName.substring(0,1) }}{{ user.lastName.substring(0,1) }}</span>
+            <span class="name">{{ user.firstName }} {{ user.lastName }}</span>
         </div>
         <div class="fake-dropdown">
             <div class="selected" v-on:click="toggleDropdown">
-                <span>IDEA AD</span>
+                <span>{{ currentCompany.name }}</span>
             </div>   
             <div class="the-rest">
                 <ul>
-                    <li>Company</li>
-                    <li>Company</li>
-                    <li>Company</li>
-                    <li>Company</li>
-                    <li>Company</li>
+                    <template v-if="otherCompanies.length > 0">
+                        <li v-for="company in otherCompanies" :data-id="company.id">
+                            {{ company.name }}
+                        </li>
+                    </template>
+                    <template v-else>
+                        <li>
+                            -
+                        </li>
+                    </template>
                 </ul>
             </div>
         </div>
@@ -137,13 +142,32 @@ export default {
   name: 'Sidebar',
   data () {
     return {
-      msg: 'Sidebar yo'
+      msg: 'Sidebar',
+      currentCompany: this.$store.getters.getCurrentCompany || null,
+      otherCompanies: this.$store.getters.getUser.companies ? this.$store.getters.getUser.companies.filter(company => company.id != this.$store.getters.getCurrentCompany.id) : null,
+      user: this.$store.getters.getUser || null,
     }
   },
   computed: {
       loggedIn(){
           return this.$store.getters.loggedIn
       }
+  },
+  created(){
+      console.log(this.currentCompany)
+      console.log(this.otherCompanies)
+      console.log(this.user)
+      if(this.currentCompany == null){
+            console.log('currentcompany is null')
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+            this.currentCompany = this.$store.getters.getCurrentCompany
+            this.otherCompanies = this.$store.getters.getUser.companies.filter(company => company.id != this.currentCompany.id)
+            this.user = this.$store.getters.getUser
+            console.log(this.currentCompany)
+            console.log(this.otherCompanies)
+            console.log(this.user)
+      }
+      
   },
   methods : {
       toggleSidebar: function(e){
@@ -152,10 +176,13 @@ export default {
       },
       toggleDropdown: function(e){
             document.querySelector('.selected').classList.toggle('open');
-            document.querySelector('.selected').nextElementSibling.classList.add('animated', 'fadeInUp')
-            setTimeout(function(){ 
+            document.querySelector('.selected').nextElementSibling.classList.toggle('open-list')
+            /* setTimeout(function(){ 
                 document.querySelector('.selected').nextElementSibling.classList.remove('animated', 'fadeInUp')
-			}, 3000);
+			}, 3000); */
+      },
+      selectCompany(){
+
       }
     }
 }

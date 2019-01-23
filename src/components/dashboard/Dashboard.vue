@@ -1,45 +1,25 @@
 <template>
-    <div class="fullpage container-fluid">
-        <div class="row">
 
+    <div class="fullpage container-fluid">
+         
+        <div class="row">
                 <sidebar></sidebar>
                <add-banner></add-banner>
-
+               
 		<div class="dashboard main-view container-fluid">
                 <div class="banners-by-company row" v-for="company in user.companies">
                    <template v-if="company.id === 1">
-                        <div class="banner-by-company active col-lg-3">
+                        <div class="banner-by-company active col-lg-3 col-md-6 col-sm-12">
                             <span class="allcaps">{{ company.name }}</span><br />
                             <span class="small">{{ company.bannersCount }} banners, {{ company.templatesCount }} templates</span>
                         </div>
                     </template>
                     <template v-else>
-                        <div class="banner-by-company active col-lg-3">
+                        <div class="banner-by-company active col-lg-3 col-md-6 col-sm-12">
                             <span class="allcaps">{{ company.name }}</span><br />
                             <span class="small">{{ company.bannersCount }} banners, {{ company.templatesCount }} templates</span>
                         </div>
                     </template>
-                    <!-- <div class="banner-by-company colorful col-lg-3">
-                        <span class="allcaps">{{ company.name }}</span><br />
-                        <span class="small">{{ company.bannersCount }} banners, {{ company.templatesCount }} templates</span>
-                    </div> -->
-
-                    
-                    <!-- <div class="banner-by-company colorful col-lg-3">
-                        <span class="allcaps">idea ad</span><br />
-                        <span class="small">230 banners, 0 templates</span>
-
-                    </div>
-                    <div class="banner-by-company col-lg-3">
-                        <span class="allcaps">idea ad</span><br />
-                        <span class="small">230 banners, 0 templates</span>
-
-                    </div>
-                    <div class="banner-by-company col-lg-3">
-                        <span class="allcaps">idea ad</span><br />
-                        <span class="small">230 banners, 0 templates</span>
-
-                    </div> -->
                 </div>
                 <div class="recent-banners">
                     <div class="header row">
@@ -47,7 +27,8 @@
                             <h1>My recent Banners ({{this.banners.count}})</h1>
                         </div>
                         <div class="right col-lg-4">
-                            <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
+                                <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
+                            
                             <router-link to="/banners"><button class="view blue roundedd">View all</button></router-link>
                          </div>   
                     </div>
@@ -228,6 +209,9 @@
 
 import Sidebar from '../sidebar/Sidebar'
 import AddBanner from '../modals/AddBanner'
+import axios from 'axios'
+import domfunctions from '@/mixins/domfunctions.js'
+
 
 
 export default {
@@ -239,7 +223,8 @@ export default {
   data () {
     return {
       user: this.$store.getters.getUser,
-      banners: this.$store.getters.getBanners,
+      banners:  null,//this.$store.getters.getBanners,
+      loading: true,
     }
   },
   computed: {
@@ -247,27 +232,42 @@ export default {
           return this.$store.getters.loggedIn
       }
   },
-  created: function(){
-        this.getBanners()
+     created(){
+         console.log('created')
+         this.asyncgetBannersDirect()
   },
-  beforeMount: function(){
-        console.log(this.$store.getters.getBanners)
-        console.log(this.$store.getters.getUser)
-
-  },
+  mixins: [domfunctions],
   methods: {
-        getBanners(){
-            this.$store.dispatch('retrieveBanners', {
-                bearer: this.$store.getters.getToken.accessToken,
-                company: 1
-            })
-            .then(response => {
+        async asyncgetBannersDirect(){
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = 1
+
+			//IF Logged in make Call
+			if(this.isloggedIn()){
+                const response = await axios.get('/banners')
                 console.log(response)
-            }).catch(error => {
-                console.log(error)
-            })
+                this.banners = response.data
+			}
         },
-        createBanner(){
+        getBanners(){
+            //return new Promise((resolve, reject) => {
+                this.$store.dispatch('retrieveBanners', {
+                    bearer: this.$store.getters.getToken.accessToken,
+                    company: 1
+                })
+                .then(response => {
+                    console.log(response)
+                    return response
+                  //  resolve(resolve)
+                }).catch(error => {
+                    console.log(error)
+                   // reject(reject)
+
+                })
+            //})
+        },
+        /* createBanner(){
 				this.$store.dispatch('createBanner', {
 					email: this.email,
 					password: this.password,
@@ -295,7 +295,7 @@ export default {
 									}
 					//	}
 				})
-			},
+			}, */
         checkBoxToggle(event){
                 event.target.parentNode.classList.toggle('selected');
                 event.target.classList.toggle('selected');
@@ -306,7 +306,10 @@ export default {
         showOverlay(){
                 document.querySelector('.overlay').classList.add('open', 'animated', 'slideInRight')
                 //document.querySelector('.overlay .popup').classList.add('animated', 'flipInY')
-        }
+        },
+        isloggedIn(){
+          return this.$store.getters.loggedIn
+      }
   },
 }
 </script>

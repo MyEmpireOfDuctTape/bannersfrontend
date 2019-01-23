@@ -11,10 +11,10 @@ export default new Vuex.Store({
     state: {
 		token: JSON.parse(VueCookie.get('accessToken')) || null,
 		user: JSON.parse(VueCookie.get('user')) || null,
-		banners: JSON.parse(VueCookie.get('banners')) || null,
-		folders: undefined,
+		currentCompany: null,
+/* 		folders: undefined,
 		templates: undefined,
-		sizes: undefined,
+		sizes: undefined, */
 	},
 	getters: {
 		loggedIn(state){
@@ -26,7 +26,10 @@ export default new Vuex.Store({
 		getUser(state){
 			return state.user
 		},
-		getBanners(state){
+		getCurrentCompany(state){
+			return state.currentCompany
+		},
+/* 		getBanners(state){
 			return state.banners
 		},
 		getFolders(state){
@@ -37,7 +40,7 @@ export default new Vuex.Store({
 		},
 		getSizes(state){
 			return state.sizes
-		}
+		} */
 	},
 	mutations: {
 		retrieveToken(state, token){
@@ -53,7 +56,10 @@ export default new Vuex.Store({
 		destroyToken(state){
 			state.token = null;
 		},
-		setFolders(state, folders){
+		setCurrentCompany(state, company){
+			state.currentCompany = company;
+		}
+/* 		setFolders(state, folders){
 			state.folders = folders
 		},
 		setTemplates(state, templates){
@@ -61,7 +67,7 @@ export default new Vuex.Store({
 		},
 		setSizes(state, sizes){
 			state.sizes = sizes
-		}
+		} */
 	},
     actions: {
         retrieveToken(context, credentials){
@@ -77,6 +83,8 @@ export default new Vuex.Store({
 					VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
 					context.commit('retrieveToken', response.data.token)
 					context.commit('retrieveUser', response.data.user)
+					context.commit('setCurrentCompany', response.data.user.companies[0])
+
 					resolve(response);
               })
               .catch(function (error) {
@@ -213,7 +221,7 @@ export default new Vuex.Store({
 				})
 			}
 		},
-		getFolders(context, credentials){
+/* 		getFolders(context, credentials){
 			// SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + credentials.bearer
 			axios.defaults.headers.common['Company'] = credentials.company
@@ -275,7 +283,7 @@ export default new Vuex.Store({
 					})
 				})
 			}
-		},
+		}, */
 	},
 	
 })

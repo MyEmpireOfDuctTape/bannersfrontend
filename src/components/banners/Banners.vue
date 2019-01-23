@@ -3,6 +3,8 @@
         <div class="row">
 
                 <sidebar></sidebar>
+                <add-banner></add-banner>
+                <add-folder></add-folder>
                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
@@ -22,8 +24,8 @@
                     <div class="container-fluid">
                         <div class="header row">
                             <div class="left col-lg-5 col-md-4">
-                                <button class="blue create-folder roundedd">Create folder</button>
-                                <button class="blue create roundedd">Create Banner</button>
+                                <button v-on:click="showFolderOverlay" class="blue create-folder roundedd">Create folder</button>
+                                <button v-on:click="showBannerOverlay" class="blue create roundedd">Create Banner</button>
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
@@ -278,15 +280,39 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import AddBanner from '../modals/AddBanner'
+import AddFolder from '../modals/AddFolder'
+
+import domfunctions from '@/mixins/domfunctions.js'
+
+
 export default {
   name: 'Banners',
   components: {
-      Sidebar
+      Sidebar, 
+      AddBanner,
+      AddFolder,
   },
   data () {
     return {
       msg: 'Dashboard yo'
     }
+  },
+    mixins: [domfunctions],
+  methods: {
+        showBannerOverlay(){
+            document.querySelector('.overlay.add-banner').classList.add('open', 'animated', 'slideInLeft')
+            setTimeout(function(){
+                    document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
+            }, 2000)
+        },
+        showFolderOverlay(){
+            console.log(document.querySelector('.overlay.add-folder'))
+            document.querySelector('.overlay.add-folder').classList.add('open', 'animated', 'slideInLeft')
+            setTimeout(function(){
+                    document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
+            }, 2000)
+        }, 
   }
 }
 </script>
