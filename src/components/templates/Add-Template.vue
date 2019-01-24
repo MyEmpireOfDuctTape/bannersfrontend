@@ -161,7 +161,7 @@ export default {
       msg: 'AddTemplate',
       name: '',
       description: '',
-      html: '',
+      html: '<!DOCTYPE html>',
     }
   },
   created(){

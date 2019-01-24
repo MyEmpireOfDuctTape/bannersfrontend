@@ -46,7 +46,7 @@
             </div>
             <input type="hidden" name="sizeId" v-model="sizeid">
         </div>
-        <div class="input-block checkbox">
+        <!-- <div class="input-block checkbox">
             <span class="fake-button check" v-on:click="checkBoxToggleStyles"></span>
             <input type="checkbox" name="manualStylesEnabled" v-model="manualStylesEnabled" class="">
             <span class="fake-label">Manual styles</span>
@@ -55,7 +55,7 @@
             <span class="fake-button check" v-on:click="checkBoxToggleTemplate"></span>
             <input type="checkbox" name="templateOverwriteEnabled" v-model="templateOverwriteEnabled" class="">
             <span class="fake-label">Template overwrite</span>
-        </div>
+        </div> -->
         <span id="error"></span>
         <button type="submit">Create Banner</button>
         </form>
@@ -222,10 +222,13 @@ export default {
                 console.log(data)
                 console.table(data)
                 axios.post('/banners', data)
-                .then(function (response) {
+                .then(response => {
                         console.log(response)
+                        if(response.status == 200){
+							this.$router.push({ path: `banners/edit-banner/`+response.data.banner.id });
+                        }
                 })
-                .catch(function (error) {
+                .catch(error => {
                         console.log(error.response);
                         if(typeof error.response.data.message != 'undefined'){
                             document.getElementById('error').innerHTML = error.response.data.message

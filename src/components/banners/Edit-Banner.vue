@@ -7,39 +7,30 @@
                         <div class="col-lg-9 col-sm-12">
                             <span class="before">Edit Banner </span>
                             <svg class="subset" version="1.1" id="Layer_1" fill="#acb2bc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <path id="Shape" d="M369.1,518.3L194.2,343.5c-8.5-8.5-12.8-19.7-12.8-30.9s4.3-22.4,12.8-30.9c17.1-17.1,44.8-17.1,61.8,0 L400,425.6l143.9-143.9c17.1-17.1,44.8-17.1,61.8,0c17.1,17.1,17.1,44.7,0,61.8L430.9,518.3C413.8,535.4,386.2,535.4,369.1,518.3z" /> </svg>
-                            <span class="after">{{ $route.params.bannerid }}</span>
+                            <span class="after">{{ banner.name }}</span>
                         </div>
                         <div class="col-lg-3 col-sm-12 right">
-                            <button class="right roundedd blue duplicate">Copy Banner</button>
+                            <button @click="showFieldValues" class="right roundedd blue duplicate">Copy Banner</button>
                         </div>
                     </div> 
                     <div class="row contentrow">
                         <div class="col-lg-9">
                             <div class="big-dd">
-                                <span v-on:click="dropdownToggle"> Template </span>
+                                <span v-on:click="dropdownToggle"> {{ banner.template.name }} </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li v-on:click="dropDownElementClicked">Template 1</li>
-                                        <li v-on:click="dropDownElementClicked">Template 2</li>
-                                        <li v-on:click="dropDownElementClicked">Template 3</li>
-                                        <li v-on:click="dropDownElementClicked">Template 4</li>
-                                        <li v-on:click="dropDownElementClicked">Template 5</li>
-                                        <li v-on:click="dropDownElementClicked">Template 6</li>
+                                        <li v-for="template in templates" v-bind:key="template.id" v-on:click="dropDownElementClicked">{{template.name}}</li>
                                     </ul>
                                 </div>   
                             </div>    
                         </div>
                         <div class="col-lg-3">
                             <div class="big-dd">
-                                <span v-on:click="dropdownToggle"> Size </span>
+                                <span v-on:click="dropdownToggle"> {{banner.size.width}}x{{banner.size.height}} </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li v-on:click="dropDownElementClicked">Size 1</li>
-                                        <li v-on:click="dropDownElementClicked">Size 2</li>
-                                        <li v-on:click="dropDownElementClicked">Size 3</li>
-                                        <li v-on:click="dropDownElementClicked">Size 4</li>
-                                        <li v-on:click="dropDownElementClicked">Size 5</li>
-                                        <li v-on:click="dropDownElementClicked">Size 6</li>
+                                        <li v-for="size in sizes" v-bind:key="size.id" v-on:click="dropDownElementClicked">{{size.width}}x{{size.height}}</li>
+                                       
                                     </ul>
                                 </div>   
                             </div>    
@@ -52,23 +43,24 @@
                             <div class="form-wrapper">
                                 <div class="input-block">
                                     <span class="fake-label">Banner name</span>
-                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Skyscraper tempate">
+                                    <input v-model="name" name="name" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Banner name">
                                 </div>
                                 <div class="input-block">
                                     <span class="fake-label">Banner Description</span>
-                                    <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" class="comment"></textarea>
+                                    <textarea v-model="description" name="description" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" class="comment"></textarea>
                                 </div>
                             </div> 
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
-                                <div class="input-block">
-                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Background image">
+                                <div v-for="(field, key) in banner.fieldValues" v-bind:key="key" class="input-block">
+                                     <span class="fake-label">{{ key }}</span>
+                                    <input v-model="fieldValues[key]" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Background image">
                                 </div>
-                                <div class="input-block">
+                                <!-- <div class="input-block">
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Button text">
-                                </div>
-                                <div class="select-row">
+                                </div> -->
+                                <!-- <div class="select-row">
                                     <div class="input-block half-width select">
                                                         <span v-on:click="dropdownToggle">Button color</span>
                                                         <div class="options">
@@ -91,7 +83,7 @@
                                                             </ul>
                                                         </div>
                                     </div>
-                                </div>    
+                                </div>   -->  
                             </div> 
                         </div> 
                         <div class="col-lg-6 col-md-12 nopad">
@@ -124,50 +116,41 @@
                         <div class="col-12">
                             <div class="row nomarg manual">
                                 <div class="container-fluid" id="cssInputs" data-numberofrows="1">
-                                    <div class="row 1">
+                                    <div v-for="(style, key) in customStyles" class="row 1">
                                         <div class="col-lg-4 col-md-12">
                                             <div class="input-block select">
-                                                    <span>Element</span>
+                                                    <span>{{style.element.name}}</span>
                                                     <div class="options">
                                                         <ul>
-                                                            <li>div</li>
-                                                            <li>span</li>
-                                                            <li>#element</li>
-                                                            <li>.class</li>
+                                                            <li v-for="value in style.element.values">{{ value }}</li>
                                                         </ul>
                                                     </div>
                                             </div>
                                         </div>  
                                         <div class="col-lg-4 col-md-12">
                                             <div class="input-block select">
-                                                    <span>Rule</span>
+                                                    <span>{{style.rule.name}}</span>
                                                     <div class="options">
                                                         <ul>
-                                                            <li>top</li>
-                                                            <li>margin</li>
-                                                            <li>left</li>
-                                                            <li>right</li>
-                                                            <li>bottom</li>
+                                                            <li v-for="value in style.rule.values">{{value}}</li>
                                                         </ul>
                                                     </div>
                                             </div>
                                         </div> 
                                         <div class="col-lg-4 col-md-12">
-                                        <div class="input-block">
-                                            <input type="text" placeholder="Value">
+                                            <div class="input-block">
+                                                <input v-model="customStyles[key].value" type="text" placeholder="Value">
                                             </div>
                                             <svg class="trash" version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
                                         </div> 
-                                    </div><!-- row -->   
-                                </div>  <!-- container-fluid -->   
+                                    </div>  <!-- row end --> 
+                                    </div>   <!-- container fluid cssinputs end -->  
                                 <div class="col-12">
                                     <button class="create blue roundedd"> Add style</button>
                                 </div>    
                                 <div class="col-12">
                                     <div class="editor-wrapper">
-                                <pre id="editor">
-&lt;!DOCTYPE html&gt;
-                                </pre>
+                                <editor id="editor" v-model="customhtml" @init="editorInit" lang="html" theme="dreamweaver"></editor>
                             </div>   
                                 </div>    
                             </div>
@@ -197,17 +180,113 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import axios from 'axios'
+const Editor = require('vue2-ace-editor')
+
 export default {
   name: 'EditBanner',
   components: {
-      Sidebar
+      Sidebar,
+      editor: Editor,
   },
   data () {
     return {
-      msg: 'Dashboard yo'
+      msg: 'Edit banner',
+      banner: null,
+      templates: null,
+      sizes: null,
+      name: null,
+      description: null,
+      fieldValues: null,
+      customhtml: '<!DOCTYPE html>',
+      customStyles:  // TODO  make domhandling functions for adding and deleting rows.
+        [
+                {
+                    element: 
+                        {
+                            name: 'Element',
+                            values: ['div', 'span', '#element', '.class']
+                        },
+                    rule: 
+                        {
+                            name: 'Rule',
+                            values: ['top', 'margin', 'left', 'right']   
+                        },
+                    value: 'Value',
+                },
+                 {
+                    element: 
+                        {
+                            name: 'Element',
+                            values: ['div', 'span', '#element', '.class']
+                        },
+                    rule: 
+                        {
+                            name: 'Rule',
+                            values: ['top', 'margin', 'left', 'right']   
+                        },
+                    value: 'Value',
+                },
+                 {
+                    element: 
+                        {
+                            name: 'Element',
+                            values: ['div', 'span', '#element', '.class']
+                        },
+                    rule: 
+                        {
+                            name: 'Rule',
+                            values: ['top', 'margin', 'left', 'right']   
+                        },
+                    value: 'Value',
+                }
+        ], 
     }
   },
+  created(){
+        if(this.$store.getters.getCurrentCompany == null){
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+        }
+        this.getBanner()
+        this.getTemplates()
+        this.getSizes()
+
+  },
   methods: {
+      editorInit() {
+            require('brace/ext/language_tools') //language extension prerequsite...
+            require('brace/mode/html')                
+            require('brace/mode/javascript')    //language
+            require('brace/mode/less')
+            require('brace/theme/dreamweaver')
+            require('brace/snippets/javascript') //snippet
+        },
+      async getBanner(){
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/banners/'+this.$route.params.bannerid)
+                console.log(response.data)   
+                this.banner = response.data.banner
+                this.name = response.data.banner.name
+                this.description = response.data.banner.description
+                this.fieldValues = response.data.banner.fieldValues
+      },
+      async getTemplates(){
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/templates')
+                console.log(response.data)
+                this.templates = response.data.templates
+			    
+            },
+      async getSizes(){
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/sizes')
+                console.log(response.data)
+                this.sizes = response.data
+			    
+            },      
       dropdownToggle(e){
           console.log('click')
         //console.log($(e.target).parent());
@@ -241,7 +320,11 @@ export default {
                 event.target.classList.add('on')
                 $('.' + slidertype).slideDown()
             }
-        }
+        },
+        showFieldValues(){
+            console.log(this.fieldValues)
+            console.log(this.banner)
+        },
   }
 }
 </script>
