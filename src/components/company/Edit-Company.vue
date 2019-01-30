@@ -7,32 +7,32 @@
                         <div class="col-lg-5 col-md-12 edit-form">
                             <h1>Edit Company</h1>
                             <div class="company-form">
-                                <div class="input-block">
-                                    <span class="fake-label">Name</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">Name</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" name="name" type="text">
                                 </div>
-                                <div class="input-block">
-                                    <span class="fake-label">Registration code</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">Registration code</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="registrationCode" name="registrationCode" type="text">
                                 </div>
-                                <div class="input-block">
-                                    <span class="fake-label">VAT Code</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">VAT Code</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="vat_number" name="vat_number" type="text">
                                 </div>
-                                <div class="input-block">
-                                    <span class="fake-label">Country</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">Country</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="country" name="country" type="text">
                                 </div>
-                                <div class="input-block">
-                                    <span class="fake-label">City</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">City</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="city" name="city" type="text" >
                                 </div>
-                                <div class="input-block">
-                                    <span class="fake-label">Street Address</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">Street Address</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="address" name="address" type="text" >
                                 </div>
-                                <div class="input-block">
-                                    <span class="fake-label">Email</span>
+                                <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">Email</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="text">
                                 </div>
                             </div>  

@@ -41,11 +41,11 @@
                         <div class="row nomarg">
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
-                                <div class="input-block">
+                                <div class="input-block focused">
                                     <span v-on:click="focusInput" class="fake-label">Banner name</span>
                                     <input v-model="name" name="name" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent"  v-on:change="changed" type="text">
                                 </div>
-                                <div class="input-block">
+                                <div class="input-block focused">
                                     <span v-on:click="focusInput" class="fake-label">Banner Description</span>
                                     <textarea v-model="description" name="description" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent"  v-on:change="changed" class="comment"></textarea>
                                 </div>
@@ -53,7 +53,7 @@
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
-                                <div v-for="(field, key) in banner.fieldValues" v-bind:key="key" class="input-block">
+                                <div v-for="(field, key) in banner.fieldValues" v-bind:key="key" class="input-block focused">
                                      <span v-on:click="focusInput" class="fake-label">{{ key }}</span>
                                     <input v-model="fieldValues[key]" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" type="text">
                                 </div>

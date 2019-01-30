@@ -10,11 +10,11 @@
                         <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
                                 <div class="input-block">
-                                    <span class="fake-label" data-initial="Template name">Template name</span>
-                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" name="name" type="text" placeholder="Skyscraper tempate">
+                                    <span v-on:click="focusInput" class="fake-label" data-initial="Template name">Template name</span>
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" name="name" type="text">
                                 </div>
                                 <div class="input-block">
-                                    <span class="fake-label" data-initial="Description">Description</span>
+                                    <span v-on:click="focusInput" class="fake-label" data-initial="Description">Description</span>
                                     <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="description" name="description" class="comment"></textarea>
                                 </div>
                             </div>    
