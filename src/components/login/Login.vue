@@ -70,11 +70,11 @@ export default {
 											for (var key in errors) {
 													if (errors.hasOwnProperty(key)) {
 															console.log(key + " -> " + errors[key]);
-															$('.logInForm input[name="'+key+'"]').parent().addClass('input-error animated shake');
+															document.querySelector('.logInForm input[name="'+key+'"]').parentNode.classList.add('input-error', 'animated', 'shake');
 													}
 											}
 											setTimeout(function(){ 
-												$('.logInForm .input-block').removeClass('animated shake');
+													document.querySelector('.logInForm .input-block').classList.remove('animated', 'shake');
 											}, 3000);
 									}
 									if(typeof error.response.data.message != 'undefined'){
