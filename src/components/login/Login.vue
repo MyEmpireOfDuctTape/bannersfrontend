@@ -5,17 +5,22 @@
 			<div class="col-lg-8 offset-lg-2 col-md-12">
 
     <h1> {{ msg }} </h1>
-    <div class="block">
+    <div class="block logInForm">
+			<form class="auth-form" @submit.prevent="login">
         <div class="input-block">
-          <span class="fake-label">Email</span>
-          <input type="email" placeholder="john.doe@bannermaster.ee">
+          <span v-on:click="focusInput" class="fake-label">Email</span>
+          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" v-model="email" type="email" name="email" placeholder="john.doe@bannermaster.ee">
         </div>
         <div class="input-block">
-          <span class="fake-label">Password</span>
-          <input type="password" placeholder="Supersecret">
+          <span v-on:click="focusInput" class="fake-label">Password</span>
+          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" v-model="password" type="password"  name="password" id="loginPassword" placeholder="Supersecret">
         </div>
         <button class="blue roundedd">Log in</button>
+			</form>
+      <span id="error"></span>
+
         <router-link to="/reminder">Forgot your password?</router-link>
+
     </div>
       <span> If you need help contact <a href="mailto:help@mail.com">help@mail.com</a> </span>
 			</div>
@@ -25,83 +30,60 @@
   </div>
 </template>
 
-<!--<template>
-  <div id="app">
-	  <div class="container">
-	  	<div style="margin-top: 2rem; padding-bottom: 1rem;"><h1>Make Bootstrap Sexy Again</h1></div>
-		<!-- Alerts -->
-		<!--<h2>Alerts</h2>
-		<div style="padding: 1rem;">
-			<div v-for="brand in ['success', 'info', 'warning', 'danger']" class="alert" :class="'alert-' + brand">
-	  		  <strong>Well done!</strong> You successfully read this {{brand}} alert message.
-	  	    </div>
-		</div>
-		<h2>Breadcrumb</h2>
-		<div style="padding: 1rem;">
-			<ol class="breadcrumb">
-			  <li class="breadcrumb-item"><a href="#">Home</a></li>
-			  <li class="breadcrumb-item"><a href="#">Library</a></li>
-			  <li class="breadcrumb-item active">Data</li>
-			</ol>
-		</div>
-		<!-- Buttons-->
-		<!--<h2>Buttons</h2>
-		<div style="padding: 1rem;">
-			  <div v-for="type in ['', 'outline']" :key="type">
-				  <span v-for="brand in ['primary', 'secondary', 'success', 'info', 'warning', 'danger']" :key="brand">
-					  <button role="button" class="btn" :class="'btn-' + (type.length ? (type + '-') : '') + brand" style="margin-bottom: 1rem; margin-right: 1rem;">
-						  {{brand}} {{type}}
-					  </button>
-				  </span>
-			  </div>
-		</div>
-		<!-- Progress-->
-		<!--<h2>Progress</h2>
-		<div style="padding: 1rem;">
-		  <div v-for="brand in ['success', 'info', 'warning', 'danger']" :key="brand" class="progress" style='margin-bottom: 1rem;'>
-			  <div class="progress-bar" :class="'bg-' + brand" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-		  </div>
-		</div>
-		<!-- Notice-->
-		<!--<h2>Modal</h2>
-		<div style="padding: 1rem;">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title">Modal title</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-		      <div class="modal-body">
-		        <p>Modal body text goes here.</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-primary">Save changes</button>
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-		<!-- Spacing utilities-->
-		<!--<h2>Spacing utilities</h2>
-		<div style="padding: 1rem;">
-		  <div v-for="brand in ['success', 'info', 'warning', 'danger']" :key="brand" class="progress" style='margin-bottom: 1rem;'>
-			  <div class="progress-bar" :class="'bg-' + brand" style="width: 55%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-		  </div>
-		</div>
-	  </div>
-  </div>
-</template>-->
-
 <script>
+import domfunctions from '@/mixins/domfunctions.js'
+
 export default {
-  name: 'Login',
+	name: 'Login',
   data () {
     return {
-      msg: 'Authenticate'
+			msg: 'Authenticate',
+			email: '',
+      password: '',
+      submitted: false
     }
-  }
+	},
+	mounted(){
+		this.clickFirstInput()
+	},
+	mixins: [domfunctions],	
+  methods: {
+			clickFirstInput(){
+				document.document.querySelector('input')[0].focus()
+			},
+			changed(){
+				this.checkIfAutofilled()
+			},
+			login(){
+				this.$store.dispatch('retrieveToken', {
+					email: this.email,
+					password: this.password,
+				}).then(response => {
+					console.log(response)
+					this.$router.push({ path: `/dashboard` });
+				}).catch(error => {
+					console.log(error.response);
+					//if(error.response.status == 422){
+									// error logging in
+									if(typeof error.response.data.errors != 'undefined'){
+										let errors = error.response.data.errors;
+											for (var key in errors) {
+													if (errors.hasOwnProperty(key)) {
+															console.log(key + " -> " + errors[key]);
+															$('.logInForm input[name="'+key+'"]').parent().addClass('input-error animated shake');
+													}
+											}
+											setTimeout(function(){ 
+												$('.logInForm .input-block').removeClass('animated shake');
+											}, 3000);
+									}
+									if(typeof error.response.data.message != 'undefined'){
+										document.getElementById('error').innerHTML = error.response.data.message;
+									}
+					//	}
+				})
+			},
+    }
 }
 </script>
 

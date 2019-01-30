@@ -11,7 +11,6 @@ export default {
   components: {
       Sidebar,
   },
-
 }
 </script>
 
@@ -20,5 +19,9 @@ export default {
 @import './assets/scss/style.scss';
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
+<style lang="css">
+@import './assets/css/animate.css';
+</style>
+
 
 

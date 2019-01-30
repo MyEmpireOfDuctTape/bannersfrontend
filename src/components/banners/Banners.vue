@@ -3,6 +3,8 @@
         <div class="row">
 
                 <sidebar></sidebar>
+                <add-banner></add-banner>
+                <add-folder></add-folder>
                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
@@ -17,13 +19,13 @@
                                 <button class="blue roundedd save">Save</button>
                             </div>    
                 </div> 
-                <div class="banners main-view">
+                <div class="banners container-fluid main-view">
                     <h1>Banners</h1>
                     <div class="container-fluid">
                         <div class="header row">
                             <div class="left col-lg-5 col-md-4">
-                                <button class="blue create-folder roundedd">Create folder</button>
-                                <button class="blue create roundedd">Create Banner</button>
+                                <button v-on:click="showFolderOverlay" class="blue create-folder roundedd">Create folder</button>
+                                <button v-on:click="showBannerOverlay" class="blue create roundedd">Create Banner</button>
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
@@ -88,7 +90,7 @@
                                     
                                
                         
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <router-link to="/banners/Folder Name 1">
@@ -117,7 +119,7 @@
                                 <span class="dimensions">20 banners</span>
                             </div>    
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <router-link to="/banners/Folder Name 2">
@@ -148,7 +150,7 @@
                             </div>    
                            
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <router-link to="/banners/Folder Name 3">
@@ -178,7 +180,7 @@
                             </div>    
                         </div>
                         
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
@@ -207,7 +209,7 @@
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
-                         <div class="col-lg-3">
+                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
@@ -236,7 +238,7 @@
                                 <span class="dimensions">300x300</span>
                             </div>    
                         </div>
-                         <div class="col-lg-3">
+                         <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
@@ -278,15 +280,56 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import AddBanner from '../modals/AddBanner'
+import AddFolder from '../modals/AddFolder'
+
+import domfunctions from '@/mixins/domfunctions.js'
+import axios from 'axios'
+
+
 export default {
   name: 'Banners',
   components: {
-      Sidebar
+      Sidebar, 
+      AddBanner,
+      AddFolder,
   },
   data () {
     return {
-      msg: 'Dashboard yo'
+      msg: 'Banners yo',
+      banners: null,
     }
+  },
+  created(){
+      if(this.$store.getters.getCurrentCompany == null){
+        this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+      }
+      this.asyncgetBannersDirect()
+  },
+mixins: [domfunctions],
+  methods: {
+        async asyncgetBannersDirect(){
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/banners')
+                console.log(response)
+                this.banners = response.data
+			
+        },
+        showBannerOverlay(){
+            document.querySelector('.overlay.add-banner').classList.add('open', 'animated', 'slideInLeft')
+            setTimeout(function(){
+                    document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
+            }, 2000)
+        },
+        showFolderOverlay(){
+            console.log(document.querySelector('.overlay.add-folder'))
+            document.querySelector('.overlay.add-folder').classList.add('open', 'animated', 'slideInLeft')
+            setTimeout(function(){
+                    document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
+            }, 2000)
+        }, 
   }
 }
 </script>
