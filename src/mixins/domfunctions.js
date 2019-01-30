@@ -1,4 +1,5 @@
-import jQuery from 'jquery'
+import $ from 'jquery'
+var jQuery = require("jquery")
 export default {
     data(){
         return{
