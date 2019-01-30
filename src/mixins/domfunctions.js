@@ -38,13 +38,13 @@ export default {
             event.target.nextElementSibling.focus();
         },
         checkIfAutofilled(){
-                let inputs = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
+                let inputs = document.querySelectorAll('.input-block')//('input[type="text"], input[type="password"], input[type="email"]');
                 console.log(inputs)
                 for(let key = 0; key < inputs.length; key++){
-                    console.log(inputs[key].value.length)
-                    console.log(inputs[key].value)
-                    if(inputs[key].value.length > 0 ){
-                        inputs[key].focus()
+                    /* console.log(inputs[key].value.length)
+                    console.log(inputs[key].value) */
+                    if(inputs[key].children[1].value.length > 0 ){
+                        inputs[key].classList.add('focused')//children[1].focus()
                     }
                 } 
         },
@@ -78,16 +78,19 @@ export default {
             }
         },
         dropdownToggle(e){
-            $(e.target).parent().toggleClass('open')
-            $(e.target).removeClass('input-error')
-            $(e.target).parent().removeClass('input-error')
-            if(!$(e.target).next().is(':visible')){
-               $(e.target).next().slideDown();
+            jQuery(e.target).parent().toggleClass('open')
+            jQuery(e.target).removeClass('input-error')
+            jQuery(e.target).parent().removeClass('input-error')
+            if(!jQuery(e.target).next().is(':visible')){
+               jQuery(e.target).next().slideDown();
            }
            else{
-               $(e.target).next().slideUp();
+               jQuery(e.target).next().slideUp();
            }    
 
        },
+       changed(){
+        this.checkIfAutofilled()
+        },
     }
 }

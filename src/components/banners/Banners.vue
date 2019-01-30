@@ -180,9 +180,9 @@
                             </div>    
                         </div>
                         
-                        <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div v-for="(banner, key) in banners" class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
-                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
+                                <router-link :to="{ path: '/banners/edit-banner/' + banner.id }">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
                                         <button class="check"></button>
@@ -205,11 +205,11 @@
                                     </div>   
                                 </div>   
                                 </router-link>  
-                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">Telia skyscraper campaginr name long</span></router-link>
-                                <span class="dimensions">300x300</span>
+                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">{{ banner.name }}</span></router-link>
+                                <span class="dimensions">{{banner.size.width}}x{{banner.size.height}}</span>
                             </div>    
                         </div>
-                         <div class="col-lg-3 col-md-6 col-sm-12">
+                         <!-- <div class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
                                 <div class="square">
@@ -266,7 +266,7 @@
                                 <router-link to="banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">Telia skyscraper campaginr name long</span></router-link>
                                 <span class="dimensions">300x300</span>
                             </div>    
-                        </div>
+                        </div> -->
 
                                 </div> 
                                 </div> 
@@ -314,7 +314,7 @@ mixins: [domfunctions],
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/banners')
                 console.log(response)
-                this.banners = response.data
+                this.banners = response.data.banners
 			
         },
         showBannerOverlay(){

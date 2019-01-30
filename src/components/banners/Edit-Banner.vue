@@ -42,20 +42,20 @@
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
                                 <div class="input-block">
-                                    <span class="fake-label">Banner name</span>
-                                    <input v-model="name" name="name" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Banner name">
+                                    <span v-on:click="focusInput" class="fake-label">Banner name</span>
+                                    <input v-model="name" name="name" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent"  v-on:change="changed" type="text">
                                 </div>
                                 <div class="input-block">
-                                    <span class="fake-label">Banner Description</span>
-                                    <textarea v-model="description" name="description" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" class="comment"></textarea>
+                                    <span v-on:click="focusInput" class="fake-label">Banner Description</span>
+                                    <textarea v-model="description" name="description" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent"  v-on:change="changed" class="comment"></textarea>
                                 </div>
                             </div> 
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
                                 <div v-for="(field, key) in banner.fieldValues" v-bind:key="key" class="input-block">
-                                     <span class="fake-label">{{ key }}</span>
-                                    <input v-model="fieldValues[key]" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Background image">
+                                     <span v-on:click="focusInput" class="fake-label">{{ key }}</span>
+                                    <input v-model="fieldValues[key]" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" type="text">
                                 </div>
                                 <!-- <div class="input-block">
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Button text">
@@ -119,7 +119,7 @@
                                     <div v-for="(style, key) in customStyles" class="row key">
                                         <div class="col-lg-4 col-md-12">
                                             <div class="input-block select">
-                                                    <span class="fake-label">{{ style.element.name }}</span>
+                                                    <span v-on:click="focusInput" class="fake-label">{{ style.element.name }}</span>
                                                     <span>{{style.element.name}}</span>
                                                     <div class="options">
                                                         <ul>
@@ -130,7 +130,7 @@
                                         </div>  
                                         <div class="col-lg-4 col-md-12">
                                             <div class="input-block select">
-                                                    <span class="fake-label">{{ style.rule.name }}</span>
+                                                    <span v-on:click="focusInput" class="fake-label">{{ style.rule.name }}</span>
                                                     <span>{{style.rule.name}}</span>
                                                     <div class="options">
                                                         <ul>
@@ -141,9 +141,9 @@
                                         </div> 
                                         <div class="col-lg-4 col-md-12">
                                             <div class="input-block">
-                                                    <span class="fake-label">{{ customStyles[key].value }}</span>
+                                                    <span v-on:click="focusInput" class="fake-label">{{ customStyles[key].value }}</span>
 
-                                                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="customStyles[key].value" type="text" placeholder="Value">
+                                                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="customStyles[key].value" type="text" >
                                             </div>
                                             <svg @click="removeStyleRow(key)" class="trash" version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
                                         </div> 
@@ -186,6 +186,7 @@
 import Sidebar from '../sidebar/Sidebar'
 import axios from 'axios'
 const Editor = require('vue2-ace-editor')
+import domfunctions from '@/mixins/domfunctions.js'
 
 export default {
   name: 'EditBanner',
@@ -221,6 +222,7 @@ export default {
         ], 
     }
   },
+  mixins: [domfunctions],
   created(){
         if(this.$store.getters.getCurrentCompany == null){
             this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
@@ -228,9 +230,13 @@ export default {
         this.getBanner()
         this.getTemplates()
         this.getSizes()
+        
 
   },
-  methods: {
+  mounted(){
+	this.checkIfAutofilled()
+  },
+  methods: {    
       editorInit() {
             require('brace/ext/language_tools') //language extension prerequsite...
             require('brace/mode/html')                
@@ -268,35 +274,28 @@ export default {
       dropdownToggle(e){
           console.log('click')
         //console.log($(e.target).parent());
-        if(!$(e.target).next().is(':visible')){
-            $(e.target).next().slideDown();
+        if(!jQuery(e.target).next().is(':visible')){
+            jQuery(e.target).next().slideDown();
         }
         else{
-            $(e.target).next().slideUp();
+            jQuery(e.target).next().slideUp();
         }   
       },
         dropDownElementClicked(e){
-            $(e.target).parent().parent().prev().text($(e.target).text())
-            $(e.target).parent().parent().slideUp()
-        },
-        highLightParent(event){
-			event.target.parentNode.classList.remove('input-error');
-			event.target.parentNode.classList.add('highlighted');
-		},
-	    unHighLightParent(event){
-			event.target.parentNode.classList.remove('highlighted');
+            jQuery(e.target).parent().parent().prev().text($(e.target).text())
+            jQuery(e.target).parent().parent().slideUp()
         },
         sliderToggle(event){
             let slidertype = event.target.classList.contains('html') ? '' : 'manual-styles'
             if(event.target.value > 50){
                 event.target.value = 1;
                 event.target.classList.remove('on')
-                $('.' + slidertype).slideUp()
+                jQuery('.' + slidertype).slideUp()
             }
             else{
                 event.target.value = 100;
                 event.target.classList.add('on')
-                $('.' + slidertype).slideDown()
+                jQuery('.' + slidertype).slideDown()
             }
         },
         showFieldValues(){

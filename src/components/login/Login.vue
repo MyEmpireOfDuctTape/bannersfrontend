@@ -9,11 +9,11 @@
 			<form class="auth-form" @submit.prevent="login">
         <div class="input-block">
           <span v-on:click="focusInput" class="fake-label">Email</span>
-          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" v-model="email" type="email" name="email" placeholder="john.doe@bannermaster.ee">
+          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" v-model="email" type="email" name="email">
         </div>
         <div class="input-block">
           <span v-on:click="focusInput" class="fake-label">Password</span>
-          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" v-model="password" type="password"  name="password" id="loginPassword" placeholder="Supersecret">
+          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" v-model="password" type="password"  name="password" id="loginPassword">
         </div>
         <button class="blue roundedd">Log in</button>
 			</form>
@@ -44,13 +44,10 @@ export default {
     }
 	},
 	mounted(){
-		this.clickFirstInput()
+		this.checkIfAutofilled()
 	},
 	mixins: [domfunctions],	
   methods: {
-			clickFirstInput(){
-				document.document.querySelector('input')[0].focus()
-			},
 			changed(){
 				this.checkIfAutofilled()
 			},
