@@ -271,7 +271,7 @@ export default {
                 this.sizes = response.data
 			    
             },      
-      dropdownToggle(e){
+      /* dropdownToggle(e){
           console.log('click')
         //console.log($(e.target).parent());
         if(!jQuery(e.target).next().is(':visible')){
@@ -280,24 +280,9 @@ export default {
         else{
             jQuery(e.target).next().slideUp();
         }   
-      },
-        dropDownElementClicked(e){
-            jQuery(e.target).parent().parent().prev().text($(e.target).text())
-            jQuery(e.target).parent().parent().slideUp()
-        },
-        sliderToggle(event){
-            let slidertype = event.target.classList.contains('html') ? '' : 'manual-styles'
-            if(event.target.value > 50){
-                event.target.value = 1;
-                event.target.classList.remove('on')
-                jQuery('.' + slidertype).slideUp()
-            }
-            else{
-                event.target.value = 100;
-                event.target.classList.add('on')
-                jQuery('.' + slidertype).slideDown()
-            }
-        },
+      }, */
+
+       
         showFieldValues(){
             console.log(this.fieldValues)
             console.log(this.banner)

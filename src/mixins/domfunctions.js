@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 export default {
     data(){
         return{
@@ -88,9 +89,26 @@ export default {
                jQuery(e.target).next().slideUp();
            }    
 
-       },
+        },
+        dropDownElementClicked(e){
+            jQuery(e.target).parent().parent().prev().text($(e.target).text())
+            jQuery(e.target).parent().parent().slideUp()
+        },
        changed(){
         this.checkIfAutofilled()
+        },
+        sliderToggle(event){
+            let slidertype = event.target.classList.contains('html') ? '' : 'manual-styles'
+            if(event.target.value > 50){
+                event.target.value = 1;
+                event.target.classList.remove('on')
+                jQuery('.' + slidertype).slideUp()
+            }
+            else{
+                event.target.value = 100;
+                event.target.classList.add('on')
+                jQuery('.' + slidertype).slideDown()
+            }
         },
     }
 }
