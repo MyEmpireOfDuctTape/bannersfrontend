@@ -6,8 +6,8 @@
          </div>
         <form class="auth-form" @submit.prevent="createFolder"> 
          <div class="input-block">
-          <span data-initial="Folder name" class="fake-label">Folder name</span>
-          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" type="text" name="name" placeholder="Your folder name">
+          <span v-on:click="focusInput" data-initial="Folder name" class="fake-label">Folder name</span>
+          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" type="text" name="name">
         </div>
         <span id="error"></span>
         <button type="submit">Create folder</button>

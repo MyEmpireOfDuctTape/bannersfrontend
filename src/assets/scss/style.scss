@@ -1470,12 +1470,10 @@ $enable-gradients: true;
     border: 2px solid #fafafb;
     background-color: #fafafb;
     margin: 1rem 0;
-    padding: 0.5rem 1rem; 
+    padding: 1.5rem 1rem 0.5rem 1rem; 
     border-radius: 7px;
     
-    &.highlighted{
-        background-color: #e7e9ec;
-    }
+
     &.input-error{
         border: 2px solid red;
         background-color: #ffe2e2;
@@ -1484,12 +1482,25 @@ $enable-gradients: true;
         margin: 1rem auto 0 auto;
     }
     &.focused{
-        background-color: $focused;
+
+        .fake-label{
+            font-size: 0.8em;
+            transform: translate(0, -50%);
+            transition: transform .3s ease-in-out;
+        }
     }
     .fake-label{
         text-align: left;
-        font-size: 0.8em;
+        //font-size: 0.8em;
         margin: 0;
+        position: absolute;
+        font-size: 1em;
+        transform-origin: left center;
+        top: 1em;
+    }
+    &.highlighted{
+        background-color: #e7e9ec;
+        
     }
     &.select{
             width: 100%;
@@ -1503,8 +1514,20 @@ $enable-gradients: true;
                 color: black;
                 background-image: url($dropdownthin);
             }
+            &.open{
+                background-color: #e7e9ec;
+                .fake-label{
+                    
+                }
+            }
         .fake-label{
             background-image: none;
+            position: absolute;
+        
+        transform-origin: left center;
+        font-size: 0.8em;
+                    transform: translate(0, -50%);
+                    transition: transform .3s ease-in-out;
             &:hover{
                 background-image: none;
                 color: #81899a;
@@ -2258,7 +2281,7 @@ input{
 } */
 
 .input-block{
-    
+    position: relative;
     &.checkbox{
         position: relative;
         background-color: white;
@@ -2300,8 +2323,11 @@ input{
 
 .fake-label{
     text-align: left;
-    font-size: 0.8em;
+   // font-size: 0.8em;
     margin: 0;
+    position: absolute;
+    font-size: 1em;
+    
     &.error{
         color: red;
     }

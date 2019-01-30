@@ -6,11 +6,11 @@
          </div>
         <form class="auth-form" @submit.prevent="createBanner"> 
          <div class="input-block">
-          <span data-initial="Banner name" class="fake-label">Banner name</span>
-          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" type="text" name="name" placeholder="Your banner name">
+          <span v-on:click="focusInput" data-initial="Banner name" class="fake-label">Banner name</span>
+          <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" type="text" name="name">
         </div>
         <div class="input-block half-width select">
-                <span data-initial="Folder name" class="fake-label">Folder name</span>
+                <span v-on:click="focusInput" data-initial="Folder name" class="fake-label">Folder name</span>
                 <span v-on:click="dropdownToggle" >Select folder</span>
             <div class="options">
                 <ul>
@@ -23,7 +23,7 @@
             <input type="hidden" name="folderId" v-model="folderid">
         </div>
         <div class="input-block half-width select">
-            <span data-initial="Template name" class="fake-label">Template name</span>
+            <span v-on:click="focusInput" data-initial="Template name" class="fake-label">Template name</span>
             <span v-on:click="dropdownToggle">Select template</span>
             <div class="options">
                 <ul>
@@ -35,7 +35,7 @@
             <input type="hidden" name="templateId" v-model="templateid">
         </div>
         <div class="input-block half-width select">
-            <span data-initial="Size" class="fake-label">Size</span>
+            <span v-on:click="focusInput" data-initial="Size" class="fake-label">Size</span>
             <span v-on:click="dropdownToggle">Select Size</span>
             <div class="options">
                 <ul>

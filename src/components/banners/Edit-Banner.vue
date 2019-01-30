@@ -104,7 +104,7 @@
                         </div>
                         </div>
                         </div>
-
+         
                     </div>  
                     <div class="container-fluid manual-styles" style="display: none">
                     <div class="row">

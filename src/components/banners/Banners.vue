@@ -284,6 +284,7 @@ import AddBanner from '../modals/AddBanner'
 import AddFolder from '../modals/AddFolder'
 
 import domfunctions from '@/mixins/domfunctions.js'
+import axios from 'axios'
 
 
 export default {
@@ -295,11 +296,27 @@ export default {
   },
   data () {
     return {
-      msg: 'Dashboard yo'
+      msg: 'Banners yo',
+      banners: null,
     }
   },
-    mixins: [domfunctions],
+  created(){
+      if(this.$store.getters.getCurrentCompany == null){
+        this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+      }
+      this.asyncgetBannersDirect()
+  },
+mixins: [domfunctions],
   methods: {
+        async asyncgetBannersDirect(){
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/banners')
+                console.log(response)
+                this.banners = response.data
+			
+        },
         showBannerOverlay(){
             document.querySelector('.overlay.add-banner').classList.add('open', 'animated', 'slideInLeft')
             setTimeout(function(){

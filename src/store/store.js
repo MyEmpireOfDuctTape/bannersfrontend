@@ -191,21 +191,6 @@ export default new Vuex.Store({
 				})
 			}
 		},
-		sendEmailReminder(context, credentials){
-			//IF NOT Logged in make Call
-			if(!context.getters.loggedIn){
-				return new Promise((resolve, reject) => {
-					axios.post('/auth/password', credentials)
-					.then(function (response) {
-						resolve(response)
-					})
-					.catch(function(error){
-						console.log(axios.defaults.headers)
-						reject(error)
-					})
-				})
-			}
-		},
 		updatePassword(context, credentials){
 			//IF NOT Logged in make Call
 			if(!context.getters.loggedIn){
