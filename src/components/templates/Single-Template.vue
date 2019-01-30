@@ -175,8 +175,23 @@ export default {
   },
   data () {
     return {
-      msg: 'Dashboard yo'
+      msg: 'Edit Template',
+      template: null,
+      name: null,
+      description: null,
+      banners: null,
     }
-  }
+  },
+  methods: {
+            async getTemplate(){
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/templates/'+this.$route.params.id)
+                console.log(response.data)   
+                this.template = response.data.template
+                this.name = response.data.template.name
+                this.description = response.data.template.description
+      },
+  },
 }
 </script>

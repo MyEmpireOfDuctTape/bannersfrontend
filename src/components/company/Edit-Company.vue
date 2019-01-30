@@ -31,10 +31,10 @@
                                     <span v-on:click="focusInput" class="fake-label">Street Address</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="address" name="address" type="text" >
                                 </div>
-                                <div class="input-block focused">
+                                <!-- <div class="input-block focused">
                                     <span v-on:click="focusInput" class="fake-label">Email</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="text">
-                                </div>
+                                </div> -->
                             </div>  
                             <button class="blue save roundedd">Save</button>  
                         </div>
@@ -199,13 +199,12 @@ export default {
   data () {
     return {
       msg: 'Edit Company',
-      name: '',
-      registrationCode: '',
-      vat_number: '',
+      name:  '',
+      registrationCode:  '',
+      vat_number:  '',
       country: '',
-      city: '',
-      address: '',
-      email: '',
+      city:  '',
+      address:  '',
       users: [],
       currentCompany: this.$store.getters.getCurrentCompany || null,
     }
@@ -215,7 +214,15 @@ export default {
             this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
             this.currentCompany = this.$store.getters.getUser.companies[0]
     }
+    this.name = this.currentCompany.name
+    this.registrationCode = this.currentCompany.registrationCode
+    this.vat_number = this.currentCompany.vatNumber
+    this.country = this.currentCompany.country
+    this.city = this.currentCompany.city
+    this.address = this.currentCompany.address
+
     this.getUsers()
+    console.log(this.currentCompany)
   },
   mixins: [domfunctions],
   methods:{
