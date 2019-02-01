@@ -110,7 +110,7 @@
                </router-link>
             </div>
             <div class="menu-option">
-                 <a href="#">
+                <router-link to="/my-account">
                     <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
                     <title>Shape</title>
@@ -125,7 +125,7 @@
                     </g>
                 </svg>
                     <span>My account</span>
-                </a>
+                 </router-link>
             </div>
             <div v-if="loggedIn" class="menu-option">
                  <router-link to="/logout">

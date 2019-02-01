@@ -46,10 +46,23 @@ export default {
     }
   },
   mixins: [domfunctions],
+  created(){
+    this.checkIfValidToken()
+  },  
   methods : {
+    checkIfValidToken(){
+        axios.get('/password/'+this.token)
+        .then(response => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error.response)
+            if(error.response.status == 404){
+              this.$router.push({ path: `/login` });
+            }
+        })
+    },
     updatePassword(){
-			//IF NOT Logged in make Call
-
           axios.post('/auth/password/' + this.token, {
 					password: this.password,
           passwordConfirmation: this.passwordConfirmation,

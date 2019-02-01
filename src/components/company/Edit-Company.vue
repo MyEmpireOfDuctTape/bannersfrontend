@@ -2,6 +2,7 @@
     <div class="fullpage container-fluid">
         <div class="row">
                 <sidebar></sidebar>
+                <add-user></add-user>
 		        <div class="edit-company main-view container-fluid">
                     <div class="row">
                         <div class="col-lg-5 col-md-12 edit-form">
@@ -44,7 +45,7 @@
                                     <h1>Users</h1>
                                 </div>
                                 <div class="col-lg-6 right">
-                                    <button class="add-user blue roundedd">Add user</button>
+                                    <button v-on:click="showOverlay" class="add-user blue roundedd">Add user</button>
                                 </div>   
                             </div> 
                             <div v-for="user in users" class="user row">
@@ -187,6 +188,7 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import AddUser from '../modals/AddUser'
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
 
@@ -194,7 +196,8 @@ import axios from 'axios'
 export default {
   name: 'EditCompany',
   components: {
-      Sidebar
+        Sidebar,
+        AddUser
   },
   data () {
     return {
@@ -207,12 +210,19 @@ export default {
       address:  '',
       users: [],
       currentCompany: this.$store.getters.getCurrentCompany || null,
+      currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
     }
   },
   created(){
     if(this.currentCompany == null){
             this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
             this.currentCompany = this.$store.getters.getUser.companies[0]
+    }
+     if(this.currentAccessLevel == null){
+            this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[this.currentCompany.id])
+            let index = this.returnTheCompanyIndexById(this.currentCompany.id)
+            this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
+            console.log(this.currentAccessLevel)
     }
     this.name = this.currentCompany.name
     this.registrationCode = this.currentCompany.registrationCode
@@ -222,10 +232,22 @@ export default {
     this.address = this.currentCompany.address
 
     this.getUsers()
-    console.log(this.currentCompany)
   },
   mixins: [domfunctions],
   methods:{
+        returnTheCompanyIndexById(id){
+            let companies = this.$store.getters.getUser.companies
+            let found = companies.find(company => 
+               company.id == id
+            )
+            console.log(companies)
+            console.log(typeof companies)
+            if(typeof companies == 'object'){
+                return 0
+            }
+            let index = companies.findIndex(found)
+            return index
+        },
         async getUsers(){
             if(typeof this.currentCompany != null){
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
@@ -234,7 +256,29 @@ export default {
                     console.log(this.users)
             }    
         },
+        showOverlay(){
+                document.querySelector('.overlay').classList.add('open', 'animated', 'slideInRight')
+                //document.querySelector('.overlay .popup').classList.add('animated', 'flipInY')
+        },
     },
 }
+
+
+
+//use this 
+/* data() {
+    return {
+        house: {
+            livingroom: {
+                lights: 4
+            }
+        }
+    }
+},
+watch: {
+    'house.livingroom.lights' : function(newVal, oldVal) {
+        // triggered when lights is changed
+    }
+} */
 </script>
 

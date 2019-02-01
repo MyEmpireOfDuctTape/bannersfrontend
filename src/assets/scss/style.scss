@@ -1489,6 +1489,9 @@ $enable-gradients: true;
             transition: transform .3s ease-in-out;
         }
     }
+    &.disabled{
+        background-color: #e7e9ec;
+    }
     .fake-label{
         text-align: left;
         //font-size: 0.8em;

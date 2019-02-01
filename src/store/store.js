@@ -12,6 +12,7 @@ export default new Vuex.Store({
 		token: JSON.parse(VueCookie.get('accessToken')) || null,
 		user: JSON.parse(VueCookie.get('user')) || null,
 		currentCompany: null,
+		currentAccessLevel: null,
 /* 		folders: undefined,
 		templates: undefined,
 		sizes: undefined, */
@@ -28,6 +29,9 @@ export default new Vuex.Store({
 		},
 		getCurrentCompany(state){
 			return state.currentCompany
+		},
+		getCurrentAccessLevel(state){
+			return state.currentAccessLevel
 		},
 /* 		getBanners(state){
 			return state.banners
@@ -58,6 +62,9 @@ export default new Vuex.Store({
 		},
 		setCurrentCompany(state, company){
 			state.currentCompany = company;
+		},
+		setCurrentAccessLevel(state, accessLevel){
+			state.currentAccessLevel = accessLevel;
 		}
 /* 		setFolders(state, folders){
 			state.folders = folders
@@ -75,7 +82,7 @@ export default new Vuex.Store({
 			return new Promise((resolve, reject) => {
 
             axios.post('/auth/login', credentials)
-              .then(function (response) {
+              .then((response) => {
 					let date = new Date()
 					//date.setTime(token.expiresIn)
 					date.setTime(1549152000)
@@ -87,7 +94,7 @@ export default new Vuex.Store({
 
 					resolve(response);
               })
-              .catch(function (error) {
+              .catch((error) => {
 				  	reject(error);
 			  })
 			})  

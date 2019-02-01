@@ -111,5 +111,6 @@ export default {
                 jQuery('.' + slidertype).slideDown()
             }
         },
+
     }
 }

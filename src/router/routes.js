@@ -17,6 +17,7 @@ import Templates from '@/components/templates/Templates'
 import SingleTemplate from '@/components/templates/Single-Template'
 
 
+import MyAccount from '@/components/users/MyAccount'
 import EditCompany from '@/components/company/Edit-Company'
 import AddTemplate from '@/components/templates/Add-Template'
 import EditBanner from '@/components/banners/Edit-Banner'
@@ -55,12 +56,16 @@ export default new Router({
       }
     },
     {
-      path: '/register',
+      path: '/register/:token',
       name: 'Register',
       component: Register,
       meta: {
         requiresVisitor: false
       }
+    },
+    {
+      path: '/register',
+      redirect: '/login',
     },
     {
       path: '/reminder',
@@ -86,6 +91,14 @@ export default new Router({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/my-account',
+      name: 'MyAccount',
+      component: MyAccount,
       meta: {
         requiresAuth: true
       }
