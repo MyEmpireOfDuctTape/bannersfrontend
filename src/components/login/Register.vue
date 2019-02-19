@@ -98,11 +98,8 @@ export default {
             }    
         },
         registerUser(){
-          axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
-                    axios.defaults.headers.common['Accept'] = 'application/json',
-                    axios.defaults.headers.common['Content-Type'] = 'application/json',
-                    axios.defaults.headers.common['Company'] = this.currentCompany.id
-                    axios.patch('/auth/register', {
+                    axios.defaults.headers.common['Accept'] = 'application/json'
+                    axios.post('/auth/register', {
                       firstName: this.firstName,
                       lastName: this.lastName,
                       email: this.email,
