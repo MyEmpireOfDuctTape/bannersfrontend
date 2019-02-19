@@ -17,6 +17,8 @@
 
 <script>
 import domfunctions from '@/mixins/domfunctions.js'
+import $ from 'jquery'
+var jQuery = require("jquery")
 
 export default {
   name: 'Dropdown',
