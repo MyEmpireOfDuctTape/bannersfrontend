@@ -136,9 +136,6 @@ export default {
                 })
             },
             async createUser(){
-
-                // todo - creat the fucking user
-
             if(typeof this.currentCompany != null){
 
                 console.log(this.selectedCompany)
