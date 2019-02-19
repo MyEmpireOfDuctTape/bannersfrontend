@@ -14,37 +14,39 @@
             <input type="text" placeholder="Last Name">
             </div>
         </div>   -->  
-        <div class="row">
-            <div class="col-lg-6 col-sm-12">
-                <div class="input-block half-width">
-                    <span v-on:click="focusInput" class="fake-label">First Name</span>
-                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="firstName" name="firstName" type="text">
-                </div>
-            </div>
-            <div class="col-lg-6 col-sm-12">
-                <div class="input-block half-width">
-                    <span v-on:click="focusInput" class="fake-label">Last Name</span>
-                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="lastName" name="lastName" type="text">
-                </div>
-            </div>    
-        </div>  
-        <div class="input-block focused disabled">
-           <span v-on:click="focusInput" class="fake-label">Email</span>
-           <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="text" disabled>
-        </div>
-        <div class="input-block">
-          <span v-on:click="focusInput" class="fake-label">Password</span>
-           <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="password" name="password" type="password">
-        </div>
-        <div class="input-block">
-           <span v-on:click="focusInput" class="fake-label">Confirm Password</span>
-           <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="passwordConfirmation" name="passwordConfirmation" type="password">
-        </div>
-       <div class="checkbox-group normal">
-                <span v-on:click="checkBox"></span><label for="data_accept">I accept the <a href="" target="_blank">terms &amp; conditions</a></label>
-                    <input v-model="terms" type="checkbox" name="data_accept">
-        </div>
-        <button class="blue roundedd">Register</button>
+        <form class="auth-form" @submit.prevent="registerUser">
+          <div class="row">
+              <div class="col-lg-6 col-sm-12">
+                  <div class="input-block half-width">
+                      <span v-on:click="focusInput" class="fake-label">First Name</span>
+                      <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="firstName" name="firstName" type="text">
+                  </div>
+              </div>
+              <div class="col-lg-6 col-sm-12">
+                  <div class="input-block half-width">
+                      <span v-on:click="focusInput" class="fake-label">Last Name</span>
+                      <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="lastName" name="lastName" type="text">
+                  </div>
+              </div>    
+          </div>  
+          <div class="input-block focused disabled">
+            <span v-on:click="focusInput" class="fake-label">Email</span>
+            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="text" disabled>
+          </div>
+          <div class="input-block">
+            <span v-on:click="focusInput" class="fake-label">Password</span>
+            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="password" name="password" type="password">
+          </div>
+          <div class="input-block">
+            <span v-on:click="focusInput" class="fake-label">Confirm Password</span>
+            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="passwordConfirmation" name="passwordConfirmation" type="password">
+          </div>
+        <div class="checkbox-group normal">
+                  <span v-on:click="checkBox"></span><label for="data_accept">I accept the <a href="" target="_blank">terms &amp; conditions</a></label>
+                      <input v-model="terms" type="checkbox" name="data_accept">
+          </div>
+          <button type="submit" class="blue roundedd">Register</button>
+			</form>
     </div>
       <span> If you need help contact <a href="mailto:help@mail.com">help@mail.com</a> </span>
 			</div>
@@ -115,9 +117,6 @@ export default {
         checkBox(e){
             e.target.classList.toggle('checked')
             this.terms = !this.terms
-            console.log(this.terms)
-            /* var checkBoxes = $(e.target).parent().find('input[type="checkbox"]');
-            checkBoxes.prop('checked', !checkBoxes.prop('checked')); */
         },
     },
 }
