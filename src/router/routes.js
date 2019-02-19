@@ -56,7 +56,7 @@ export default new Router({
       }
     },
     {
-      path: '/register/:token',
+      path: '/invitation/:token',
       name: 'Register',
       component: Register,
       meta: {
@@ -64,7 +64,7 @@ export default new Router({
       }
     },
     {
-      path: '/register',
+      path: '/invitation',
       redirect: '/login',
     },
     {

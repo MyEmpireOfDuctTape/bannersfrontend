@@ -154,18 +154,18 @@ export default {
       }
   },
   created(){
-      console.log(this.currentCompany)
+      /* console.log(this.currentCompany)
       console.log(this.otherCompanies)
-      console.log(this.user)
+      console.log(this.user) */
       if(this.currentCompany == null){
-            console.log('currentcompany is null')
+            //console.log('currentcompany is null')
             this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
             this.currentCompany = this.$store.getters.getCurrentCompany
             this.otherCompanies = this.$store.getters.getUser.companies.filter(company => company.id != this.currentCompany.id)
             this.user = this.$store.getters.getUser
-            console.log(this.currentCompany)
+            /* console.log(this.currentCompany)
             console.log(this.otherCompanies)
-            console.log(this.user)
+            console.log(this.user) */
       }
       
   },

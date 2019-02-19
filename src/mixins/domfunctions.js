@@ -1,5 +1,6 @@
 import $ from 'jquery'
 var jQuery = require("jquery")
+var _ = require('lodash')
 export default {
     data(){
         return{

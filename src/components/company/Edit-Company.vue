@@ -218,11 +218,12 @@ export default {
             this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
             this.currentCompany = this.$store.getters.getUser.companies[0]
     }
-     if(this.currentAccessLevel == null){
-            this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[this.currentCompany.id])
-            let index = this.returnTheCompanyIndexById(this.currentCompany.id)
+    if(this.currentAccessLevel == null){
+            let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+                return company.id == this.$store.getters.getCurrentCompany.id
+            });
             this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
-            console.log(this.currentAccessLevel)
+            this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
     }
     this.name = this.currentCompany.name
     this.registrationCode = this.currentCompany.registrationCode
@@ -235,25 +236,13 @@ export default {
   },
   mixins: [domfunctions],
   methods:{
-        returnTheCompanyIndexById(id){
-            let companies = this.$store.getters.getUser.companies
-            let found = companies.find(company => 
-               company.id == id
-            )
-            console.log(companies)
-            console.log(typeof companies)
-            if(typeof companies == 'object'){
-                return 0
-            }
-            let index = companies.findIndex(found)
-            return index
-        },
         async getUsers(){
             if(typeof this.currentCompany != null){
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                     const response = await axios.get('/companies/'+this.currentCompany.id)
                     this.users = response.data.company.users
                     console.log(this.users)
+                    console.log(this.currentCompany.id)
             }    
         },
         showOverlay(){

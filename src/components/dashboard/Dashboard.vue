@@ -7,15 +7,9 @@
                <add-banner></add-banner>
                
 		<div class="dashboard main-view container-fluid">
-                <div class="banners-by-company row" v-for="company in user.companies">
-                   <template v-if="company.id === 1">
-                        <div class="banner-by-company active col-lg-3 col-md-6 col-sm-12">
-                            <span class="allcaps">{{ company.name }}</span><br />
-                            <span class="small">{{ company.bannersCount }} banners, {{ company.templatesCount }} templates</span>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div class="banner-by-company active col-lg-3 col-md-6 col-sm-12">
+                <div class="banners-by-company row">
+                   <template v-for="company in user.companies">
+                        <div v-on:click="setCurrentCompany(company.id)" v-bind:class="isCurrentCompany(company.id)" class="banner-by-company col-lg-3 col-md-6 col-sm-12">
                             <span class="allcaps">{{ company.name }}</span><br />
                             <span class="small">{{ company.bannersCount }} banners, {{ company.templatesCount }} templates</span>
                         </div>
@@ -24,7 +18,7 @@
                 <div class="recent-banners">
                     <div class="header row">
                         <div class="left col-lg-8">
-                            <h1>My recent Banners ({{this.banners.count}})</h1>
+                            <h1>My recent Banners ({{banners.totalCount}})</h1>
                         </div>
                         <div class="right col-lg-4">
                                 <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
@@ -33,7 +27,7 @@
                          </div>   
                     </div>
                     <div class="banner-slide row">
-                       <div v-for="(banner, key) in banners" class="col-lg-3 col-md-6 col-sm-12">
+                       <div v-for="banner in banners.banners" class="col-lg-3 col-md-6 col-sm-12">
                             <div class="preview">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
@@ -58,13 +52,16 @@
                                 </div>     
                             </div>    
                         </div>
+                        <template v-if="banners.totalCount == 0">
+                            <span class="sad">No banners yet :'(</span>
+                        </template>    
                       
                 </div>
                 </div>
                 <div class="recent-templates">
                     <div class="header row">
                         <div class="left col-lg-8">
-                            <h1>My recent Templates ({{this.templates.totalCount}})</h1>
+                            <h1>My recent Templates ({{templates.totalCount}})</h1>
                         </div>
                         <div class="right col-lg-4">
                             <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
@@ -91,7 +88,10 @@
                                     <span> Last used   <span>{{ humanDate(template.updatedAt) }}</span></span>
                                 </div>        
                             </div>
-                        </div>     
+                        </div>  
+                        <template v-if="templates.totalCount == 0">
+                            <span class="sad">No banners yet :'(</span>
+                        </template>     
                           
                         </div>   
                     </div>    
@@ -119,22 +119,32 @@ export default {
   },
   data () {
     return {
-      user: this.$store.getters.getUser,
-      banners:  null,//this.$store.getters.getBanners,
-      templates: null,
-      loading: true,
+        user: this.$store.getters.getUser,
+        banners:  null,
+        templates: null,
+        loading: true,
+        currentCompany: this.$store.getters.getCurrentCompany || null,
+        currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
     }
   },
   computed: {
       loggedIn(){
           return this.$store.getters.loggedIn
       }
+
   },
      created(){
-         console.log('created')
-         if(this.$store.getters.getCurrentCompany == null){
-            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
-        }
+        if(this.currentCompany == null){
+                this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+                this.currentCompany = this.$store.getters.getUser.companies[0]
+            }
+            if(this.currentAccessLevel == null){
+                let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+                    return company.id == this.$store.getters.getCurrentCompany.id
+                });
+                this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
+                this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
+            }
         this.asyncgetBannersDirect()
         this.asyncgetTemplatesDirect()
   },
@@ -148,8 +158,10 @@ export default {
 			//IF Logged in make Call
 			if(this.isloggedIn()){
                 const response = await axios.get('/banners')
-                console.log(response)
+                console.log(this)
+                console.log(response.data)
                 this.banners = response.data
+                
 			}
         },
         async asyncgetTemplatesDirect(){
@@ -206,7 +218,20 @@ export default {
         },
         isloggedIn(){
           return this.$store.getters.loggedIn
-      }
+        },
+        isCurrentCompany(id){
+            return id === this.currentCompany.id ? 'active' : ''
+        },
+        setCurrentCompany(id){
+            let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+                return company.id == id
+            });
+            console.log(index)
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[index])
+            this.currentCompany = this.$store.getters.getUser.companies[index]
+            this.asyncgetBannersDirect()
+            this.asyncgetTemplatesDirect()
+        }
   },
 }
 </script>

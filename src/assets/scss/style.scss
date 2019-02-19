@@ -1646,6 +1646,10 @@ button{
             box-shadow: 0 11px 15px -6px $blueshadow;
            cursor: pointer;
        }
+       &:focus{
+           outline: none;
+           border: none;
+       }
     }
 
     &.save{

@@ -177,15 +177,28 @@ export default {
         popoverstart: '<div class="popoover">',
         popoverclose : '<a href="#" class="close">dismiss</a>',
         popoverend : '</div>',
+        currentCompany: this.$store.getters.getCurrentCompany || null,
+        currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
     }
   },
   created(){
+      if(this.$store.getters.getCurrentCompany == null){
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+            this.currentCompany = this.$store.getters.getUser.companies[0]
+        }
+        if(this.currentAccessLevel == null){
+        let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+            return company.id == this.$store.getters.getCurrentCompany.id
+        });
+            this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
+            this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
+        }
       this.getTemplates()
   },
   methods: {
       async getTemplates(){
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
-                axios.defaults.headers.common['Company'] = 1
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
         
                 //IF Logged in make Call
                 if(this.isloggedIn()){

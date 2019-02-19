@@ -296,15 +296,25 @@ export default {
   },
   data () {
     return {
-      msg: 'Banners yo',
-      banners: null,
+        msg: 'Banners yo',
+        banners: null,
+        currentCompany: this.$store.getters.getCurrentCompany || null,
+        currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
     }
   },
   created(){
-      if(this.$store.getters.getCurrentCompany == null){
-        this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
-      }
-      this.asyncgetBannersDirect()
+        if(this.$store.getters.getCurrentCompany == null){
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
+            this.currentCompany = this.$store.getters.getUser.companies[0]
+        }
+        if(this.currentAccessLevel == null){
+        let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+            return company.id == this.$store.getters.getCurrentCompany.id
+        });
+            this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
+            this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
+        }
+        this.asyncgetBannersDirect()
   },
 mixins: [domfunctions],
   methods: {
