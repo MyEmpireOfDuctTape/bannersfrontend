@@ -113,7 +113,7 @@ export default {
                     });
         },
         checkBox(e){
-            $(e.target).toggleClass('checked');
+            e.target.classList.toggle('checked')
             this.terms = !this.terms
             console.log(this.terms)
             /* var checkBoxes = $(e.target).parent().find('input[type="checkbox"]');
