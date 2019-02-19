@@ -78,19 +78,23 @@ export default {
   mixins: [domfunctions],
   methods:{
         async getInvitation(){
-          
+          // https://stage.banners.ee/#/invitation/I1ZsEYZxAJ7SoMRBGi9k -> juhan.soone@gmail.com
             if(typeof this.currentCompany != null){
                     axios.defaults.headers.common['Accept'] = 'application/json'
                     //const response = await axios.get('/auth/invitation/'+this.$route.params.token)
                      axios.get('/auth/invitation/'+this.$route.params.token)
                     .then(response => {
                       console.log(response)
+                      if(typeof response.data.invitation.user != undefined){
+                        this.email = response.data.invitation.user.email
+                      }
                     })
                     .catch(error => {
                       console.log(error.response)
                     }) 
                     //this.users = response.data.company.users
                     console.log(response.data)
+
             }    
         },
         checkBox(e){
