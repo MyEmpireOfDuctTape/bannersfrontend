@@ -30,7 +30,7 @@ const Foo = { template: '<div>foo</div>' }
 const Bar = { template: '<div>bar</div>' }
 
 export default new Router({
-  mode:'history',
+  //mode:'history',
   routes: [
     {
       path: '/',

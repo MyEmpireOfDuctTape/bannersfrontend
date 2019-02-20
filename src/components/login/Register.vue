@@ -93,6 +93,7 @@ export default {
                     })
                     .catch(error => {
                       console.log(error.response)
+                      this.$router.push({ path: `/login` });
                     }) 
                     //this.users = response.data.company.users
                     console.log(response.data)
