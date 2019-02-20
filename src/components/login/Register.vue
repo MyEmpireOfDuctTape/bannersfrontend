@@ -59,6 +59,8 @@
 <script>
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
+import VueCookie from 'vue-cookie'
+
 
 export default {
   name: 'Register',
@@ -96,7 +98,7 @@ export default {
                       this.$router.push({ path: `/login` });
                     }) 
                     //this.users = response.data.company.users
-                    console.log(response.data)
+                    //console.log(response.data)
 
             }    
         },
@@ -110,7 +112,16 @@ export default {
                       passwordConfirmation: this.passwordConfirmation,
                       terms: this.terms,
                     }).then(function (response) {
-                        console.log(response);
+                        console.log(response)
+                        if(typeof response.data.token == undefined){
+                              let date = new Date()
+					                    date.setTime(token.expiresIn)
+                              this.$store.commit('retrieveToken', response.data.token)
+                              this.$store.commit('retrieveUser', response.data.token)
+                              VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString())
+                              VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString())
+                              this.$router.push({ path: `/dashboard` })
+                        } 
                     }).catch(function (error) {
                         console.log(error.response);       
                     });
