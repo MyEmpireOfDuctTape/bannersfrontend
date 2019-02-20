@@ -59,7 +59,8 @@ export default {
 					console.log(response)
 					this.$router.push({ path: `/dashboard` });
 				}).catch(error => {
-					console.log(error.response);
+					console.log(error.response)
+					console.log(error)
 					//if(error.response.status == 422){
 									// error logging in
 									if(typeof error.response.data.errors != 'undefined'){
