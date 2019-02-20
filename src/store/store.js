@@ -84,8 +84,8 @@ export default new Vuex.Store({
             axios.post('/auth/login', credentials)
               .then((response) => {
 					let date = new Date()
-					date.setTime(token.expiresIn)
-					//date.setTime(1549152000)
+					//date.setTime(token.expiresIn)
+					date.setTime(1549152000)
 					VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
 					VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
 					context.commit('retrieveToken', response.data.token)
