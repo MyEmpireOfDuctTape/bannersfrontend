@@ -101,7 +101,7 @@ export default {
         },
         registerUser(){
                     axios.defaults.headers.common['Accept'] = 'application/json'
-                    axios.post('/auth/register', {
+                    axios.post('/auth/invitation/'+this.$route.params.token, {
                       firstName: this.firstName,
                       lastName: this.lastName,
                       email: this.email,
