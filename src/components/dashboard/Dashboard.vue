@@ -209,9 +209,6 @@ export default {
                 event.target.parentNode.classList.toggle('selected');
                 event.target.classList.toggle('selected');
         },
-        editPopup(event){
-			event.target.nextElementSibling.classList.toggle('visible');
-        },
         showOverlay(){
                 document.querySelector('.overlay').classList.add('open', 'animated', 'slideInRight')
                 //document.querySelector('.overlay .popup').classList.add('animated', 'flipInY')

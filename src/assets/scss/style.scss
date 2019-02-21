@@ -486,6 +486,11 @@ $enable-gradients: true;
                             border-radius: 50%;
                             overflow: visible;
                             background-color: $paleblue;
+                            min-height: 3.5em;
+                            min-width: 3.5em;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
                             
                         }
                     }
@@ -1769,7 +1774,7 @@ button{
     }
     &.dropdown{
         
-        min-width: 25%;
+        //min-width: 25%;
         padding: 0.7rem 0rem 0.7rem 1.5rem;
         text-align: left;
         background-size: 20px;
@@ -1780,6 +1785,10 @@ button{
             &:hover{
                 color: $gray;
                 cursor: pointer;
+            }
+            &.actually-not{
+                padding: 0.7rem;
+                text-align: center;
             }
             @media(max-width: 772px){
                 width: 50%;
@@ -2254,6 +2263,7 @@ input{
     overflow: scroll;
     max-height:80vh;
     position: relative;
+
     button[type="submit"]{
         transition: 1s;
         background-color: $bluebutton;
@@ -2338,4 +2348,45 @@ input{
     &.error{
         color: red;
     }
+}
+
+
+.danger-popup{
+    //border: 1px solid red;
+    display: none;
+    max-width: 100%;
+    border-radius: 5px;
+    padding: 1rem;
+    background-color: #ffa5a5;
+    span{
+        color: white;
+        text-align: center;
+        padding: 0 0 1rem 0 !important;
+        &:hover{
+            color: white;
+        }
+    }
+    .buttons{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        button{
+            width: 50%;
+            border-radius: 5px;
+            margin: 0 5px;
+            text-align: center;
+            padding: 0.5rem 1rem !important;
+            border: none;
+            &:hover{
+                cursor: pointer;
+                outline: none;
+            }
+            &.yes{
+                background-color: red;
+                color: white;
+                font-weight: bold;
+            }
+        }
+    }
+    
 }

@@ -89,6 +89,7 @@
         </div>    
         <hr>
         <div class="menu-options level2">
+            <template v-if="accessLevel == 'admin'">
             <div class="menu-option">
                <router-link to="/edit-company">
                     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -109,6 +110,7 @@
                     <span>Edit Company</span>
                </router-link>
             </div>
+            </template>
             <div class="menu-option">
                 <router-link to="/my-account">
                     <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -144,6 +146,7 @@ export default {
     return {
       msg: 'Sidebar',
       currentCompany: this.$store.getters.getCurrentCompany || null,
+      currentAccessLevel : this.$store.getters.getCurrentAccessLevel || null,
       otherCompanies: this.$store.getters.getUser.companies ? this.$store.getters.getUser.companies.filter(company => company.id != this.$store.getters.getCurrentCompany.id) : null,
       user: this.$store.getters.getUser || null,
     }
@@ -151,22 +154,23 @@ export default {
   computed: {
       loggedIn(){
           return this.$store.getters.loggedIn
+      },
+      accessLevel(){
+          return this.currentAccessLevel
       }
   },
   created(){
-      /* console.log(this.currentCompany)
-      console.log(this.otherCompanies)
-      console.log(this.user) */
-      if(this.currentCompany == null){
-            //console.log('currentcompany is null')
+     if(this.currentCompany == null){
             this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0])
-            this.currentCompany = this.$store.getters.getCurrentCompany
-            this.otherCompanies = this.$store.getters.getUser.companies.filter(company => company.id != this.currentCompany.id)
-            this.user = this.$store.getters.getUser
-            /* console.log(this.currentCompany)
-            console.log(this.otherCompanies)
-            console.log(this.user) */
-      }
+            this.currentCompany = this.$store.getters.getUser.companies[0]
+    }
+    if(this.currentAccessLevel == null){
+            let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+                return company.id == this.$store.getters.getCurrentCompany.id
+            });
+            this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
+            this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
+    }
       
   },
   methods : {

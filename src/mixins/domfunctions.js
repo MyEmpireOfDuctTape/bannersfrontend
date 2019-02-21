@@ -112,6 +112,26 @@ export default {
                 jQuery('.' + slidertype).slideDown()
             }
         },
+        editPopup(event){
+            console.log(event.target.tagName)
+            if(event.target.tagName != 'path'){
+			    event.target.nextElementSibling.classList.toggle('visible');
+            }
+            else{
+                event.target.parentNode.nextElementSibling.classList.toggle('visible');
+            }
+        },
+        dismissPopup(event){
+            $(event.target).parent().parent().slideUp()
+        },
+        showConfirmation(event){
+
+            $(event.target).next().slideDown()
+        },
+        focusEveryElementOnce(element){
+            element.find('input').focusin()
+            element.find('input').focusout()
+        }
 
     }
 }

@@ -83,6 +83,7 @@ export default {
   methods:{
         async getInvitation(){
           // https://stage.banners.ee/#/invitation/I1ZsEYZxAJ7SoMRBGi9k -> juhan.soone@gmail.com
+          // https://stage.banners.ee/#/invitation/yqIiwCmlYhytXnJbm7HR _> juhan.soone@havas.ee
             if(typeof this.currentCompany != null){
                     axios.defaults.headers.common['Accept'] = 'application/json'
                     //const response = await axios.get('/auth/invitation/'+this.$route.params.token)
@@ -113,13 +114,13 @@ export default {
                       terms: this.terms,
                     }).then(function (response) {
                         console.log(response)
-                        if(typeof response.data.token == undefined){
+                        if(typeof response.data.token != undefined){
                               let date = new Date()
 					                    date.setTime(token.expiresIn)
                               this.$store.commit('retrieveToken', response.data.token)
                               this.$store.commit('retrieveUser', response.data.token)
-                              VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString())
-                              VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString())
+                              this.$cookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString())
+                              this.$cookie.set('user', JSON.stringify(response.data.user), date.toUTCString())
                               this.$router.push({ path: `/dashboard` })
                         } 
                     }).catch(function (error) {
