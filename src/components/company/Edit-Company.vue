@@ -102,13 +102,7 @@
                                                     <li><a v-on:click="openDeleteUser" href="#">
                                                      <svg version="1.1" id="" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
                                                     Delete</a>
-                                                    <!-- <div class="danger-popup">
-                                                        <span>Are you sure?</span>
-                                                        <div class="buttons">
-                                                            <button class="yes" v-on:click="deleteUser(user.id)">YES</button>
-                                                            <button class="no" v-on:click="dismissPopup">NO</button>
-                                                        </div>
-                                                    </div> -->
+                                                    
                                                     </li>
                                                 </template>
                                             </ul>
@@ -289,11 +283,13 @@ export default {
             event.preventDefault()
             let elemt = document.querySelector('.edit-user.overlay')
             elemt.classList.add('open', 'animated', 'slideInRight')
+            this.focusEveryElementOnce($('.edit-user.overlay'))
         },
         openDeleteUser(event){
             event.preventDefault()
             let elemt = document.querySelector('.delete-user.overlay')
             elemt.classList.add('open', 'animated', 'slideInRight')
+             this.focusEveryElementOnce($('.delete-user.overlay'))
         }
     },
 }

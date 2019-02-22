@@ -4,7 +4,9 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="#ededed" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 30" x="0px" y="0px"><path d="M17 21h-10c-2.209 0-4-1.791-4-4v-10c0-2.209 1.791-4 4-4h10c2.209 0 4 1.791 4 4v10c0 2.209-1.791 4-4 4zM19 7c0-1.105-0.895-2-2-2h-10c-1.105 0-2 0.895-2 2v10c0 1.105 0.895 2 2 2h10c1.105 0 2-0.895 2-2v-10zM14.008 8l4 4-4 4v-8zM9.992 8v8l-4-4z"/><text x="0" y="39" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Travis Avery</text><text x="0" y="44" fill="#000000" font-size="5px" font-weight="bold" font-family="Helvetica Neue, Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
       </div>    
 		<div class="name-block">
-            <span class="round">{{ user.firstName.substring(0,1) }}{{ user.lastName.substring(0,1) }}</span>
+            <span class="round">
+             <span>{{ user.firstName.substring(0,1) }}{{ user.lastName.substring(0,1) }}</span>
+            </span>
             <span class="name">{{ user.firstName }} {{ user.lastName }}</span>
         </div>
         <div class="fake-dropdown">

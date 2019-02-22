@@ -66,6 +66,7 @@ export default {
             }
         },
         hidePopup(event){
+            event.preventDefault()
             if(event.target.classList.contains('overlay')){
                 let allOverlays = document.querySelectorAll('.overlay')
                 for(var overlay of allOverlays){
@@ -79,6 +80,7 @@ export default {
                     
                 }, 2000)
             }
+            
         },
         dropdownToggle(e){
             jQuery(e.target).parent().toggleClass('open')
@@ -129,9 +131,15 @@ export default {
             $(event.target).next().slideDown()
         },
         focusEveryElementOnce(element){
-            element.find('input').focusin()
-            element.find('input').focusout()
-        }
+           /*  element.find('input').each(function(k,v){
+                $(v).focusin()
+                console.log($(v))
+                
+            }) */
+            element.find('input').each(function(k,v){
+                $(v).focus()
+            })
+        }    
 
     }
 }

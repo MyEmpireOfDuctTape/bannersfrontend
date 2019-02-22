@@ -307,13 +307,20 @@ $enable-gradients: true;
         font-weight: bold;
         text-align: center;
         min-height: 3rem;
+
         .round{
-            display: inline-block;
+            font-weight: bold;
+            margin: 0 auto;
             color: white;
             text-transform: uppercase;
             padding: 1em;
             border-radius: 50%;
             background-color: $paleblue;
+            height: 3.5em;
+            width: 3.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .name{
             display: inline-block;
@@ -479,7 +486,7 @@ $enable-gradients: true;
 
                         margin: 0 auto;
                         .round{
-                            display: inline-block;
+                            font-weight: bold;
                             color: white;
                             text-transform: uppercase;
                             padding: 1em;
@@ -1972,6 +1979,9 @@ button{
       &.open{
           display: flex;
       }
+      &.delete-user{
+        background-color: #ffababa8;
+      }
       .form-wrapper{
           background-color: $gray-lightest;
           padding: 2rem;
@@ -2353,14 +2363,16 @@ input{
 
 .danger-popup{
     //border: 1px solid red;
-    display: none;
+    //display: none;
     max-width: 100%;
     border-radius: 5px;
     padding: 1rem;
-    background-color: #ffa5a5;
+    //background-color: #ffa5a5;
     span{
-        color: white;
+        color: black;
         text-align: center;
+        display: block;
+        margin: 0 auto;
         padding: 0 0 1rem 0 !important;
         &:hover{
             color: white;
@@ -2370,13 +2382,19 @@ input{
         display: flex;
         align-items: center;
         justify-content: center;
-        button{
+        a{  
+            color: white;
+            text-decoration: none;
             width: 50%;
             border-radius: 5px;
             margin: 0 5px;
             text-align: center;
             padding: 0.5rem 1rem !important;
             border: none;
+            &.no{
+                color: black;
+                font-weight: bold;
+            }
             &:hover{
                 cursor: pointer;
                 outline: none;

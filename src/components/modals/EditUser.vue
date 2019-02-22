@@ -13,14 +13,14 @@
                 <span v-on:click="focusInput" data-initial="Last name" class="fake-label">Last name</span>
                 <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="lastName" type="text" name="name">
             </div>
-            <div class="input-block">
+            <!-- <div class="input-block">
                 <span v-on:click="focusInput" data-initial="Password" class="fake-label">Password</span>
-                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="password" type="text" name="name">
+                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="password" type="password" name="name">
             </div>
             <div class="input-block">
                 <span v-on:click="focusInput" data-initial="Password Confirmation" class="fake-label">Password Confirmation</span>
-                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="passwordConfirmation" type="text" name="name">
-            </div>
+                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="passwordConfirmation" type="password" name="name">
+            </div> -->
         <span id="error"></span>
         <button type="submit">Save</button>
         </form>
@@ -48,12 +48,10 @@ import axios from 'axios'
 import domfunctions from '@/mixins/domfunctions.js'
 export default {
     name: 'EditUserModal',
-    props: ['userIndex', 'firstName', 'lastName', 'password', 'passwordConfirmation'],
+    props: ['firstName', 'lastName', 'password', 'passwordConfirmation'],
     data () {
         return {
             msg: 'Edit user',
-            firstName: this.props.firstName,
-
             /* firstName: null,
             lastName: null,
             password: null,
@@ -62,18 +60,18 @@ export default {
     },
     mixins: [domfunctions],
     created(){
-        this.checkIfAutofilled()
-        console.log(this.props.firstName)
     },
     methods : {
         editUser(){
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
             axios.defaults.headers.common['Accept'] = 'application/json'
             axios.patch('/auth/user', {
+                firstName: this.firstName,
+                lastName: this.lastName,
                 confirmed: 1,
                 email: this.$store.getters.getUser.email,// todo check this,
-                password: this.password,
-                passwordConfirmation: this.passwordConfirmation,
+                /* password: this.password,
+                passwordConfirmation: this.passwordConfirmation, */
             }).then(function (response) {
                 console.log(response)
                 if(typeof response.data.token != undefined){
