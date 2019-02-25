@@ -27,9 +27,7 @@
             <span v-on:click="dropdownToggle">Select template</span>
             <div class="options">
                 <ul>
-                    <template v-for="template in templates.templates">
-                        <li :data-templateid="template.id" v-on:click="dropDownElementClicked($event, 'template')">{{ template.name }}</li>
-                    </template>    
+                        <li v-for="template in templates" :data-templateid="template.id" v-on:click="dropDownElementClicked($event, 'template')">{{ template.name }}</li>
                 </ul>
             </div>
             <input type="hidden" name="templateId" v-model="templateid">
@@ -39,9 +37,7 @@
             <span v-on:click="dropdownToggle">Select Size</span>
             <div class="options">
                 <ul>
-                    <template v-for="size in sizes.sizes">
-                        <li :data-sizeid="size.id" v-on:click="dropDownElementClicked($event, 'size')">{{ size.width }}x{{ size.height }}</li>
-                    </template>    
+                        <li v-for="size in sizes" :data-sizeid="size.id" v-on:click="dropDownElementClicked($event, 'size')">{{ size.width }}x{{ size.height }}</li>
                 </ul>
             </div>
             <input type="hidden" name="sizeId" v-model="sizeid">
@@ -122,7 +118,7 @@ export default {
       this.getSizes()
       /* console.log(this.folders)
       console.log(this.templates) */
-      console.log(this.sizes)
+      //console.log(this.sizes)
 
   },
   methods : {
@@ -144,8 +140,8 @@ export default {
                 //IF Logged in make Call
                 if(this.isloggedIn()){
                     const response = await axios.get('/sizes')
-                    console.log(response.data)
-                    this.sizes = response.data
+                    console.log(response.data.sizes)
+                    this.sizes = response.data.sizes
 			    }
             },
             async getTemplates(){
@@ -156,7 +152,7 @@ export default {
                 if(this.isloggedIn()){
                     const response = await axios.get('/templates')
                     console.log(response.data)
-                    this.templates = response.data
+                    this.templates = response.data.templates
 			    }
             },
             async selectTemplate(templatedId){

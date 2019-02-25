@@ -19,7 +19,7 @@
                                 <span v-on:click="dropdownToggle"> {{ banner.template.name }} </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li v-for="template in templates" v-bind:key="template.id" v-on:click="dropDownElementClicked">{{template.name}}</li>
+                                        <li v-for="template in templates" v-bind:key="template.id" v-on:click="selectTemplate($event, template.id)">{{template.name}}</li>
                                     </ul>
                                 </div>   
                             </div>    
@@ -305,6 +305,11 @@ export default {
         },
         removeStyleRow(index){
             this.customStyles.splice(index,1)
+        },
+        selectTemplate(e, template_id){
+            console.log(template_id)
+            jQuery(e.target).parent().parent().prev().text($(e.target).text())
+            jQuery(e.target).parent().parent().slideUp()
         }
   }
 }

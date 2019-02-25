@@ -139,7 +139,44 @@ export default {
             element.find('input').each(function(k,v){
                 $(v).focus()
             })
-        }    
+        },
+        animateCss(event, element, animationName, callback) {
+            event.preventDefault()
+            const node = document.querySelector(element)
+            node.classList.add('animated', animationName)
+            console.log(node)
+            function handleAnimationEnd() {
+                console.log('handleAnimationend')
+                node.classList.remove('animated', animationName)
+                node.removeEventListener('animationend', handleAnimationEnd)
+        
+                if (typeof callback === 'function') callback()
+            }
+            function whichAnimationEvent(){
+                var t,
+                    el = document.createElement("fakeelement");
+              
+                var animations = {
+                  "animation"      : "animationend",
+                  "OAnimation"     : "oAnimationEnd",
+                  "MozAnimation"   : "animationend",
+                  "WebkitAnimation": "webkitAnimationEnd"
+                }
+              
+                for (t in animations){
+                  if (el.style[t] !== undefined){
+                    return animations[t];
+                  }
+                }
+            }  
+              let transitionEvent = whichAnimationEvent()
+              console.log(transitionEvent)
+                node.addEventListener(transitionEvent, handleAnimationEnd)
+                node.addEventListener(transitionEvent, function(){
+                console.log('animation ended')
+                })
+        },
+          
 
     }
 }

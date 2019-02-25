@@ -27,8 +27,8 @@
                          </div>   
                     </div>
                     <div class="banner-slide row">
-                       <div v-for="banner in banners.banners" class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="preview">
+                       <div v-for="banner in banners.banners" class="col-lg-2 col-md-3 col-sm-6">
+                            <!-- <div class="preview">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
                                         <button v-on:click="checkBoxToggle" class="check"></button>
@@ -50,11 +50,29 @@
                                          <img class="Aligner-item land" src="../../assets/img/banner.jpg">
                                     </div>   
                                 </div>     
-                            </div>    
+                            </div>   -->  
+                            <router-link :to="{ path: '/banners/edit-banner/' + banner.id }">
+                            <div v-bind:class="returnAspectRatio(banner.size.width, banner.size.height) + ' dimension-box'">
+                                      <!--    <img class="Aligner-item land" src="../../assets/img/banner_tower.svg">
+                                <img v-bind:src="'../../assets/img/banner_' + returnAspectRatio(banner.size.width, banner.size.height) + '.svg'"> -->
+                                <template v-if="returnAspectRatio(banner.size.width, banner.size.height) == 'tower'">
+                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve"><g id="Page-1" class="st0"> <g id="image-gallery-copy-2"> <path id="Shape" d="M6.2,26.8V9.6H3.5C1.6,9.6,0,11.2,0,13.2v23.2c0,1.9,1.6,3.5,3.5,3.5h23.2c1.9,0,3.5-1.6,3.5-3.5v-2.5H13.2 C9.3,33.9,6.2,30.7,6.2,26.8z"/> <path d="M36.5,0.1H13.2c-1.9,0-3.5,1.6-3.5,3.5v23.2c0,1.9,1.6,3.5,3.5,3.5h23.2c1.9,0,3.5-1.6,3.5-3.5V3.6 C40,1.6,38.4,0.1,36.5,0.1z M28.5,25.5h-6.8V4.7h6.8V25.5z"/> </g> </g> </svg> 
+                                </template>
+                                <template v-else-if="returnAspectRatio(banner.size.width, banner.size.height) == 'rectangle'">
+                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve"> <g id="Page-1" class="st0"> <g id="image-gallery-copy-3"> <path id="Shape" d="M6.2,26.8V9.6H3.5C1.6,9.6,0,11.2,0,13.2v23.2c0,1.9,1.6,3.5,3.5,3.5h23.2c1.9,0,3.5-1.6,3.5-3.5v-2.5H13.2 C9.3,33.9,6.2,30.7,6.2,26.8z"/> <path d="M36.5,0.1H13.2c-1.9,0-3.5,1.6-3.5,3.5v23.2c0,1.9,1.6,3.5,3.5,3.5h23.2c1.9,0,3.5-1.6,3.5-3.5V3.6 C40,1.6,38.4,0.1,36.5,0.1z M35.2,18.4H15v-6.4h20.1V18.4z"/> </g> </g> </svg> 
+                                </template>
+                                <template v-else-if="returnAspectRatio(banner.size.width, banner.size.height) == 'square'">
+                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve"> <g id="Page-1" class="st0"> <g id="image-gallery-copy-4"> <path id="Shape" d="M6.2,26.8V9.6H3.5C1.6,9.6,0,11.2,0,13.2v23.2c0,1.9,1.6,3.5,3.5,3.5h23.2c1.9,0,3.5-1.6,3.5-3.5v-2.5H13.2 C9.3,33.9,6.2,30.7,6.2,26.8z"/> <path d="M36.5,0.1H13.2c-1.9,0-3.5,1.6-3.5,3.5v23.2c0,1.9,1.6,3.5,3.5,3.5h23.2c1.9,0,3.5-1.6,3.5-3.5V3.6 C40,1.6,38.4,0.1,36.5,0.1z M30.5,20.4H19.7V10.1h10.8V20.4z"/> </g> </g> </svg>     
+                                </template>
+                                <span>{{banner.size.width}}x{{banner.size.height}}</span>
+                            </div>
+                            <span>{{banner.name}}</span>
+                            </router-link>
                         </div>
                         <template v-if="banners.totalCount == 0">
                             <span class="sad">No banners yet :'(</span>
                         </template>    
+
                       
                 </div>
                 </div>
@@ -228,6 +246,17 @@ export default {
             this.currentCompany = this.$store.getters.getUser.companies[index]
             this.asyncgetBannersDirect()
             this.asyncgetTemplatesDirect()
+        },
+        returnAspectRatio(width, height, ){
+                if(width == height){
+                return 'square';
+                }
+                else if(width > height){
+                    return 'rectangle';
+                }
+                else{
+                    return 'tower';
+                }
         }
   },
 }

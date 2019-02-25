@@ -2408,3 +2408,96 @@ input{
     }
     
 }
+
+.dimension-box{
+    box-shadow: 0 0 10px 0 #f1f1f1;
+    background-color: white;
+    border: 1px solid #ededed;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1em 2em;
+    text-decoration: none;
+    color: $textcolor !important;
+    &:hover{
+        cursor: pointer;
+        a, span{
+            text-decoration: none !important;
+        }
+    }
+    &.tower{
+        background-color: #eceff9;
+    }
+    &.rectangle{
+        background-color: #fae8dc;
+    }
+    &.square{
+        background-color: #e6f0de;
+    }
+    svg{
+        width: 40%;
+        fill: #c3c3c3;
+    }
+    span{
+        width: 60%;
+        font-size: 20px;
+        color: black;
+        text-align: center;
+    }
+}
+
+a{
+    color: $textcolor !important;
+    &:hover{
+        text-decoration: uppercase !important;
+    }
+}
+
+
+.folders{
+    .folder{
+        position: relative;
+        box-shadow: 0 0 10px 0 #f1f1f1;
+        background-color:#eff9fd;
+        border: 1px solid #ededed;
+        border-radius: 10px;
+        background-image: $folder;
+        padding: 1em 2em;
+        text-decoration: none;
+        color: $textcolor !important;
+        .folder-bg{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        button{
+            position: absolute;
+            top: 10px;
+            padding: 0;
+            background-repeat: no-repeat;
+            background-size: 15px;
+            border: 1px solid $gray-lighter;
+            height: 20px;
+            width: 20px;
+            border-radius: 5px;
+            z-index: 1;
+            right: 10px;
+            background-image: url($morebluu);
+        }
+        .folder-name{
+            display: block;
+            font-size: 0.85em;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .contents{
+            display: block;
+            font-size: 0.8em;
+            text-align: center;
+            margin: 0 auto;
+            font-weight: bold;
+        }
+    }
+}

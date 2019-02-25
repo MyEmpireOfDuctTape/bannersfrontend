@@ -46,17 +46,18 @@ export default {
   mixins: [domfunctions],
   created(){
       console.log('addfolder created')
-      this.getFolders()
+     /*  this.getFolders()
       this.getTemplates()
-      this.getSizes()
+      this.getSizes() */
       /* console.log(this.folders)
       console.log(this.templates) */
-      console.log(this.sizes)
+      //console.log(this.sizes)
 
   },
-  methods : {
-            createFolder(event){
-                event.preventDefault()
+  methods: {
+            createFolder(){
+                console.log('attempting to create folder')
+                //event.preventDefault()
                 console.log(event.target)
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
                 axios.defaults.headers.common['Company'] = 1

@@ -71,7 +71,7 @@ export default {
     },
     mixins: [domfunctions],
     created(){
-        this.checkIfAutofilled()
+        //this.checkIfAutofilled()
     },
     methods : {
         deleteUser(userid){
@@ -103,14 +103,18 @@ export default {
             document.querySelector('button#delete').style.display = 'block'
         },
         dissmissDelete(event){
-                console.log(document.querySelector('#delete-user-modal'))
+                /* console.log(document.querySelector('#delete-user-modal'))
                 document.querySelector('#delete-user-modal').classList.add('animated', 'slideOutRight')
                 setTimeout(function(){
-                        document.querySelector('#delete-user-modal').classList.remove('animated', 'slideOutRight', 'open')
+                        
                     
-                }, 2000)
+                }, 2000) */
+                console.log('animatecss')
+                this.animateCss('#delete-user-modal', 'slideOutLeft'); /* , function() {
+                     document.querySelector('#delete-user-modal').classList.remove('animated', 'slideOutRight', 'open')
+                });   */
             
-        }
+        },
     }
 }
 </script>
