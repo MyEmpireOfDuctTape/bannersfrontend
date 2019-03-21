@@ -1,10 +1,11 @@
 <template>
-<div id="add-folder-overlay" v-on:click="hidePopup" class="overlay add-folder Aligner">
+ <!-- <div id="add-folder-overlay" v-on:click="hidePopup" class="overlay add-folder Aligner"> -->
+<div id="add-folder-overlay" v-on:click="hideSlide($event)" class="overlay add-folder Aligner">
     <div class="popup Aligner-item">
         <div class="popup-header">
          <h3>{{ msg }}</h3>
          </div>
-        <form class="auth-form" @submit.prevent="createFolder"> 
+        <form id="folderform" class="auth-form" @submit.prevent="createFolder($event)">  
          <div class="input-block">
           <span v-on:click="focusInput" data-initial="Folder name" class="fake-label">Folder name</span>
           <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" type="text" name="name">
@@ -15,6 +16,7 @@
     </div>    
     </div>    
  
+
 </template>
 
 <style lang="scss" scoped>
@@ -55,9 +57,28 @@ export default {
 
   },
   methods: {
-            createFolder(){
+      submitClick(event){
+          console.log('clicked');
+          console.log(event);
+
+      },
+      hideSlide(event){
+          if(event.target.classList.contains('overlay')){
+                let allOverlays = document.querySelectorAll('.overlay')
+                for(var overlay of allOverlays){
+                    overlay.classList.add('animated', 'slideOutRight')
+                }
+                setTimeout(function(){
+                    for(var overlay of allOverlays){
+                        overlay.classList.remove('animated', 'slideOutRight')
+                        overlay.classList.remove('open')
+                    }
+                    
+                }, 2000)
+            }
+      },
+        createFolder(event){
                 console.log('attempting to create folder')
-                //event.preventDefault()
                 console.log(event.target)
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
                 axios.defaults.headers.common['Company'] = 1

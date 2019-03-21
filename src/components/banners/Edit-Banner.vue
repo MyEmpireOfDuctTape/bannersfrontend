@@ -170,8 +170,10 @@
                     <div class="row contentrow bigger-wrapper">
                         <div class="col-12">
                             <div class="row nomarg html-preview">
-                                
-                                <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe>
+                                <div id="bannerpreview">
+                                    {{ banner.templateHtml }}
+                                </div>
+                                <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
                             </div>
                         </div>
                     </div>          
@@ -197,7 +199,6 @@ export default {
   data () {
     return {
       msg: 'Edit banner',
-      banner: null,
       templates: null,
       sizes: null,
       name: null,
@@ -219,7 +220,10 @@ export default {
                         },
                     value: 'Value',
                 },
-        ], 
+        ],
+        banner: {
+            name: 'loading',
+        }
     }
   },
   mixins: [domfunctions],

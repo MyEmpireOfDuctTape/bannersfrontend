@@ -6,6 +6,7 @@
 
 <script>
 import Sidebar from '@/components/sidebar/Sidebar'
+//import Sass from './assets/scss/style.scss'
 export default {
   name: 'App',
   components: {
@@ -16,10 +17,11 @@ export default {
 
 
 <style lang="scss">
-@import './assets/scss/style.scss';
+/* @import './assets/scss/style.scss'; */
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
 <style lang="css">
+@import './build/app.min.css';
 @import './assets/css/animate.css';
 </style>
 
