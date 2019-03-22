@@ -16,6 +16,7 @@ import BannerFolder from '@/components/banners/BannerFolder'
 import Templates from '@/components/templates/Templates'
 import SingleTemplate from '@/components/templates/Single-Template'
 import Folder from '@/components/folders/Folder'
+import Folders from '@/components/folders/Folders'
 
 
 import MyAccount from '@/components/users/MyAccount'
@@ -114,14 +115,21 @@ export default new Router({
         }
     },
     {
+      path: '/folder',
+      name: 'Folders',
+      component: Folders,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/folder/:id',
       name: 'Folder',
       component: Folder,
       meta: {
         requiresAuth: true
       }
-  },
-  
+    },
     {
       path: '/banners/:folderName',
       name: 'BannerFolder',
