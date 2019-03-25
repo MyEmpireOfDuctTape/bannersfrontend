@@ -3,7 +3,9 @@
         <div class="row">
 
                 <sidebar></sidebar>
-
+                <template v-if="loading">
+                    <Loading></Loading>
+                </template>
                 <div class="templates main-view container-fluid">
                     <h1>Templates</h1>
                         <div class="header row">
@@ -12,9 +14,9 @@
                             </div>
                             <div class="right col-lg-9 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" placeholder="Search by name or description">
+                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
                                 </div>
-                                <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
+                                 <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
                                     <span> Aspect ratio</span>
                                     <div class="hidden">
                                         <ul>
@@ -56,7 +58,7 @@
                                         </div>    
                                     </div>
                                 </div>
-                                 <template v-for="(template, index) in templates.templates">
+                                 <template v-for="(template, index) in templates">
                                     <div class="template-list">
                                     <div class="template row">
                                         <div class="left col-lg-6">
@@ -147,15 +149,18 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import Loading from '../loading/Loading'
 import axios from 'axios'
 
 export default {
   name: 'Templates',
   components: {
-      Sidebar
+      Sidebar,
+      Loading
   },
   data () {
     return {
+        loading: true,
       msg: 'Dashboard yo',
       active: [],
       activetwo: [],
@@ -174,11 +179,14 @@ export default {
                 ]
         }, */
         templates: null,
+        allTemplates: null,
         popoverstart: '<div class="popoover">',
         popoverclose : '<a href="#" class="close">dismiss</a>',
         popoverend : '</div>',
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
+        searchValue: null,
+
     }
   },
   created(){
@@ -196,7 +204,31 @@ export default {
       this.getTemplates()
   },
   methods: {
+        searchFolders(){
+            //console.log(this.searchValue)
+            let searchValue = this.searchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.templates = this.allTemplates
+                return
+            }
+            console.log(searchValue)
+            _.forEach(this.allTemplates, function(value){
+                /* console.log(value)
+                console.log(value.name)
+                console.log(value.description) */
+                if(value.name && value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+                else if(value.description && value.description.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            console.log(searchResults)
+            this.templates = searchResults
+        },
       async getTemplates(){
+          this.loading = true
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
         
@@ -204,13 +236,16 @@ export default {
                 if(this.isloggedIn()){
                     const response = await axios.get('/templates')
                     console.log(response.data)
-                    this.templates = response.data
+                    this.templates = response.data.templates
+                    this.allTemplates = response.data.templates
                     for(let i = 0; i < response.data.templates.length; i++){
                         this.active.push(false)
                         this.activetwo.push(false)
                     }
                     console.log(this.active)
-			    }
+                }
+          this.loading = false
+                
             },
             isloggedIn(){
                 return this.$store.getters.loggedIn

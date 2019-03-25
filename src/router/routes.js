@@ -115,7 +115,7 @@ export default new Router({
         }
     },
     {
-      path: '/folder',
+      path: '/folders',
       name: 'Folders',
       component: Folders,
       meta: {

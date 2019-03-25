@@ -2650,3 +2650,15 @@ a{
         }
     }
 }
+
+.preloader{
+    width: 100vw;
+    height: 100vh;
+    background: #c1c1c1;
+    opacity: 0.5;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}

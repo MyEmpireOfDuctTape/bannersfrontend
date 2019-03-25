@@ -5,6 +5,9 @@
                 <sidebar></sidebar>
                 <add-banner></add-banner>
 <!--                 <AddFolder></AddFolder> -->
+            <template v-if="loading">
+                <Loading></Loading>
+            </template>
                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
@@ -315,6 +318,7 @@
 import Sidebar from '../sidebar/Sidebar'
 import AddBanner from '../modals/AddBanner'
 import AddFolder from '../modals/AddFolder'
+import Loading from '../loading/Loading'
 
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
@@ -326,9 +330,11 @@ export default {
       Sidebar, 
       AddBanner,
       AddFolder,
+      Loading,
   },
   data () {
     return {
+        loading: true,
         msg: 'Banners yo',
         banners: null,
         folders: null,
@@ -337,7 +343,7 @@ export default {
         creating: false,
         createName: null,
         confirmedtrue: false,
-        editName: 'CHANGED',// null,
+        editName:  null,
         editing: [],
     }
   },
@@ -359,15 +365,19 @@ export default {
 mixins: [domfunctions],
   methods: {
         async asyncgetBannersDirect(){
+            this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/banners')
                 console.log(response)
                 this.banners = response.data.banners
+            this.loading = false
 			
         },
         async asyncgetFolderbyID(id){
+            this.loading = true
+
             // SET HEADERS
 			axios.defaults.headers.common['Accept'] = 'application/json',
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
@@ -375,9 +385,12 @@ mixins: [domfunctions],
                 const response = await axios.get('/folders/'+id)
                 console.log(response.data)
                 
+            this.loading = false
 			
         },
         async asyncgetFolders(){
+            this.loading = true
+
             // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
@@ -387,11 +400,13 @@ mixins: [domfunctions],
             this.folders = response.data.folders
             this.hideAllPopups()
                 // nothing useful in here
-                for(let key in response.data.folders){
+                /* for(let key in response.data.folders){
                     if (response.data.folders.hasOwnProperty(key)) {
                         this.asyncgetFolderbyID(response.data.folders[key].id)
                     }
-                }
+                } */
+            this.loading = false
+
 
         },
         

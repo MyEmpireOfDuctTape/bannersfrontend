@@ -3,8 +3,6 @@
         <div class="row">
 
                 <sidebar></sidebar>
-                <add-banner></add-banner>
-<!--                 <AddFolder></AddFolder> -->
                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
@@ -29,29 +27,7 @@
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" placeholder="Search by name or description">
-                                </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Aspect ratio</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Size</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>Size 1</li>
-                                            <li>Size 2</li>
-                                            <li>Size 3</li>
-                                            <li>Size 4</li>
-                                        </ul>
-                                    </div>                            
+                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
                                 </div>
                             </div>
                         </div>
@@ -151,13 +127,16 @@ export default {
         msg: 'Banners yo',
         banners: null,
         folders: null,
+        allFolders: null,
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
         creating: false,
         createName: null,
         confirmedtrue: false,
-        editName: 'CHANGED',// null,
+        editName: null,
         editing: [],
+        searchValue: null,
+        //searchResults: [],
     }
   },
   created(){
@@ -172,11 +151,28 @@ export default {
             this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
             this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
         }
-        this.asyncgetBannersDirect()
+        //this.asyncgetBannersDirect()
         this.asyncgetFolders()
+
   },
 mixins: [domfunctions],
   methods: {
+        searchFolders(){
+            //console.log(this.searchValue)
+            let searchValue = this.searchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.folders = this.allFolders
+                return
+            }
+            _.forEach(this.allFolders, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.folders = searchResults
+        },
         async asyncgetBannersDirect(){
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
@@ -204,6 +200,7 @@ mixins: [domfunctions],
             const response = await axios.get('/folders')
             console.log(response.data.folders)
             this.folders = response.data.folders
+            this.allFolders = response.data.folders
             this.hideAllPopups()
                 // nothing useful in here
                 for(let key in response.data.folders){

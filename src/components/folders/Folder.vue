@@ -1,9 +1,15 @@
 <template>
+
     <div class="fullpage container-fluid">
+
+            
         <div class="row">
 
                 <sidebar></sidebar>
                 <add-banner></add-banner>
+            <template v-if="loading">
+                <Loading></Loading>
+            </template>
                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
@@ -20,9 +26,17 @@
                 </div> 
                 <div class="banners container-fluid main-view">
                     <div class="col-lg-9 col-sm-12">
-                            <span class="before">Folder </span>
-                            <svg class="subset" version="1.1" id="Layer_1" fill="#acb2bc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <path id="Shape" d="M369.1,518.3L194.2,343.5c-8.5-8.5-12.8-19.7-12.8-30.9s4.3-22.4,12.8-30.9c17.1-17.1,44.8-17.1,61.8,0 L400,425.6l143.9-143.9c17.1-17.1,44.8-17.1,61.8,0c17.1,17.1,17.1,44.7,0,61.8L430.9,518.3C413.8,535.4,386.2,535.4,369.1,518.3z" /> </svg>
-                            <span class="after">{{currentFolder.name}}</span>
+                            <router-link :to="{ path: '/folders' }">
+                                <span class="before">Folders </span>
+                            </router-link>
+                            <!-- <svg class="subset" version="1.1" id="Layer_1" fill="#acb2bc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <path id="Shape" d="M369.1,518.3L194.2,343.5c-8.5-8.5-12.8-19.7-12.8-30.9s4.3-22.4,12.8-30.9c17.1-17.1,44.8-17.1,61.8,0 L400,425.6l143.9-143.9c17.1-17.1,44.8-17.1,61.8,0c17.1,17.1,17.1,44.7,0,61.8L430.9,518.3C413.8,535.4,386.2,535.4,369.1,518.3z" /> </svg>
+                            <span class="after">{{currentFolder.name}}</span> -->
+                            <template v-for="(name, key) in parentNames">
+                                <svg class="subset" version="1.1" id="Layer_1" fill="#acb2bc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <path id="Shape" d="M369.1,518.3L194.2,343.5c-8.5-8.5-12.8-19.7-12.8-30.9s4.3-22.4,12.8-30.9c17.1-17.1,44.8-17.1,61.8,0 L400,425.6l143.9-143.9c17.1-17.1,44.8-17.1,61.8,0c17.1,17.1,17.1,44.7,0,61.8L430.9,518.3C413.8,535.4,386.2,535.4,369.1,518.3z" /> </svg>
+                                <router-link :to="{ path: '/folder/' + name.id }">
+                                    <span class="after">{{name.name}}</span>
+                                </router-link>
+                            </template>
                         </div>
                     <div class="container-fluid">
                         <div class="header row">
@@ -32,30 +46,9 @@
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" placeholder="Search by name or description">
+                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
                                 </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Aspect ratio</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Size</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>Size 1</li>
-                                            <li>Size 2</li>
-                                            <li>Size 3</li>
-                                            <li>Size 4</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="folders row">
@@ -134,6 +127,20 @@
                                         </div>    
                                     </div>
                                     <div class="right col-lg-8 col-md-6 col-sm-6">
+                                        <div class="input-bubble search">
+                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
+                                </div>
+                                <div class="input-bubble dropdown"> 
+                                    <span> Aspect ratio</span>
+                                    <div class="hidden">
+                                        <ul>
+                                            <li>600x300</li>
+                                            <li>600x300</li>
+                                            <li>600x300</li>
+                                            <li>600x300</li>
+                                        </ul>
+                                    </div>                            
+                                </div>
                                          <div class="input-bubble dropdown"> 
                                     <span> Size</span>
                                     <div class="hidden">
@@ -171,15 +178,15 @@
                                 </div> 
                         </div>
                     </div>
+           
                 </div>    
-            </div>
 
 </template>
-
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
 import AddBanner from '../modals/AddBanner'
+import Loading from '../loading/Loading'
 
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
@@ -190,14 +197,19 @@ export default {
   components: {
       Sidebar, 
       AddBanner,
+      Loading,
   },
   data () {
     return {
+        loading: true,
+        goading: true,
         msg: 'Folders yo',
         banners: [],
         allBanners: null,
         folders: [],
         allFolders: null,
+        parentFolder: null,
+        parentNames: [],
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
         creating: false,
@@ -206,6 +218,8 @@ export default {
         editName: null,
         editing: [],
         currentFolder: null,
+        searchValue: null,
+        searchResults: [],
     }
   },
   created(){
@@ -225,22 +239,15 @@ export default {
         this.asyncgetFolders()
         this.asyncgetFolderbyID(this.$route.params.id)
   },
-/*   computed:  function(){
-        this.asyncgetFolderbyID(this.$route.params.id)
-        
-  }, */
-/*     watch: {
-        '$route': function(){
-            console.log(this);
-        }
-    }, */
     watch:{
     $route (to, from){
         // too many api calls this.asyncgetBannersDirect()        
 /*         console.log(this.banners)
         console.log(to.params.id) */
+       /*  console.log('route change') */
         this.banners = []
         this.folders = []
+        this.parentNames = []
         this.sortBannersById(to.params.id)
         this.sortFoldersById(to.params.id)
         this.asyncgetFolderbyID(to.params.id)
@@ -250,8 +257,25 @@ export default {
 } ,
     mixins: [domfunctions],
   methods: {
+      searchFolders(){
+            //console.log(this.searchValue)
+            let searchValue = this.searchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.folders = this.allFolders
+                return
+            }
+            _.forEach(this.allFolders, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name && value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.folders = searchResults
+        },
         async asyncgetBannersDirect(){
             console.log('async banners start')
+            this.loading = true
             let banana = this.banners
             //let id = this.$route.params.id
             // SET HEADERS
@@ -262,6 +286,7 @@ export default {
                 this.allBanners = response.data.banners
                 this.sortBannersById(this.$route.params.id)
             console.log('async banners end')
+            this.loading = false
 			
         },
         sortBannersById(id){
@@ -275,28 +300,43 @@ export default {
                 }
             });
         },
+        hasParentFolder(folderObject){
+            return folderObject.parentId != null ? folderObject.parentId : false
+        },
         async asyncgetBannersDirectById(id){
+            this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/banners')
                 console.log(response.data.banners)
                 this.banners = response.data.banners
-			
+			this.loading = false
         },
         async asyncgetFolderbyID(id){
+            this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Accept'] = 'application/json',
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/folders/'+id)
                 console.log(response.data)
+                let hasParentId = this.hasParentFolder(response.data.folder)
+                this.parentNames.unshift({
+                        name: response.data.folder.name,
+                        id: response.data.folder.id
+                    })
+                if(hasParentId){
+                    this.asyncgetFolderbyID(hasParentId)
+                }
                 this.currentFolder = response.data.folder
+                this.loading = false
                 
 			
         },
         async asyncgetFolders(){
             // SET HEADERS
+            this.loading = true
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
@@ -306,7 +346,7 @@ export default {
             //this.folders = response.data.folders
             this.hideAllPopups()
             this.sortFoldersById(this.$route.params.id)
-
+this.loading = false
                 // nothing useful in here
                 /* for(let key in response.data.folders){
                     if (response.data.folders.hasOwnProperty(key)) {
@@ -316,18 +356,19 @@ export default {
 
         },
         sortFoldersById(id){
-            let banana = this.folders
+            this.loading = true
+            let banana = []
              // sort the banners with this folder id
             _.forEach(this.allFolders, function(value, key) {
                 //if(value.folderId == this.$route.params.id){
                     //console.log(value)
-                if(value.id == id){
+                if(value.parentId == id){
                     banana.push(value)
                 }
             });
             this.folders = banana
-            console.log(this.folders)
-            console.log('banana')
+            //this.allFolders = banana
+            this.loading = false
         },
         
         showBannerOverlay(){

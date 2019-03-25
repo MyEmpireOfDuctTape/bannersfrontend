@@ -18,9 +18,10 @@
     "lodash": "^4.17.11",
     "popper": "^1.0.1",
     "request": "^2.88.0",
-    "vue": "^2.6.9",
+    "vue": "^2.6.10",
     "vue-cookie": "^1.1.4",
     "vue-router": "^3.0.2",
+    "vue-typed-js": "^0.1.2",
     "vuex": "^3.1.0"
   },
   "devDependencies": {
@@ -57,7 +58,6 @@
     "jshint": "^2.10.2",
     "lodash.assign": "^4.2.0",
     "node-notifier": "^5.4.0",
-    "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
     "portfinder": "^1.0.20",
@@ -76,12 +76,12 @@
     "vinyl-transform": "^1.0.0",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.6.9",
+    "vue-template-compiler": "^2.6.10",
     "vue2-ace-editor": "0.0.13",
     "watchify": "^3.6.1",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.9.1",
+    "webpack-dev-server": "^2.11.5",
     "webpack-merge": "^4.2.1"
   },
   "engines": {
