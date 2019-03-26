@@ -4,8 +4,7 @@
 
             
         <div class="row">
-
-                <sidebar></sidebar>
+                <sidebar v-on:company-changed="methodThatForcesUpdate($event)"></sidebar>
                 <add-banner></add-banner>
             <template v-if="loading">
                 <Loading></Loading>
@@ -101,6 +100,8 @@
                                         <template v-else>      
                                            <router-link :to="{ path: '/folder/' + folder.id }">
                                                 <span class="contents">{{folder.name}}</span>
+                                                <span class="date">Created at <br />{{humanDate(folder.createdAt)}}</span>
+                                                <span class="date">Updated at <br />{{humanDate(folder.updatedAt)}}</span>
                                             </router-link>
                                         </template>
                                     </div>
@@ -234,9 +235,8 @@ export default {
             this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
             this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
         }
-        
+        this.asyncgetFolders()        
         this.asyncgetBannersDirect()
-        this.asyncgetFolders()
         this.asyncgetFolderbyID(this.$route.params.id)
   },
     watch:{
@@ -257,7 +257,17 @@ export default {
 } ,
     mixins: [domfunctions],
   methods: {
-      searchFolders(){
+        methodThatForcesUpdate(event) {
+            //this.currentCompany = event
+
+            // have to route to all folders 
+            this.$router.push({ path: `/folders` });
+           /*  this.asyncgetFolders() // redirect if 404 */
+           /*  this.asyncgetBannersDirect() */
+           /*  this.asyncgetFolderbyID(this.$route.params.id) */
+        },
+        searchFolders(){
+            
             //console.log(this.searchValue)
             let searchValue = this.searchValue.toLowerCase()
             let searchResults = []
@@ -327,26 +337,54 @@ export default {
                         id: response.data.folder.id
                     })
                 if(hasParentId){
-                    this.asyncgetFolderbyID(hasParentId)
+                    return this.asyncgetFolderbyID(hasParentId)
                 }
                 this.currentFolder = response.data.folder
                 this.loading = false
                 
 			
         },
-        async asyncgetFolders(){
-            // SET HEADERS
+        async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+            //POSSIBLE ORDERBYS
+            //companyId -> company_id
+            //createdAt -> created_at
+            //id -> id  // duh
+            //name -> name
+            // parentId -> parent_id
+            //token -> ????? 
+            // updatedAt -> updated_at
             this.loading = true
+            let take = 50
+            let skip = 0
+            let orderBy = orderByArg
+            let orderByType = orderByTypeArg
+            if(takeAmount && Number.isInteger(takeAmount)){
+                take = takeAmount
+            }
+            if(skipAmount && Number.isInteger(skipAmount)){
+                skip = skipAmount
+            }
+            if(skipAmount && Number.isInteger(skipAmount)){
+                skip = skipAmount
+            }
+            // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            let params = {
+                    take: take,
+                    skip: skip,
+                    orderByType: orderByType,
+                    orderBy: orderBy,
+            };
+            let serialized = this.serialize(params)
             const response = await axios.get('/folders')
             console.log(response.data.folders)
             this.allFolders = response.data.folders
             //this.folders = response.data.folders
             this.hideAllPopups()
             this.sortFoldersById(this.$route.params.id)
-this.loading = false
+            this.loading = false
                 // nothing useful in here
                 /* for(let key in response.data.folders){
                     if (response.data.folders.hasOwnProperty(key)) {
@@ -423,7 +461,7 @@ this.loading = false
                 console.log('attempting to create folder')
                 console.log(event.target)
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-                axios.defaults.headers.common['Company'] = 1
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 let data = {
                     name: this.createName,
                 };
@@ -527,6 +565,7 @@ this.loading = false
                     this.createName = null
                     this.editName = null
                     this.editing = null
+                    this.parentNames = []
                     this.asyncgetFolderbyID(this.$route.params.id)
 
                 }).catch((error) => {

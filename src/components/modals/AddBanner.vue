@@ -1,5 +1,8 @@
 <template>
-<div id="add-banner-overlay" v-on:click="hidePopup" class="overlay add-banner Aligner">
+<div id="add-banner-overlay" v-on:click="hidePopup($event)" class="overlay add-banner Aligner">
+    <template v-if="loading">
+                <Loading></Loading>
+    </template>
     <div class="popup Aligner-item">
         <div class="popup-header">
          <h3>{{ msg }}</h3>
@@ -14,10 +17,10 @@
                 <span v-on:click="dropdownToggle" >Select folder</span>
             <div class="options">
                 <ul>
-                    <li data-folderid="1" v-on:click="dropDownElementClicked($event, 'folder')">Folder 1</li>
-                    <li data-folderid="1" v-on:click="dropDownElementClicked($event, 'folder')">Folder 2</li>
+                    <li v-for="(folder, key) in folders" :key="key" v-on:click="dropDownElementClicked($event, 'folder', key)">{{folder.name}}</li>
+                    <!-- <li data-folderid="1" v-on:click="dropDownElementClicked($event, 'folder')">Folder 2</li>
                     <li data-folderid="1" v-on:click="dropDownElementClicked($event, 'folder')">Folder 3</li>
-                    <li data-folderid="1" v-on:click="dropDownElementClicked($event, 'folder')">Folder 4</li>
+                    <li data-folderid="1" v-on:click="dropDownElementClicked($event, 'folder')">Folder 4</li> -->
                 </ul>
             </div>
             <input type="hidden" name="folderId" v-model="folderid">
@@ -27,7 +30,7 @@
             <span v-on:click="dropdownToggle">Select template</span>
             <div class="options">
                 <ul>
-                        <li v-for="template in templates" :data-templateid="template.id" v-on:click="dropDownElementClicked($event, 'template')">{{ template.name }}</li>
+                        <li v-for="(template, key) in templates" :key="key" :data-templateid="template.id" v-on:click="dropDownElementClicked($event, 'template', template.id)">{{ template.name }}</li>
                 </ul>
             </div>
             <input type="hidden" name="templateId" v-model="templateid">
@@ -37,7 +40,7 @@
             <span v-on:click="dropdownToggle">Select Size</span>
             <div class="options">
                 <ul>
-                        <li v-for="size in sizes" :data-sizeid="size.id" v-on:click="dropDownElementClicked($event, 'size')">{{ size.width }}x{{ size.height }}</li>
+                        <li v-for="(size, key) in sizes" :key="key" :data-sizeid="size.id" v-on:click="dropDownElementClicked($event, 'size', size.id)">{{ size.width }}x{{ size.height }}</li>
                 </ul>
             </div>
             <input type="hidden" name="sizeId" v-model="sizeid">
@@ -75,12 +78,18 @@
 </style>
 
 <script>
+import Loading from '../loading/Loading'
+
 import axios from 'axios'
 import domfunctions from '@/mixins/domfunctions.js'
 export default {
   name: 'AddBannerModal',
+  components: {
+      Loading
+  },
   data () {
     return {
+        loading: true,
         msg: 'Create a banner',
         name: '',
         folderid: 0,
@@ -113,7 +122,7 @@ export default {
       }
   },
   mounted(){
-      this.getFolders()
+      this.asyncgetFolders()
       this.getTemplates()
       this.getSizes()
       /* console.log(this.folders)
@@ -122,17 +131,50 @@ export default {
 
   },
   methods : {
-            async getFolders(){
-                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
-                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
-        
-                //IF Logged in make Call
-                if(this.isloggedIn()){
-                    const response = await axios.get('/folders')
-                    console.log(response.data)
-                    this.folders = response.data
-			    }
-            },
+            async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+            //POSSIBLE ORDERBYS
+            //companyId -> company_id
+            //createdAt -> created_at
+            //id -> id  // duh
+            //name -> name
+            // parentId -> parent_id
+            //token -> ????? 
+            // updatedAt -> updated_at
+            this.loading = true
+            let take = 50
+            let skip = 0
+            let orderBy = orderByArg
+            let orderByType = orderByTypeArg
+            if(takeAmount && Number.isInteger(takeAmount)){
+                take = takeAmount
+            }
+            if(skipAmount && Number.isInteger(skipAmount)){
+                skip = skipAmount
+            }
+            // SET HEADERS
+            console.log('asyncfolders start')
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+            axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            let params = {
+                    take: take,
+                    skip: skip,
+                    orderByType: orderByType,
+                    orderBy: orderBy,
+            };
+            let serialized = this.serialize(params)
+            const response = await axios.get('/folders'+serialized)
+            console.log(response.data)
+            this.folders = response.data.folders
+            this.loading = false
+
+                // nothing useful in here
+                /* for(let key in response.data.folders){
+                    if (response.data.folders.hasOwnProperty(key)) {
+                        this.asyncgetFolderbyID(response.data.folders[key].id)
+                    }
+                } */
+
+        },
             async getSizes(){
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
@@ -168,22 +210,22 @@ export default {
             },
             // failure, a man can dream of passing events and argument
             //update - dreams do come true - func($event, arg)
-            dropDownElementClicked(e, type){
+            dropDownElementClicked(e, type, value){
                 let targetParameter, dataAttribute
                 $(e.target).parent().parent().prev().text($(e.target).text())
                 switch (type) {
                     case 'folder':
-                        this.folderid = Number(e.target.dataset.folderid)
+                        this.folderid = value//Number(e.target.dataset.folderid)
                         break;
                     case 'template':
-                        this.selectTemplate(e.target.dataset.templateid)
-                        this.templateid = Number(e.target.dataset.templateid)
+                        this.selectTemplate(value)//(e.target.dataset.templateid)
+                        this.templateid = value//Number(e.target.dataset.templateid)
                         break;
                     case 'size':
-                        this.sizeid = Number(e.target.dataset.sizeid)
+                        this.sizeid = value//Number(e.target.dataset.sizeid)
                         break;    
                     default:
-                        this.folderid = Number(e.target.dataset.folderid)
+                        this.folderid = value//Number(e.target.dataset.folderid)
                         break;
                 }
                 $(e.target).parent().parent().slideUp() 

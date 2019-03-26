@@ -2,7 +2,10 @@
     <div class="fullpage container-fluid">
         <div class="row">
 
-                <sidebar></sidebar>
+                <sidebar v-on:company-changed="methodThatForcesUpdate($event)" ></sidebar>
+            <template v-if="loading">
+                <Loading></Loading>
+            </template>
                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
@@ -28,6 +31,14 @@
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
                                     <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
+                                </div>
+                                <div class="input-bubble dropdown" v-on:click="toggleDropDown($event)"> 
+                                    <span>Order By</span>
+                                    <div class="hidden">
+                                        <ul>
+                                            <li v-for="(value, key) in orderByOptions" :key="key" v-on:click="updateFolders(take, skip, orderByType, value)">{{key}}</li>
+                                        </ul>
+                                    </div>                            
                                 </div>
                             </div>
                         </div>
@@ -90,6 +101,8 @@
                                         <template v-else>      
                                             <router-link :to="{ path: '/folder/' + folder.id }">
                                                 <span class="contents">{{folder.name}}</span>
+                                                <span class="date">Created at <br />{{humanDate(folder.createdAt)}}</span>
+                                                <span class="date">Updated at <br />{{humanDate(folder.updatedAt)}}</span>
                                             </router-link>
                                         </template>
                                         
@@ -111,6 +124,7 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import Loading from '../loading/Loading'
 
 
 import domfunctions from '@/mixins/domfunctions.js'
@@ -121,9 +135,11 @@ export default {
   name: 'Folders',
   components: {
       Sidebar, 
+      Loading
   },
   data () {
     return {
+        loading: true,
         msg: 'Banners yo',
         banners: null,
         folders: null,
@@ -136,6 +152,20 @@ export default {
         editName: null,
         editing: [],
         searchValue: null,
+        orderByOptions: {
+            'Date Created': 'created_at',
+            'Name': 'name',
+            'Date Updated': 'updated_at',
+            //id -> id  // duh
+            //name -> name
+            // parentId -> parent_id
+            //token -> ????? 
+            // updatedAt -> updated_at
+        },
+        orderBy: 'id',
+        orderByType: 'ASC',
+        take: 60,
+        skip: 0,
         //searchResults: [],
     }
   },
@@ -157,6 +187,19 @@ export default {
   },
 mixins: [domfunctions],
   methods: {
+
+        updateFolders(take, skip, orderByTypeArg, orderByArg){
+            // "updateFolders(take, skip, orderByType, value)"
+            console.log(take)
+            console.log(skip)
+            console.log(orderByTypeArg)
+            console.log(orderByArg)
+           this.asyncgetFolders(take, skip, orderByTypeArg, orderByArg)
+        },
+        methodThatForcesUpdate(event) {
+                this.currentCompany = event
+                this.asyncgetFolders()
+            },
         searchFolders(){
             //console.log(this.searchValue)
             let searchValue = this.searchValue.toLowerCase()
@@ -174,40 +217,73 @@ mixins: [domfunctions],
             this.folders = searchResults
         },
         async asyncgetBannersDirect(){
+            this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/banners')
                 console.log(response)
                 this.banners = response.data.banners
+            this.loading = false
 			
         },
         async asyncgetFolderbyID(id){
+            this.loading = true
+
             // SET HEADERS
 			axios.defaults.headers.common['Accept'] = 'application/json',
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/folders/'+id)
-                console.log(response.data)
+                //console.log(response.data)
+            this.loading = false
                 
 			
         },
-        async asyncgetFolders(){
+        async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+            //POSSIBLE ORDERBYS
+            //companyId -> company_id
+            //createdAt -> created_at
+            //id -> id  // duh
+            //name -> name
+            // parentId -> parent_id
+            //token -> ????? 
+            // updatedAt -> updated_at
+            this.loading = true
+            let take = 50
+            let skip = 0
+            let orderBy = orderByArg
+            let orderByType = orderByTypeArg
+            if(takeAmount && Number.isInteger(takeAmount)){
+                take = takeAmount
+            }
+            if(skipAmount && Number.isInteger(skipAmount)){
+                skip = skipAmount
+            }
             // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
-            const response = await axios.get('/folders')
-            console.log(response.data.folders)
+            axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            let params = {
+                    take: take,
+                    skip: skip,
+                    orderByType: orderByType,
+                    orderBy: 'name',//orderBy,
+            };
+            let serialized = this.serialize(params)
+            const response = await axios.get('/folders'+serialized)
+            console.log(response.data)
             this.folders = response.data.folders
             this.allFolders = response.data.folders
             this.hideAllPopups()
+            this.loading = false
+
                 // nothing useful in here
-                for(let key in response.data.folders){
+                /* for(let key in response.data.folders){
                     if (response.data.folders.hasOwnProperty(key)) {
                         this.asyncgetFolderbyID(response.data.folders[key].id)
                     }
-                }
+                } */
 
         },
         
@@ -224,7 +300,7 @@ mixins: [domfunctions],
                     document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
             }, 2000)
         }, 
-        returnAspectRatio(width, height, ){
+        returnAspectRatio(width, height ){
                 if(width == height){
                 return 'squaree';
                 }
@@ -263,7 +339,7 @@ mixins: [domfunctions],
                 console.log('attempting to create folder')
                 console.log(event.target)
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-                axios.defaults.headers.common['Company'] = 1
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 let data = {
                     name: this.createName,
                 };

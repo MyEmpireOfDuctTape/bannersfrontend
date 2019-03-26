@@ -63,7 +63,8 @@ export default {
 					console.log(error)
 					//if(error.response.status == 422){
 									// error logging in
-									if(typeof error.response.data.errors != 'undefined'){
+									console.log(error)
+									if(error && typeof error.response.data.errors != 'undefined'){
 										let errors = error.response.data.errors;
 											for (var key in errors) {
 													if (errors.hasOwnProperty(key)) {

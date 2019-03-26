@@ -9,10 +9,10 @@ Vue.use(VueCookie)
 axios.defaults.baseURL = 'https://stage.api.banners.ee/v1'
 export default new Vuex.Store({
     state: {
-		token: JSON.parse(VueCookie.get('accessToken')) || null,
-		user: JSON.parse(VueCookie.get('user')) || null,
-		currentCompany: null,
-		currentAccessLevel: null,
+			token: JSON.parse(VueCookie.get('accessToken')) || null,
+			user: JSON.parse(VueCookie.get('user')) || null,
+			currentCompany: JSON.parse(VueCookie.get('currentCompany')) || null,
+			currentAccessLevel: null,
 /* 		folders: undefined,
 		templates: undefined,
 		sizes: undefined, */
@@ -28,11 +28,14 @@ export default new Vuex.Store({
 			return state.user
 		},
 		getCurrentCompany(state){
+/* 			console.log('getCurrentCompany')
+			console.log(state.currentCompany) */
 			return state.currentCompany
 		},
 		getCurrentAccessLevel(state){
 			return state.currentAccessLevel
 		},
+
 /* 		getBanners(state){
 			return state.banners
 		},
@@ -62,6 +65,7 @@ export default new Vuex.Store({
 		},
 		setCurrentCompany(state, company){
 			state.currentCompany = company;
+			VueCookie.set('currentCompany', JSON.stringify(company));
 		},
 		setCurrentAccessLevel(state, accessLevel){
 			state.currentAccessLevel = accessLevel;
@@ -81,22 +85,22 @@ export default new Vuex.Store({
 			
 			return new Promise((resolve, reject) => {
 
-            axios.post('/auth/login', credentials)
-              .then((response) => {
-					let date = new Date()
-					//date.setTime(token.expiresIn)
-					date.setTime(1549152000)
-					VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
-					VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
-					context.commit('retrieveToken', response.data.token)
-					context.commit('retrieveUser', response.data.user)
-					context.commit('setCurrentCompany', response.data.user.companies[0])
-
-					resolve(response);
-              })
-              .catch((error) => {
+          axios.post('/auth/login', credentials)
+          .then((response) => {
+						let date = new Date()
+						date.setTime(response.data.expiresIn)
+						//date.setTime(1549152000)
+						VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
+						VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
+						VueCookie.set('currentCompany', JSON.stringify(response.data.companies[0]), date.toUTCString());
+						context.commit('retrieveToken', response.data.token)
+						context.commit('retrieveUser', response.data.user)
+						context.commit('setCurrentCompany', response.data.user.companies[0])
+						resolve(response);
+          })
+          .catch((error) => {
 				  	reject(error);
-			  })
+			  	})
 			})  
 		},
 		destroyToken(context, credentials){
@@ -131,6 +135,8 @@ export default new Vuex.Store({
               		.then(function (response) {
 						console.log(response)
 						console.log(axios.defaults.headers.common)
+						let date = new Date()
+						date.setTime(response.data.expiresIn)
 						VueCookie.set('accessToken', response.data.token.accessToken, date.toUTCString());
 						VueCookie.set('user', response.data.user, date.toUTCString());
 						context.commit('retrieveToken', response.data.token)
@@ -158,8 +164,8 @@ export default new Vuex.Store({
 						//console.log(axios.defaults.headers)
 						context.commit('retrieveBanners', response.data)
 						let date = new Date()
-						//date.setTime(token.expiresIn)
-						date.setTime(1549152000)
+						date.setTime(response.data.expiresIn)
+						//date.setTime(1549152000)
 						VueCookie.set('banners', JSON.stringify(response.data) , date.toUTCString());
 						resolve(response)
 					})
@@ -186,7 +192,8 @@ export default new Vuex.Store({
 						context.commit('retrieveBanners', response.data)
 						let date = new Date()
 						//date.setTime(token.expiresIn)
-						date.setTime(1549152000)
+						//date.setTime(1549152000)
+						date.setTime(response.data.expiresIn)
 						VueCookie.set('banners', JSON.stringify(response.data) , date.toUTCString());
 						resolve(response)
 					})

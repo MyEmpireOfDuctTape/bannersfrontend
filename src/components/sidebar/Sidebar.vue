@@ -16,7 +16,7 @@
             <div class="the-rest">
                 <ul>
                     <template v-if="otherCompanies.length > 0">
-                        <li v-for="company in otherCompanies" :data-id="company.id">
+                        <li v-for="company in otherCompanies" :data-id="company.id" v-on:click="setCurrentCompany(company.id)">
                             {{ company.name }}
                         </li>
                     </template>
@@ -187,9 +187,18 @@ export default {
                 document.querySelector('.selected').nextElementSibling.classList.remove('animated', 'fadeInUp')
 			}, 3000); */
       },
-      selectCompany(){
-
-      }
+      setCurrentCompany(id){
+            let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+                return company.id == id
+            });
+            console.log(index)
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[index])
+            this.currentCompany = this.$store.getters.getUser.companies[index]
+            this.otherCompanies = this.$store.getters.getUser.companies ? this.$store.getters.getUser.companies.filter(company => company.id != this.$store.getters.getCurrentCompany.id) : null,
+            //this.$router.go()
+            this.$emit('company-changed', this.currentCompany)
+            this.toggleSidebar()
+        },
     }
 }
 </script>

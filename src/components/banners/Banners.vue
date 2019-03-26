@@ -2,7 +2,7 @@
     <div class="fullpage container-fluid">
         <div class="row">
 
-                <sidebar></sidebar>
+                <sidebar v-on:company-changed="methodThatForcesUpdate($event)"></sidebar>
                 <add-banner></add-banner>
 <!--                 <AddFolder></AddFolder> -->
             <template v-if="loading">
@@ -117,6 +117,8 @@
                                         <template v-else>      
                                             <router-link :to="{ path: '/folder/' + folder.id }">
                                                 <span class="contents">{{folder.name}}</span>
+                                                <span class="date">Created at <br />{{humanDate(folder.createdAt)}}</span>
+                                                <span class="date">Updated at <br />{{humanDate(folder.updatedAt)}}</span>
                                             </router-link>
                                         </template>
                                         
@@ -462,7 +464,7 @@ mixins: [domfunctions],
                 console.log('attempting to create folder')
                 console.log(event.target)
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-                axios.defaults.headers.common['Company'] = 1
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 let data = {
                     name: this.createName,
                 };
@@ -574,7 +576,12 @@ mixins: [domfunctions],
                 this.editing = folder.id
                 this.editName = folder.name
                 this.hideAllPopups()
-            }
+            },
+            methodThatForcesUpdate(event) {
+                this.currentCompany = event
+                this.asyncgetBannersDirect()
+                this.asyncgetFolders()
+            },
 
   }
 }

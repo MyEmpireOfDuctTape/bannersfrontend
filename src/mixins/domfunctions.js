@@ -55,6 +55,11 @@ export default {
             let date = new Date(input)
             return date.toDateString()
         },
+        returnHumanDate(date){
+            let newDate = new Date(date).toLocaleString('en-GB', { timeZone: 'UTC' })
+            let res = newDate.split(',')
+            return res[0]
+        },
         returnRole(role){
             switch(role){
                 case 'admin':
@@ -66,7 +71,8 @@ export default {
             }
         },
         hidePopup(event){
-            event.preventDefault()
+            //event.preventDefault()
+            console.log('hidepopup')
             if(event.target.classList.contains('overlay')){
                 let allOverlays = document.querySelectorAll('.overlay')
                 for(var overlay of allOverlays){
@@ -176,6 +182,27 @@ export default {
                 console.log('animation ended')
                 })
         },
+        serialize(input){
+            let serialized = '?'
+                    _.forEach(input, (value, index) => {
+                        
+                        if(index == 'vat_number'){
+                            serialized += index + '=testtestt&'
+                        }
+                        else if(index == 'email'){
+                            serialized += index + '=juhan.soone@havas.ee&'
+                        }
+                        else if(value == null && index != 'vat_number'){
+                            serialized += index + '=testtest&'
+                        }
+                        else{
+                            serialized += index + '=' + value + '&'
+                        }
+                        
+                    })
+                    serialized = serialized.substring(0, serialized.length - 1)
+                    return serialized;
+        }
           
 
     }

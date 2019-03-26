@@ -3,9 +3,11 @@
     <div class="fullpage container-fluid">
          
         <div class="row">
-                <sidebar></sidebar>
+                <sidebar v-on:company-changed="methodThatForcesUpdate($event)"></sidebar>
                <add-banner></add-banner>
-               
+                <template v-if="loading">
+                    <Loading></Loading>
+                </template>
 		<div class="dashboard main-view container-fluid">
                 <div class="banners-by-company row">
                    <template v-for="company in user.companies">
@@ -123,6 +125,7 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import Loading from '../loading/Loading'
 import AddBanner from '../modals/AddBanner'
 import axios from 'axios'
 import domfunctions from '@/mixins/domfunctions.js'
@@ -133,10 +136,12 @@ export default {
   name: 'Dashboard',
   components: {
       Sidebar ,
-      AddBanner 
+      AddBanner,
+      Loading
   },
   data () {
     return {
+        loading: true,
         user: this.$store.getters.getUser,
         banners:  null,
         templates: null,
@@ -168,7 +173,16 @@ export default {
   },
   mixins: [domfunctions],
   methods: {
+        methodThatForcesUpdate(event) {
+            // ...
+            /* console.log(event)
+            this.$forceUpdate() */
+            this.setCurrentCompany(event.id)
+              // Notice we have to use a $ here
+            // ...
+        },
         async asyncgetBannersDirect(){
+            this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
@@ -180,9 +194,13 @@ export default {
                 console.log(response.data)
                 this.banners = response.data
                 
-			}
+            }
+            this.loading = false
+            
         },
         async asyncgetTemplatesDirect(){
+            this.loading = true
+
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
@@ -192,7 +210,9 @@ export default {
                 const response = await axios.get('/templates')
                 console.log(response)
                 this.templates = response.data
-			}
+            }
+            this.loading = false
+            
         },
         /* createBanner(){
 				this.$store.dispatch('createBanner', {

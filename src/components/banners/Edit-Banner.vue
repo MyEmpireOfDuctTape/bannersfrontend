@@ -16,7 +16,7 @@
                     <div class="row contentrow">
                         <div class="col-lg-9">
                             <div class="big-dd">
-                                <span v-on:click="dropdownToggle"> {{ banner.template.name }} </span>
+                                <span v-on:click="dropdownToggle"> {{ currentTemplate.name }} </span>
                                 <div class="dropdown">
                                     <ul>
                                         <li v-for="template in templates" v-bind:key="template.id" v-on:click="selectTemplate($event, template.id)">{{template.name}}</li>
@@ -26,13 +26,18 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="big-dd">
-                                <span v-on:click="dropdownToggle"> {{banner.size.width}}x{{banner.size.height}} </span>
+                                <template v-if="sizes.length > 0">
+                                <span v-on:click="dropdownToggle"> {{sizes[0].width}}x{{sizes[0].height}} </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li v-for="size in sizes" v-bind:key="size.id" v-on:click="dropDownElementClicked">{{size.width}}x{{size.height}}</li>
-                                       
+                                        <li v-for="(size, key) in sizes" v-bind:key="key" v-on:click="dropDownElementClicked">{{size.width}}x{{size.height}}</li>
                                     </ul>
-                                </div>   
+                                </div> 
+                                </template>
+                                <template v-else>
+                                    <span>This template has no sizes</span>
+                                </template>
+                                  
                             </div>    
                         </div>
                     </div>  
@@ -186,6 +191,7 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import Loading from '../loading/Loading'
 import axios from 'axios'
 const Editor = require('vue2-ace-editor')
 import domfunctions from '@/mixins/domfunctions.js'
@@ -194,18 +200,20 @@ export default {
   name: 'EditBanner',
   components: {
       Sidebar,
+      Loading,
       editor: Editor,
   },
   data () {
     return {
-      msg: 'Edit banner',
-      templates: null,
-      sizes: null,
-      name: null,
-      description: null,
-      fieldValues: null,
-      customhtml: '<!DOCTYPE html>',
-      customStyles:  // TODO  make domhandling functions for adding and deleting rows.
+        loading: true,
+        msg: 'Edit banner',
+        templates: null,
+        sizes: ['test'],
+        name: null,
+        description: null,
+        fieldValues: null,
+        customhtml: '<!DOCTYPE html>',
+        customStyles:  // TODO  make domhandling functions for adding and deleting rows.
         [
                 {
                     element: 
@@ -223,7 +231,8 @@ export default {
         ],
         banner: {
             name: 'loading',
-        }
+        },
+        currentTemplate: null,
     }
   },
   mixins: [domfunctions],
@@ -250,6 +259,7 @@ export default {
             require('brace/snippets/javascript') //snippet
         },
       async getBanner(){
+                this.loading = true
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/banners/'+this.$route.params.bannerid)
@@ -258,21 +268,27 @@ export default {
                 this.name = response.data.banner.name
                 this.description = response.data.banner.description
                 this.fieldValues = response.data.banner.fieldValues
+                this.currentTemplate = response.data.banner.template
+                this.sizes = response.data.banner.template.sizes
+                this.loading = false  
       },
       async getTemplates(){
+                this.loading = true
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/templates')
                 console.log(response.data)
                 this.templates = response.data.templates
-			    
+			    this.loading = false
             },
       async getSizes(){
+                this.loading = true   
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/sizes')
                 console.log(response.data)
                 this.sizes = response.data
+                this.loading = false
 			    
             },      
       /* dropdownToggle(e){
@@ -312,9 +328,23 @@ export default {
         },
         selectTemplate(e, template_id){
             console.log(template_id)
+            this.getTemplateById(template_id)
             jQuery(e.target).parent().parent().prev().text($(e.target).text())
             jQuery(e.target).parent().parent().slideUp()
-        }
+        },
+        async getTemplateById(id){
+                this.sizes = []
+                this.loading = true
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+
+                const response = await axios.get('/templates/'+id)
+                console.log(response.data)
+                this.currentTemplate = response.data.template
+                this.sizes = response.data.template.sizes
+                this.loading = false
+                
+            },
   }
 }
 </script>
