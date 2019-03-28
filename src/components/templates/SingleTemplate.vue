@@ -67,6 +67,21 @@
                     <div class="row template-form">
                         <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
+                                <template v-for="(field, key) in template.fields">
+                                    <template v-if="field.type == 'select'">
+                                         <div class="input-block"></div>
+                                    </template>
+                                    <template v-else-if="field.type == 'input'">
+                                         <div class="input-block"></div>
+                                    </template>
+                                    <template v-else-if="field.type == 'file'">
+                                         <div class="input-block"></div>
+                                    </template>
+                                    <template v-else-if="field.type == 'color'">
+                                         <div class="input-block"></div>
+                                    </template>
+                               
+                                </template>
                                 <div class="input-block">
                                     <input type="text" placeholder="Background image">
                                 </div>
@@ -252,16 +267,19 @@ export default {
 
             this.loading = false
       },
-      editTemplate(){
+      saveTemplate(){
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 /* let timeout
                 clearTimeout(timeout) */
-                const response = axios.patch('/templates', {
-                    name: this.name,
-                    description: this.description,
-                    html: this.html,
-                }).then(response => {
+                let params = {
+                    name: this.template.name,
+                    description: this.template.description,
+                    html: this.template.html,
+                }
+                let serialized = this.serialize(params)
+                const response = axios.patch('/templates/'+this.template.id, params)
+                .then(response => {
                     console.log(response.data)
 					if(typeof response.data.messages != 'undefined'){
                        document.getElementById('success').innerHTML = response.data.messages[0].message  

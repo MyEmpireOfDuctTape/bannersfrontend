@@ -27,6 +27,7 @@ import AddTemplate from '@/components/templates/Add-Template'
 import EditBanner from '@/components/banners/Edit-Banner'
 import ace from "ace-builds"
 
+import ColorPicker from '@radial-color-picker/vue-color-picker';
 
 Vue.use(Router)
 
@@ -185,6 +186,14 @@ export default new Router({
       path: '/banners/edit-banner/:bannerid',
       name: 'EditBanner',
       component: EditBanner,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/colorpicker',
+      name: 'ColorPicker',
+      component: ColorPicker,
       meta: {
         requiresAuth: true
       }
