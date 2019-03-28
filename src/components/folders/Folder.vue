@@ -237,7 +237,7 @@ export default {
         }
         this.asyncgetFolders()        
         this.asyncgetBannersDirect()
-        this.asyncgetFolderbyID(this.$route.params.id)
+        //this.asyncgetFolderbyID(this.$route.params.id)
   },
     watch:{
     $route (to, from){
@@ -250,7 +250,9 @@ export default {
         this.parentNames = []
         this.sortBannersById(to.params.id)
         this.sortFoldersById(to.params.id)
-        this.asyncgetFolderbyID(to.params.id)
+        this.asyncgetFolders()        
+        this.asyncgetBannersDirect()
+        //this.asyncgetFolderbyID(to.params.id)
 /*         console.log(this.banners) */
 
     }
@@ -290,17 +292,25 @@ export default {
             //let id = this.$route.params.id
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
-                const response = await axios.get('/banners')
+            axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            let params = {
+                    take: take,
+                    skip: skip,
+                    orderByType: orderByType,
+                    orderBy: orderBy,
+                    folderId: this.$route.params.id
+            };
+            let serialized = this.serialize(params)
+                const response = await axios.get('/banners'+serialized)
                 console.log(response.data.banners)
                 this.allBanners = response.data.banners
-                this.sortBannersById(this.$route.params.id)
+                //this.sortBannersById(this.$route.params.id)
             console.log('async banners end')
             this.loading = false
 			
         },
         sortBannersById(id){
-            let banana = this.banners
+            let banana = []
              // sort the banners with this folder id
             _.forEach(this.allBanners, function(value, key) {
                 //if(value.folderId == this.$route.params.id){
@@ -309,6 +319,7 @@ export default {
                     banana.push(value)
                 }
             });
+            this.banners = banana
         },
         hasParentFolder(folderObject){
             return folderObject.parentId != null ? folderObject.parentId : false
@@ -376,9 +387,10 @@ export default {
                     skip: skip,
                     orderByType: orderByType,
                     orderBy: orderBy,
+                    parentId: this.$route.params.id
             };
             let serialized = this.serialize(params)
-            const response = await axios.get('/folders')
+            const response = await axios.get('/folders'+serialized)
             console.log(response.data.folders)
             this.allFolders = response.data.folders
             //this.folders = response.data.folders
@@ -422,17 +434,7 @@ export default {
                     document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
             }, 2000)
         }, 
-        returnAspectRatio(width, height, ){
-                if(width == height){
-                return 'squaree';
-                }
-                else if(width > height){
-                    return 'rectangle';
-                }
-                else{
-                    return 'tower';
-                }
-        },
+
         editPopup(event){
             
             if(event.target.nextElementSibling.classList.contains('visible')){

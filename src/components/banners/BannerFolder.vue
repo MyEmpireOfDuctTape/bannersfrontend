@@ -191,7 +191,7 @@
 
 import Sidebar from '../sidebar/Sidebar'
 export default {
-  name: 'BannerFolder',
+  name: 'BannerFolder-old',
   components: {
       Sidebar
   },

@@ -2,6 +2,10 @@
     <div class="fullpage container-fluid">
         <div class="row">
                 <sidebar></sidebar>
+                <template v-if="loading">
+                    <Loading></Loading>
+                </template>
+                <template v-else>
 		        <div class="edit-banner main-view container-fluid">
                     <div class="row">
                         <div class="col-lg-9 col-sm-12">
@@ -26,7 +30,7 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="big-dd">
-                                <template v-if="sizes.length > 0">
+                                <template v-if="undefined !== sizes && sizes.length > 0">
                                 <span v-on:click="dropdownToggle"> {{sizes[0].width}}x{{sizes[0].height}} </span>
                                 <div class="dropdown">
                                     <ul>
@@ -62,6 +66,13 @@
                                      <span v-on:click="focusInput" class="fake-label">{{ key }}</span>
                                     <input v-model="fieldValues[key]" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" type="text">
                                 </div>
+<!--                                 <v-flex xs12 sm6 md3>
+                                <v-text-field
+                                    label="Outline"
+                                    outline
+                                ></v-text-field>
+                                </v-flex>
+                                <v-text-field name="test" label="value" color="teal"></v-text-field> -->
                                 <!-- <div class="input-block">
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" type="text" placeholder="Button text">
                                 </div> -->
@@ -176,13 +187,15 @@
                         <div class="col-12">
                             <div class="row nomarg html-preview">
                                 <div id="bannerpreview">
-                                    {{ banner.templateHtml }}
+                                    <div v-html="banner.templateHtml"> </div>
                                 </div>
                                 <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
                             </div>
                         </div>
                     </div>          
                 </div>
+                </template>
+
             </div> 
 		</div>
 

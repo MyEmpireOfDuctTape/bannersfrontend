@@ -12,9 +12,11 @@ import NewPassword from '@/components/login/NewPassword'
 //dashboard 
 import Dashboard from '@/components/dashboard/Dashboard'
 import Banners from '@/components/banners/Banners'
-import BannerFolder from '@/components/banners/BannerFolder'
+//import BannerFolder from '@/components/banners/BannerFolder'
+import BannerFolder from '@/components/folders/BannerFolder'
 import Templates from '@/components/templates/Templates'
-import SingleTemplate from '@/components/templates/Single-Template'
+import BannersByTemplate from '@/components/templates/BannersByTemplate'
+import SingleTemplate from '@/components/templates/SingleTemplate'
 import Folder from '@/components/folders/Folder'
 import Folders from '@/components/folders/Folders'
 
@@ -131,17 +133,10 @@ export default new Router({
       }
     },
     {
-      path: '/banners/:folderName',
+//      path: '/banners/:folderName',
+      path: '/banners/:id',
       name: 'BannerFolder',
       component: BannerFolder,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/templates',
-      name: 'Templates',
-      component: Templates,
       meta: {
         requiresAuth: true
       }
@@ -155,7 +150,23 @@ export default new Router({
       }
     },
     {
+      path: '/templates',
+      name: 'Templates',
+      component: Templates,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/templates/:id',
+      name: 'BannersByTemplate',
+      component: BannersByTemplate,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/template/:id',
       name: 'SingleTemplate',
       component: SingleTemplate,
       meta: {

@@ -153,9 +153,9 @@ export default {
         editing: [],
         searchValue: null,
         orderByOptions: {
-            'Date Created': 'created_at',
+            'Date Created': 'createdAt',
             'Name': 'name',
-            'Date Updated': 'updated_at',
+            'Date Updated': 'updatedAt',
             //id -> id  // duh
             //name -> name
             // parentId -> parent_id
@@ -242,11 +242,11 @@ mixins: [domfunctions],
         },
         async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
             //POSSIBLE ORDERBYS
-            //companyId -> company_id
-            //createdAt -> created_at
+            //companyId -> companyId
+            //createdAt -> createdAt
             //id -> id  // duh
             //name -> name
-            // parentId -> parent_id
+            // parentId -> parentId
             //token -> ????? 
             // updatedAt -> updated_at
             this.loading = true
@@ -268,7 +268,7 @@ mixins: [domfunctions],
                     take: take,
                     skip: skip,
                     orderByType: orderByType,
-                    orderBy: 'name',//orderBy,
+                    orderBy: orderBy,
             };
             let serialized = this.serialize(params)
             const response = await axios.get('/folders'+serialized)

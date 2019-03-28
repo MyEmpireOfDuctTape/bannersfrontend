@@ -21,6 +21,7 @@ export default {
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
 <style lang="css">
+/* @import '../node_modules/vuetify/dist/vuetify.min.css'; */
 @import './build/app.min.css';
 @import './assets/css/animate.css';
 </style>

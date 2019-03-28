@@ -7,6 +7,7 @@ Vue.use(Vuex)
 Vue.use(VueCookie)
 
 axios.defaults.baseURL = 'https://stage.api.banners.ee/v1'
+
 export default new Vuex.Store({
     state: {
 			token: JSON.parse(VueCookie.get('accessToken')) || null,
@@ -90,9 +91,10 @@ export default new Vuex.Store({
 						let date = new Date()
 						date.setTime(response.data.expiresIn)
 						//date.setTime(1549152000)
+						console.log(response)
 						VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
 						VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
-						VueCookie.set('currentCompany', JSON.stringify(response.data.companies[0]), date.toUTCString());
+						VueCookie.set('currentCompany', JSON.stringify(response.data.user.companies[0]), date.toUTCString());
 						context.commit('retrieveToken', response.data.token)
 						context.commit('retrieveUser', response.data.user)
 						context.commit('setCurrentCompany', response.data.user.companies[0])

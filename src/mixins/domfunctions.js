@@ -202,7 +202,18 @@ export default {
                     })
                     serialized = serialized.substring(0, serialized.length - 1)
                     return serialized;
-        }
+        },
+        returnAspectRatio(width, height, ){
+            if(width == height){
+            return 'squaree';
+            }
+            else if(width > height){
+                return 'rectangle';
+            }
+            else{
+                return 'tower';
+            }
+        },
           
 
     }

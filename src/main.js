@@ -5,7 +5,8 @@ import App from './App'
 import router from './router/routes'
 import store from './store/store'
 import VueCookie from 'vue-cookie'
-
+import Vuetify from 'vuetify'
+//import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -23,7 +24,7 @@ router.beforeEach((to, from, next) => {
   }
 })
   
-
+Vue.use(Vuetify) //-> cant use due to webpack extract text issue
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

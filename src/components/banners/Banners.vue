@@ -115,7 +115,7 @@
 
                                         </template>
                                         <template v-else>      
-                                            <router-link :to="{ path: '/folder/' + folder.id }">
+                                            <router-link :to="{ path: '/banners/' + folder.id }">
                                                 <span class="contents">{{folder.name}}</span>
                                                 <span class="date">Created at <br />{{humanDate(folder.createdAt)}}</span>
                                                 <span class="date">Updated at <br />{{humanDate(folder.updatedAt)}}</span>
@@ -340,6 +340,7 @@ export default {
         msg: 'Banners yo',
         banners: null,
         folders: null,
+        allFolders: null,
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
         creating: false,
@@ -370,8 +371,13 @@ mixins: [domfunctions],
             this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
-                const response = await axios.get('/banners')
+            axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            let params = {
+                    take: 30,
+                    skip: 0,
+            };
+            let serialized = this.serialize(params)
+                const response = await axios.get('/banners'+serialized)
                 console.log(response)
                 this.banners = response.data.banners
             this.loading = false
@@ -390,16 +396,42 @@ mixins: [domfunctions],
             this.loading = false
 			
         },
-        async asyncgetFolders(){
+        async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+            //POSSIBLE ORDERBYS
+            //companyId -> companyId
+            //createdAt -> createdAt
+            //id -> id  // duh
+            //name -> name
+            // parentId -> parentId
+            //token -> ????? 
+            // updatedAt -> updated_at
             this.loading = true
-
+            let take = 50
+            let skip = 0
+            let orderBy = orderByArg
+            let orderByType = orderByTypeArg
+            if(takeAmount && Number.isInteger(takeAmount)){
+                take = takeAmount
+            }
+            if(skipAmount && Number.isInteger(skipAmount)){
+                skip = skipAmount
+            }
             // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
-			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
-            const response = await axios.get('/folders')
+            axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            let params = {
+                    take: take,
+                    skip: skip,
+                    orderByType: orderByType,
+                    orderBy: orderBy,
+            };
+            let serialized = this.serialize(params)
+            const response = await axios.get('/folders'+serialized)
             console.log(response.data.folders)
             this.folders = response.data.folders
+            this.allFolders = response.data.folders
+            this.sortFoldersById()
             this.hideAllPopups()
                 // nothing useful in here
                 /* for(let key in response.data.folders){
@@ -410,6 +442,21 @@ mixins: [domfunctions],
             this.loading = false
 
 
+        },
+        sortFoldersById(){
+            this.loading = true
+            let banana = []
+             // sort the banners with this folder id
+            _.forEach(this.allFolders, function(value, key) {
+                //if(value.folderId == this.$route.params.id){
+                    //console.log(value)
+                if(value.parentId == null){
+                    banana.push(value)
+                }
+            });
+            this.folders = banana
+            //this.allFolders = banana
+            this.loading = false
         },
         
         showBannerOverlay(){
