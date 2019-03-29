@@ -27,7 +27,8 @@ import AddTemplate from '@/components/templates/Add-Template'
 import EditBanner from '@/components/banners/Edit-Banner'
 import ace from "ace-builds"
 
-import ColorPicker from '@radial-color-picker/vue-color-picker';
+import ColorPicker from '@/components/color/ColorPicker';
+import Advanced from '@/components/color/advanced';
 
 Vue.use(Router)
 
@@ -194,6 +195,14 @@ export default new Router({
       path: '/colorpicker',
       name: 'ColorPicker',
       component: ColorPicker,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/advanced',
+      name: 'Advanced',
+      component: Advanced,
       meta: {
         requiresAuth: true
       }

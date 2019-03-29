@@ -78,10 +78,13 @@
                                          <div class="input-block"></div>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
-                                         <div class="input-block"></div>
+                                         <color-picker v-bind="color" @input="onInput" v-bind:inputHex="field.default"></color-picker>
                                     </template>
                                
                                 </template>
+
+                                 <color-picker v-bind="color" @input="onInput" v-bind:inputHex="'#000000'"></color-picker>
+                                  <color-picker v-bind="color" @input="onInput" v-bind:inputHex="'#ffffff'"></color-picker>
                                 <div class="input-block">
                                     <input type="text" placeholder="Background image">
                                 </div>
@@ -181,7 +184,7 @@
 
 import Sidebar from '../sidebar/Sidebar'
 import Loading from '../loading/Loading'
-
+import ColorPicker from '../color/ColorPicker';
 
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
@@ -193,6 +196,7 @@ export default {
       Sidebar,
       Loading,
       editor: Editor,
+      ColorPicker: ColorPicker,
   },
   data () {
     return {
@@ -202,6 +206,12 @@ export default {
         banners: null,
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
+        color: {
+                hue: 50,
+                saturation: 100,
+                luminosity: 50,
+                alpha: 1
+            }
     }
   },
   created(){
@@ -232,6 +242,10 @@ export default {
 } ,
     mixins: [domfunctions],
   methods: {
+      onInput() {
+            // do something with this.color
+            console.log(this.color)
+        },
         editorInit() {
             require('brace/ext/language_tools') //language extension prerequsite...
             require('brace/mode/html')                

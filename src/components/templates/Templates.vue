@@ -79,7 +79,7 @@
                                                 </div>    
                                             <div @mouseover="showTooltip(2, index)" @mouseout="showTooltip(2, index)" class="svg-wrapper popover-wrapper">  
                                                 <div v-show="activetwo[index]" class="popoover">
-                                                        <span>Edit the banners of this template</span>
+                                                        <span>Edit this template</span>
                                                     </div>           
                                                      <router-link :to="{ path: '/template/'+template.id }">       
                                                         <svg  class="edit" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>
