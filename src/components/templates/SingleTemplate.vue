@@ -32,11 +32,11 @@
                                 <div class="row template-form">
                         <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
-                                <div class="input-block">
+                                <div class="input-block" v-bind:class="[template.name.length > 0 ? 'focused' : '']">
                                     <span v-on:click="focusInput" class="fake-label" data-initial="Template name">Template name</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.name" name="name" type="text">
                                 </div>
-                                <div class="input-block">
+                                <div class="input-block" v-bind:class="[template.description.length > 0 ? 'focused' : '']">
                                     <span v-on:click="focusInput" class="fake-label" data-initial="Description">Description</span>
                                     <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.description" name="description" class="comment"></textarea>
                                 </div>
@@ -69,23 +69,29 @@
                             <div class="form-wrapper">
                                 <template v-for="(field, key) in template.fields">
                                     <template v-if="field.type == 'select'">
-                                         <div class="input-block"></div>
+                                         <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" ></dropDown>
                                     </template>
                                     <template v-else-if="field.type == 'input'">
-                                         <div class="input-block"></div>
+                                         <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text">
+                                        </div>
                                     </template>
                                     <template v-else-if="field.type == 'file'">
-                                         <div class="input-block"></div>
+                                         <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text">
+                                        </div>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
-                                         <color-picker v-bind="color" @input="onInput" v-bind:inputHex="field.default"></color-picker>
+                                         <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text">
+                                                <color-picker v-on:color-selected="setField($event, key)" v-bind="color" v-bind:inputHex="field.value"></color-picker>
+                                         </div>
                                     </template>
-                               
                                 </template>
-
-                                 <color-picker v-bind="color" @input="onInput" v-bind:inputHex="'#000000'"></color-picker>
-                                  <color-picker v-bind="color" @input="onInput" v-bind:inputHex="'#ffffff'"></color-picker>
-                                <div class="input-block">
+                                <!-- <div class="input-block">
                                     <input type="text" placeholder="Background image">
                                 </div>
                                 <div class="input-block">
@@ -112,7 +118,7 @@
                                             <li>Animation 4</li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>    
                         </div>
                         <div class="col-lg-6 col-md-12">
@@ -185,6 +191,7 @@
 import Sidebar from '../sidebar/Sidebar'
 import Loading from '../loading/Loading'
 import ColorPicker from '../color/ColorPicker';
+import dropDown from '@/components/htmlComponents/dropDown'
 
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
@@ -197,6 +204,7 @@ export default {
       Loading,
       editor: Editor,
       ColorPicker: ColorPicker,
+      dropDown
   },
   data () {
     return {
@@ -242,6 +250,23 @@ export default {
 } ,
     mixins: [domfunctions],
   methods: {
+      getFieldOptions(key){
+          let options = this.template.fields[key].options;
+          let values = []
+          _.forEach(options.split('|'), value => {
+              values.push({  
+                'value': value,
+                'name': value
+              })
+          })
+          console.log(values)
+          return values
+      },
+      setField(value, key){
+            this.template.fields[key].value = value
+            console.log(value)
+            console.log(this.template.fields[key])
+      },
       onInput() {
             // do something with this.color
             console.log(this.color)
@@ -259,8 +284,11 @@ export default {
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 const response = await axios.get('/templates/'+this.$route.params.id)
-                console.log(response)   
                 this.template = response.data.template
+                _.forEach(this.template.fields, field => {
+                    field.value = field.default
+                })
+                console.log(this.template) 
                 this.getBannersByTemplate(this.template.id)
                 this.loading = false
 

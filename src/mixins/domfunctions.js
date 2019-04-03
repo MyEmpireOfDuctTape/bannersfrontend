@@ -107,7 +107,7 @@ export default {
        changed(){
         this.checkIfAutofilled()
         },
-        sliderToggle(event){
+        /* sliderToggle(event){
             let slidertype = event.target.classList.contains('html') ? '' : 'manual-styles'
             if(event.target.value > 50){
                 event.target.value = 1;
@@ -119,7 +119,7 @@ export default {
                 event.target.classList.add('on')
                 jQuery('.' + slidertype).slideDown()
             }
-        },
+        }, */
         editPopup(event){
             console.log(event.target.tagName)
             if(event.target.tagName != 'path'){

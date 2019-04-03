@@ -14,11 +14,11 @@
                             <span class="after">{{ banner.name }}</span>
                         </div>
                         <div class="col-lg-3 col-sm-12 right">
-                            <button @click="showFieldValues" class="right roundedd blue duplicate">Copy Banner</button>
+                            <button class="right roundedd blue duplicate">Copy Banner</button>
                         </div>
                     </div> 
                     <div class="row contentrow">
-                        <div class="col-lg-9">
+                        <div class="col-lg-8">
                             <div class="big-dd">
                                 <span v-on:click="dropdownToggle"> {{ currentTemplate.name }} </span>
                                 <div class="dropdown">
@@ -28,7 +28,7 @@
                                 </div>   
                             </div>    
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="big-dd">
                                 <template v-if="undefined !== sizes && sizes.length > 0">
                                 <span v-on:click="dropdownToggle"> {{sizes[0].width}}x{{sizes[0].height}} </span>
@@ -62,10 +62,34 @@
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
-                                <div v-for="(field, key) in banner.fieldValues" v-bind:key="key" class="input-block focused">
+                                <template v-for="(field, key) in field_values">
+                                    <template v-if="field.type == 'select'">
+                                         <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" ></dropDown>
+                                    </template>
+                                    <template v-else-if="field.type == 'input'">
+                                         <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
+                                        </div>
+                                    </template>
+                                    <template v-else-if="field.type == 'file'">
+                                         <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
+                                        </div>
+                                    </template>
+                                    <template v-else-if="field.type == 'color'">
+                                         <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
+                                                <color-picker v-on:color-selected="setField($event, key)" v-bind:inputHex="field.value"></color-picker>
+                                         </div>
+                                    </template>
+                                </template>
+                                <!-- <div v-for="(field, key) in banner.fieldValues" v-bind:key="key" class="input-block focused">
                                      <span v-on:click="focusInput" class="fake-label">{{ key }}</span>
                                     <input v-model="fieldValues[key]" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-on:change="changed" type="text">
-                                </div>
+                                </div> -->
 <!--                                 <v-flex xs12 sm6 md3>
                                 <v-text-field
                                     label="Outline"
@@ -105,7 +129,7 @@
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="slider-wrapper">
                                 <div class="slidecontainer">
-                                    <input v-on:click="sliderToggle" type="range" min="1" max="100" value="1" class="styles slider" id="myRange" draggable="false">
+                                    <input v-on:click="sliderToggle($event, 'styles')" v-bind:class="[customStylesVisible == true ? 'on' : '']" type="range" min="1" max="100" value="1" class="styles slider" id="myRange" draggable="false">
                                     <span>Manual styles mode</span>
                                 </div>
                             </div>
@@ -113,7 +137,7 @@
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="slider-wrapper">
                                 <div class="slidecontainer">
-                                    <input v-on:click="sliderToggle" type="range" min="1" max="100" value="1" class="slider html" id="myRange" draggable="false">
+                                    <input v-on:click="sliderToggle($event, 'html')" v-bind:class="[templateHtmlOverwrite == true ? 'on' : '']" type="range" min="1" max="100" value="1" class="slider html" id="myRange2" draggable="false">
                                     <span>Template HTML overwrite</span>
                                 </div>
                             </div>
@@ -122,7 +146,8 @@
                         </div>
          
                     </div>  
-                    <div class="container-fluid manual-styles" style="display: none">
+                    <template v-if="customStylesVisible">
+                    <div class="container-fluid manual-styles">
                     <div class="row">
                         <div class="col-lg-12">
                             <span class="before">Add manual styles </span>
@@ -156,7 +181,7 @@
                                             </div>
                                         </div> 
                                         <div class="col-lg-4 col-md-12">
-                                            <div class="input-block">
+                                            <div class="input-block focused">
                                                     <span v-on:click="focusInput" class="fake-label">{{ customStyles[key].value }}</span>
 
                                                 <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="customStyles[key].value" type="text" >
@@ -168,16 +193,34 @@
                                 <div class="col-12">
                                     <button @click="addStyleRow" class="create blue roundedd"> Add style</button>
                                 </div>    
-                                <div class="col-12">
+                                <!-- <div class="col-12">
                                     <div class="editor-wrapper">
-                                <editor id="editor" v-model="customhtml" @init="editorInit" lang="html" theme="dreamweaver"></editor>
-                            </div>   
-                                </div>    
+                                        <editor id="editor" v-model="customhtml" @init="editorInit" lang="html" theme="dreamweaver"></editor>
+                                    </div>   
+                                </div>     -->
                             </div>
                         </div>
 
                     </div>
                     </div> 
+                    </template>
+                    <template v-if="templateHtmlOverwrite">
+                    <div class="container-fluid manual-styles">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span class="before">Template HTML</span>
+                        </div>
+                    </div> 
+                    <div class="row contentrow bigger-wrapper templatehtmloverride">
+                                <div class="col-12">
+                                    <div class="editor-wrapper">
+                                <editor id="editor" v-model="currentTemplate.html" @init="editorInit" lang="html" theme="dreamweaver"></editor>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div> 
+                    </template>
                     <div class="row">
                         <div class="col-lg-12">
                             <span class="before">Banner preview</span>
@@ -187,7 +230,7 @@
                         <div class="col-12">
                             <div class="row nomarg html-preview">
                                 <div id="bannerpreview">
-                                    <div v-html="banner.templateHtml"> </div>
+                                    <template v-html="currentTemplate.html"> </template>
                                 </div>
                                 <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
                             </div>
@@ -209,12 +252,16 @@ import axios from 'axios'
 const Editor = require('vue2-ace-editor')
 import domfunctions from '@/mixins/domfunctions.js'
 
+import ColorPicker from '../color/ColorPicker';
+import dropDown from '@/components/htmlComponents/dropDown'
 export default {
   name: 'EditBanner',
   components: {
       Sidebar,
       Loading,
       editor: Editor,
+        ColorPicker: ColorPicker,
+      dropDown
   },
   data () {
     return {
@@ -224,7 +271,6 @@ export default {
         sizes: ['test'],
         name: null,
         description: null,
-        fieldValues: null,
         customhtml: '<!DOCTYPE html>',
         customStyles:  // TODO  make domhandling functions for adding and deleting rows.
         [
@@ -246,6 +292,9 @@ export default {
             name: 'loading',
         },
         currentTemplate: null,
+        customStylesVisible: false,
+        templateHtmlOverwrite: false,
+        field_values: {},
     }
   },
   mixins: [domfunctions],
@@ -263,6 +312,26 @@ export default {
 	this.checkIfAutofilled()
   },
   methods: {    
+      getFieldOptions(key){
+          let options = this.currentTemplate.fields[key].options;
+          let values = []
+          _.forEach(options.split('|'), value => {
+              values.push({  
+                'value': value,
+                'name': value
+              })
+          })
+          return values
+      },
+      setField(value, key){
+            this.field_values[key] = value
+            console.log(this.field_values[key])
+            console.log(this.field_values)
+      },
+      onInput() {
+            // do something with this.color
+            console.log(this.color)
+        },
       editorInit() {
             require('brace/ext/language_tools') //language extension prerequsite...
             require('brace/mode/html')                
@@ -283,6 +352,15 @@ export default {
                 this.fieldValues = response.data.banner.fieldValues
                 this.currentTemplate = response.data.banner.template
                 this.sizes = response.data.banner.template.sizes
+                _.forEach(this.currentTemplate.fields, field => {
+                    field.value = field.default
+                })
+                this.field_values = this.currentTemplate.fields
+                _.forEach(this.field_values, field => {
+                    field = field.default
+                })
+                console.log(this.field_values)
+                //this.getBannerPreview()
                 this.loading = false  
       },
       async getTemplates(){
@@ -314,12 +392,30 @@ export default {
             jQuery(e.target).next().slideUp();
         }   
       }, */
+      async getBannerPreview(){
+          this.loading = true
+            axios.defaults.headers.common['Accept'] = 'application/json'
+            //axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id          
+            const response = await axios.get('/preview/'+this.banner.token)
+            console.log(response)  
+            this.loading = false
+      },
+       sliderToggle(event, target){
+            if(target == 'styles'){
+                this.customStylesVisible = !this.customStylesVisible
+            }
+            else{
+                this.templateHtmlOverwrite = !this.templateHtmlOverwrite
+            }
+            if(event.target.value > 50){
+                event.target.value = 1;
+            }
+            else{
+                event.target.value = 100;
+            }
 
-       
-        showFieldValues(){
-            console.log(this.fieldValues)
-            console.log(this.banner)
         },
+
         addStyleRow(){
             let newRow = {
                     element: 
@@ -350,10 +446,17 @@ export default {
                 this.loading = true
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
-
                 const response = await axios.get('/templates/'+id)
                 console.log(response.data)
                 this.currentTemplate = response.data.template
+                _.forEach(this.currentTemplate.fields, field => {
+                    field.value = field.default
+                })
+                this.field_values = this.currentTemplate.fields
+                _.forEach(this.field_values, field => {
+                    field = field.default
+                })
+                console.log(this.field_values)
                 this.sizes = response.data.template.sizes
                 this.loading = false
                 

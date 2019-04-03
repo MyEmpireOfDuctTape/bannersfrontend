@@ -1,5 +1,5 @@
 <template>
-<div>
+ <div v-bind:class="[active == true ? 'active' : '']" class="colorpickerwrapper">
    <color-picker
             :hue="color.hue"
             :saturation="color.saturation"
@@ -8,22 +8,26 @@
             :mouse-scroll="useScroll"
             :step="step"
             :variant="step"
+            :initiallyCollapsed="true"
             @input="onInput"
             @change="onChange"
+            @toggle="onToggle"
+            
         />
         </color-picker>
     <!-- <pre v-html="color"></pre> -->
     <template v-if="editing">
+        <h1>HSL values</h1>
         <div id="hslvalues">
-            <h1>HSL values</h1>
-            <input v-model="color.hue">
+            
+            <input v-model="color.hue.toFixed(0)">
             <input v-model="color.saturation">
             <input v-model="color.luminosity">
-            <input v-model="color.alpha">
+            <!-- <input v-model="color.alpha"> -->
         </div>
         <div id="hexvalues">
             <h1>HEX value</h1>
-            <input v-model="this.outputHex">
+            <input v-on:keyup="recalculateHex()" v-model="outputHex">
         </div>
     </template>
 </div>
@@ -59,27 +63,38 @@ export default {
             variant: 'collapsible',
             // support for disabling UI interactions too!
             disabled: false,
-            editing: true,
+            editing: false,
+            active: false,
         }
     },
     created(){
         if(this.inputHex == null){
             this.inputHex = 'C87300'
         }
+        this.outputHex = this.inputHex
         this.convertInputtoHSL(this.$props.inputHex)
+
     },
     methods: {
+            recalculateHex(){
+                console.log(this.outputHex)
+                this.convertInputtoHSL(this.outputHex)
+            },
          onInput(hue, saturation) {
             this.color.hue = hue;
             this.reCalculateOutput()
         },
         reCalculateOutput(){
             this.outputHex = convert.hsl.hex(this.color.hue, this.color.saturation, this.color.luminosity)
-            console.log(this.outputHex)
+            //console.log(this.outputHex)
         },
         onChange(hue) {
             console.log('Color picker was dismissed', hue);
+            this.$emit('color-selected', this.outputHex)
+        },
+        onToggle(input){
             this.editing = !this.editing
+            this.active = !this.active
         },
         convertInputtoHSL(inputHex){
             let colorArray = convert.hex.hsl(inputHex)

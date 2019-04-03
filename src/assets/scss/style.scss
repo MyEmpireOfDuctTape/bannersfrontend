@@ -1550,6 +1550,7 @@ $enable-gradients: true;
             background-repeat: no-repeat;
             background-position-x: 95%;
             background-position-y: 50%;
+            margin: 1rem 0;
             &:hover{
                 cursor: pointer;
                 color: black;
@@ -2673,5 +2674,72 @@ a{
 a{
     &:hover{
         text-decoration: none !important; 
+    }
+}
+
+
+
+
+.input-block{
+    position: relative;
+    .colorpickerwrapper{
+        position: absolute;
+        z-index: 10;
+        right: 0;
+        top: -0.5rem;
+        .rcp__well{
+            width: 40px;
+            height: 40px;
+            top: 15px;
+            left: 15px;
+        }
+        .rcp{
+            width: 70px;
+            height: 70px;
+            overflow: visible;
+        }
+        &.active{
+            /* height: 300px;
+            width: 200px; */
+            background: #f1f1f1;
+            border-radius: 5px;
+            padding: 1em;
+            z-index: 20;
+            .rcp__well{
+                position:absolute;
+                width:25%;
+                height:25%;
+                top:37.5%;
+                left:37.5%;
+                padding:0;
+                margin:0;
+                border-radius:50%;
+                background-color:red;
+                outline:0;
+                cursor:pointer;
+                overflow:visible;
+                border:6px solid #fff;
+                box-shadow:0 0 0 1px #b2b2b2;
+            }
+            .rcp{
+                width: 280px;
+                height: 280px;
+                margin: 0 auto;
+            }
+        }
+        
+        #hslvalues{
+            display: flex;
+            input{
+                width: 33%;
+                margin: 0 5px;
+                padding: 0.5em;
+            }
+        }
+        #hexvalues{
+            input{
+                padding: 0.5em;
+            }
+        }
     }
 }
