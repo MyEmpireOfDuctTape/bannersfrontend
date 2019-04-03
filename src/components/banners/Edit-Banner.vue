@@ -68,19 +68,17 @@
                                     </template>
                                     <template v-else-if="field.type == 'input'">
                                          <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
-                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{field.name}}</span>
                                             <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
                                         </div>
                                     </template>
                                     <template v-else-if="field.type == 'file'">
-                                         <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
-                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
-                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
-                                        </div>
+                                         <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
+                                            <file-upload :label="field.name"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
-                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
+                                            <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{field.name}}</span>
                                             <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
                                                 <color-picker v-on:color-selected="setField($event, key)" v-bind:inputHex="field.value"></color-picker>
                                          </div>
@@ -246,14 +244,15 @@
 
 <script>
 
-import Sidebar from '../sidebar/Sidebar'
-import Loading from '../loading/Loading'
+import Sidebar from '@/components/sidebar/Sidebar'
+import Loading from '@/components/loading/Loading'
 import axios from 'axios'
 const Editor = require('vue2-ace-editor')
 import domfunctions from '@/mixins/domfunctions.js'
 
-import ColorPicker from '../color/ColorPicker';
+import ColorPicker from '@/components/color/ColorPicker'
 import dropDown from '@/components/htmlComponents/dropDown'
+import FileUpload from '@/components/fileupload/FileUpload'
 export default {
   name: 'EditBanner',
   components: {
@@ -261,7 +260,8 @@ export default {
       Loading,
       editor: Editor,
         ColorPicker: ColorPicker,
-      dropDown
+      dropDown,
+      FileUpload
   },
   data () {
     return {
@@ -295,6 +295,7 @@ export default {
         customStylesVisible: false,
         templateHtmlOverwrite: false,
         field_values: {},
+        file: null,
     }
   },
   mixins: [domfunctions],
@@ -311,7 +312,11 @@ export default {
   mounted(){
 	this.checkIfAutofilled()
   },
-  methods: {    
+  methods: {   
+      submitForm(event){
+          console.log(event.target)
+          console.log(this.file)
+      },
       getFieldOptions(key){
           let options = this.currentTemplate.fields[key].options;
           let values = []

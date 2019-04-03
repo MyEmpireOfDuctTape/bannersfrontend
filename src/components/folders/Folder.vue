@@ -113,6 +113,15 @@
                         <div class="linebreak"></div>
                         <div class="recent-templates file-view">
                                 <div class="header row">
+                                    <div class="col-lg-9 col-sm-12">
+                                        <span class="before">Banners</span>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-12">
+                                        <router-link :to="{ path: '/create-banner'}">
+                                                    <button class="right roundedd blue duplicate">Create Banner</button>
+                                                </router-link>
+                                
+                                    </div>
                                     <div class="left  col-lg-4 col-md-6 col-sm-6">
                                         <div class="grey-dd">
                                             <span>Latest updated</span>

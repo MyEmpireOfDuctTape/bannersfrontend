@@ -2342,6 +2342,15 @@ input{
 
 .input-block{
     position: relative;
+    &.file-upload{
+        span{
+            &.label{
+                margin-bottom: 1em;
+                position: relative;
+                top: 0;
+            }
+        }
+    }
     &.checkbox{
         position: relative;
         background-color: white;

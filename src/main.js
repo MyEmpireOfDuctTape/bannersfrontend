@@ -6,6 +6,9 @@ import router from './router/routes'
 import store from './store/store'
 import VueCookie from 'vue-cookie'
 import Vuetify from 'vuetify'
+//import FileUpload from 'v-file-upload'
+
+
 //import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
 router.beforeEach((to, from, next) => {
@@ -23,8 +26,8 @@ router.beforeEach((to, from, next) => {
     next() // make sure to always call next()!
   }
 })
-  
-Vue.use(Vuetify) //-> cant use due to webpack extract text issue
+//Vue.use(FileUpload)
+Vue.use(Vuetify) //-> cant use CSS due to webpack extract text issue :/
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

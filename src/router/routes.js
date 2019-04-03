@@ -29,11 +29,12 @@ import ace from "ace-builds"
 
 import ColorPicker from '@/components/color/ColorPicker';
 import Advanced from '@/components/color/advanced';
+import MyFileUpload from '@/components/fileupload/FileUpload';
 
 Vue.use(Router)
 
-const Foo = { template: '<div>foo</div>' }
-const Bar = { template: '<div>bar</div>' }
+/* const Foo = { template: '<div>foo</div>' }
+const Bar = { template: '<div>bar</div>' } */
 
 export default new Router({
   //mode:'history',
@@ -191,6 +192,8 @@ export default new Router({
         requiresAuth: true
       }
     },
+
+    // tests
     {
       path: '/colorpicker',
       name: 'ColorPicker',
@@ -203,6 +206,14 @@ export default new Router({
       path: '/advanced',
       name: 'Advanced',
       component: Advanced,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/fileupload',
+      name: 'MyFileUpload',
+      component: MyFileUpload,
       meta: {
         requiresAuth: true
       }

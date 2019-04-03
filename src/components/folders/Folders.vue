@@ -6,7 +6,7 @@
             <template v-if="loading">
                 <Loading></Loading>
             </template>
-                <div class="overlay Aligner">
+<!--                 <div class="overlay Aligner">
 
                             <div class="form-wrapper Aligner-item">
                                 <div class="input-block">
@@ -19,14 +19,14 @@
                                 </div>
                                 <button class="blue roundedd save">Save</button>
                             </div>    
-                </div> 
+                </div>  -->
                 <div class="banners container-fluid main-view">
                     <h1>All Folders</h1>
                     <div class="container-fluid">
                         <div class="header row">
                             <div class="left col-lg-5 col-md-4">
                                 <button v-on:click="toggleCreating" class="blue create-folder roundedd">Create folder</button>
-                               <!--  <button v-on:click="showBannerOverlay" class="blue create roundedd">Create Banner</button> -->
+                                <button v-on:click="toggleFileUpload" class="blue create roundedd">Upload File</button>
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
@@ -42,6 +42,13 @@
                                 </div>
                             </div>
                         </div>
+                        <template v-if="uploading">
+                             <div class="folders row">
+                                <div class="col-12">
+                                    <file-upload :label="'Upload here'" :showFiles="false"></file-upload>
+                                </div>
+                            </div>
+                        </template>
                         <div class="folders row">
                             <template v-if="creating">
                             <div class="col-lg-2 col-md-3 col-sm-6">
@@ -125,6 +132,7 @@
 
 import Sidebar from '../sidebar/Sidebar'
 import Loading from '../loading/Loading'
+import FileUpload from '@/components/fileupload/FileUpload'
 
 
 import domfunctions from '@/mixins/domfunctions.js'
@@ -135,7 +143,8 @@ export default {
   name: 'Folders',
   components: {
       Sidebar, 
-      Loading
+      Loading,
+      FileUpload
   },
   data () {
     return {
@@ -147,6 +156,7 @@ export default {
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
         creating: false,
+        uploading: false,
         createName: null,
         confirmedtrue: false,
         editName: null,
@@ -334,6 +344,9 @@ mixins: [domfunctions],
         },
         toggleCreating(){
             this.creating = !this.creating
+        },
+        toggleFileUpload(){
+            this.uploading = !this.uploading
         },
         createFolder(event){
                 console.log('attempting to create folder')
