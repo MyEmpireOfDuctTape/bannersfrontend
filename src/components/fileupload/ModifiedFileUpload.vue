@@ -1,10 +1,10 @@
 <template>
 <div class="file-upload">
-  <div class="thumb-preview" v-if='thumbUrl(anexo)'>
+<!--   <div class="thumb-preview" v-if='thumbUrl(anexo)'>
     <div class="thumb-preview-item">
       <img :src='thumbUrl(anexo)'>
     </div>
-    </div>
+    </div> -->
   <div class="input-wrapper" :style='inputWrapperStyle'>
     <input id="file-upload-input" type='file' name='file' @change='onChangeInputFile' :accept='accept' :multiple='false' :disabled='uploading' ref='input'>
     <label class="file-upload-label" for='file-upload-input'>
@@ -139,10 +139,11 @@ export default {
   .input-wrapper {
     text-align: center;
     position: relative;
-    background-color: #307DBF;
+    background-color: #70cef3;
     height: 80px;
+    border-radius: 5px;
     &:hover {
-      background-color: #2C70AC;
+      background-color: #54bfe8;
     }
     #file-upload-input {
       width: 0.1px;
@@ -188,16 +189,68 @@ export default {
   .thumb-preview {
     display: flex;
     flex-flow: row wrap;
+    overflow: hidden;
+     margin: 5px;
+     border-radius: 3px;
     .thumb-preview-item {
-      border-radius: 5px;
-      margin: 5px;
-      background-color: #cccccc;
+      
+     
+      //background-color: #cccccc;
       height: 150px;
-      width: 150px;
+      width: 100%;
       padding: 0;
       position: relative;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      transition: 1s ease;
+      .edit-file, .delete-file{
+        display: none;
+        transition: 1s ease;
+      }
+      &:hover{
+        transform: scale(1.05);
+        background-size: 150%;
+        cursor: pointer;
+        .edit-file{
+          display: block;
+          transform: none;
+          position: absolute;
+          background: rgba(0,0,0,0.5);
+          width: 100%;
+          height: 100%;
+          z-index: 2;
+          svg{
+            fill: white;
+            position: absolute;
+            top: 10%;
+            right: 10%;
+          }
+        }
+        .delete-file{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          transform: none;
+          background: rgba(255,0,0,0.5);
+          width: 100%;
+          height: 100%;
+          z-index: 3;
+          p{
+            max-width: 70%;
+            text-align: center;
+            color: white;
+          }
+          button{
+            padding: 0.5em 1em;
+          }
+        }
+      }
       img {
         border-radius: 5px;
+        max-width: 100%;
+        height: auto;
       }
     }
   }

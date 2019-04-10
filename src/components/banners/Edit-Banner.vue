@@ -62,24 +62,24 @@
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
-                                <template v-for="(field, key) in field_values">
+                                <template v-for="(field, key) in currentTemplate.fields">
                                     <template v-if="field.type == 'select'">
                                          <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" ></dropDown>
                                     </template>
                                     <template v-else-if="field.type == 'input'">
                                          <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
                                             <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{field.name}}</span>
-                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field.value" type="text">
                                         </div>
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
-                                            <file-upload :label="field.name"></file-upload>
+                                            <file-upload :label="field.name" :showFiles="false"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
                                             <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{field.name}}</span>
-                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field_values[key].value" type="text">
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="field.value" type="text">
                                                 <color-picker v-on:color-selected="setField($event, key)" v-bind:inputHex="field.value"></color-picker>
                                          </div>
                                     </template>
@@ -329,9 +329,8 @@ export default {
           return values
       },
       setField(value, key){
-            this.field_values[key] = value
-            console.log(this.field_values[key])
-            console.log(this.field_values)
+            this.currentTemplate.fields[key] = value
+            console.log(this.currentTemplate.fields[key])
       },
       onInput() {
             // do something with this.color
@@ -360,13 +359,16 @@ export default {
                 _.forEach(this.currentTemplate.fields, field => {
                     field.value = field.default
                 })
-                this.field_values = this.currentTemplate.fields
+                this.setFieldValues()
+                //this.getBannerPreview()
+                this.loading = false  
+      },
+      setFieldValues(){
+          this.field_values = this.currentTemplate.fields
                 _.forEach(this.field_values, field => {
                     field = field.default
                 })
                 console.log(this.field_values)
-                //this.getBannerPreview()
-                this.loading = false  
       },
       async getTemplates(){
                 this.loading = true
@@ -398,7 +400,7 @@ export default {
         }   
       }, */
       async getBannerPreview(){
-          this.loading = true
+            this.loading = true
             axios.defaults.headers.common['Accept'] = 'application/json'
             //axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id          
             const response = await axios.get('/preview/'+this.banner.token)
@@ -457,11 +459,7 @@ export default {
                 _.forEach(this.currentTemplate.fields, field => {
                     field.value = field.default
                 })
-                this.field_values = this.currentTemplate.fields
-                _.forEach(this.field_values, field => {
-                    field = field.default
-                })
-                console.log(this.field_values)
+                console.log(this.currentTemplate)
                 this.sizes = response.data.template.sizes
                 this.loading = false
                 

@@ -2752,3 +2752,13 @@ a{
         }
     }
 }
+
+
+.thumbs{
+    display: flex;
+    .thumb-preview{
+        width: 20%;
+        align-items: center;
+        justify-content: center;
+    }
+}
