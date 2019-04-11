@@ -74,7 +74,7 @@
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
-                                            <file-upload :label="field.name" :showFiles="false"></file-upload>
+                                            <file-upload :label="field.name" :showFiles="true"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
