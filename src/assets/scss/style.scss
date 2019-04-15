@@ -2753,7 +2753,6 @@ a{
     }
 }
 
-
 .thumbs{
     display: flex;
     .thumb-preview{
@@ -2761,4 +2760,14 @@ a{
         align-items: center;
         justify-content: center;
     }
+}
+
+button{
+    background-color: white;
+}
+
+#bannerpreview{
+    overflow: hidden;
+    display: block;
+    margin: 0 auto;
 }

@@ -177,6 +177,7 @@ export default {
                 let index = _.findIndex(this.$store.getters.getUser.companies , company => {
                     return company.id == this.$store.getters.getCurrentCompany.id
                 });
+                console.log(this.$store.getters.getUser)
                 this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
                 this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
             }

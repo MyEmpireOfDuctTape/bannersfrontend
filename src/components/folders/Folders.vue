@@ -45,7 +45,7 @@
                         <template v-if="uploading">
                              <div class="folders row">
                                 <div class="col-12">
-                                    <file-upload :label="'Upload here'" :showFiles="true"></file-upload>
+                                    <file-upload :label="'Upload here'" :showFiles="false"></file-upload>
                                 </div>
                             </div>
                         </template>

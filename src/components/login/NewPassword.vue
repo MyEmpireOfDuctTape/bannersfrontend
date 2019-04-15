@@ -51,7 +51,7 @@ export default {
   },  
   methods : {
     checkIfValidToken(){
-        axios.get('/password/'+this.token)
+        axios.get('/auth/password/'+this.token)
         .then(response => {
             console.log(response)
         })

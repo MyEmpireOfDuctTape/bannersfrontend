@@ -54,7 +54,7 @@ export default {
                 alpha: 1
             },
             outputHex: this.$props.inputHex || null,
-            inputHex: this.$props.inputHex || null,
+            //inputHex: this.$props.inputHex || null,
             // increase scroll (and keyboard) step size
             step: 1,
             // change color with mouse scroll
@@ -68,10 +68,10 @@ export default {
         }
     },
     created(){
-        if(this.inputHex == null){
+/*         if(this.inputHex == null){
             this.inputHex = 'C87300'
-        }
-        this.outputHex = this.inputHex
+        } */
+        //this.outputHex = this.inputHex
         this.convertInputtoHSL(this.$props.inputHex)
 
     },

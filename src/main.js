@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
   }
 })
 //Vue.use(FileUpload)
-Vue.use(Vuetify) //-> cant use CSS due to webpack extract text issue :/
+Vue.use(Vuetify) //-> cant use CSS import via js due to webpack extract text issue :/
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

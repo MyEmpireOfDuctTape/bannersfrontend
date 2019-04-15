@@ -84,7 +84,7 @@ export default new Router({
       }
     },
     {
-      path: '/newpassword/:token',
+      path: '/password/:token',
       name: 'NewPassword',
       component: NewPassword,
       meta: {

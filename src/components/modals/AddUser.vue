@@ -12,6 +12,7 @@
         </div>
         <dropDown v-on:element-selected="selectAccessLevel($event)" defaultValue="Select user access level" name="User access level" v-bind:optionsArray="accessLevels" ></dropDown>
         <span id="error"></span>
+        <span :id="respType">{{responseText}}</span>
         <button type="submit">Create User</button>
         </form>
     </div>    
@@ -74,6 +75,8 @@ export default {
                 
             ]
         },
+        responseText: '',
+        respType: 'error',
         selectedAccessLevel: null,
         email: null,
 
@@ -96,16 +99,17 @@ export default {
                 this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
             }
             this.setAvailableCompanies()
-            console.log(this.availableCompanies)
+            //console.log(this.availableCompanies)
   },
   methods : {
             selectCompany(id){
                 //this.selectedCompany = id
                 let companies = this.$store.getters.getUser.companies 
-                let company = _.find(companies, company => {
-                    return company.id == id
+                let company = _.find(this.availableCompanies, company => {
+                    return company.value == id
                 })
-                this.selectedCompanyId = company.id
+                console.log(company)
+                this.selectedCompanyId = company.value
                 this.selectedCompany.name = company.name == null ? this.selectedCompany.name : company.name
                 this.selectedCompany.registrationCode = company.registrationCode == null ? this.selectedCompany.registrationCode : company.registrationCode
                 this.selectedCompany.vat_number = company.vatNumber == null ? this.selectedCompany.vat_number : company.vatNumber
@@ -113,7 +117,7 @@ export default {
                 this.selectedCompany.city = company.city == null ? this.selectedCompany.city : company.city
                 this.selectedCompany.address = company.address == null ? this.selectedCompany.address : company.address
                 this.selectedCompany.email = company.email == null ? this.selectedCompany.email : company.email
-
+                console.log(this.selectedCompany)
             },
             selectAccessLevel(accessLevelName){
                 this.selectedAccessLevel = accessLevelName
@@ -124,6 +128,7 @@ export default {
             },
             setAvailableCompanies(){
                 let companies = this.$store.getters.getUser.companies 
+                console.log(companies)
                 _.forEach(companies, (company, index) => {
                     if(company.pivot.role == 'admin'){
                         this.availableCompanies.push(
@@ -165,9 +170,11 @@ export default {
                     //let serialize = Object.entries(this.selectedCompany).map(([key, val]) => `${key}=${val}`).join('&')
 
                     console.log(this.selectedCompany)
+                    console.log(this.selectedCompanyId)
                     axios.patch('/companies/'+this.selectedCompanyId, this.selectedCompany)
                     .then(function (response) {
-                        console.log(response);
+                        console.log(response)
+                        this.hidePopup()
                     }).catch(function (error) {
                         console.log(error.response); 
                         console.log(error.response);

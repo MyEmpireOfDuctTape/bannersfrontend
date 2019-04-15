@@ -62,9 +62,9 @@
                         </div>  
                         <div class="col-lg-6 col-md-12 nopad">
                             <div class="form-wrapper">
-                                <template v-for="(field, key) in currentTemplate.fields">
+                                <template v-for="(field, key) in field_values">
                                     <template v-if="field.type == 'select'">
-                                         <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" ></dropDown>
+                                         <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.value" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" ></dropDown>
                                     </template>
                                     <template v-else-if="field.type == 'input'">
                                          <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
@@ -74,7 +74,7 @@
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
-                                            <file-upload :label="field.name" :showFiles="true"></file-upload>
+                                            <file-upload :label="field.name" :showFiles="false" :selectFiles="true"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
@@ -227,8 +227,8 @@
                     <div class="row contentrow bigger-wrapper">
                         <div class="col-12">
                             <div class="row nomarg html-preview">
-                                <div id="bannerpreview">
-                                    <template v-html="currentTemplate.html"> </template>
+                                <div id="bannerpreview" v-html="renderedHtml">
+                                   <!--  <template v-html="renderedHtml"> </template> -->
                                 </div>
                                 <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
                             </div>
@@ -296,6 +296,8 @@ export default {
         templateHtmlOverwrite: false,
         field_values: {},
         file: null,
+        renderedHtml: null,
+        thumbnails: [],
     }
   },
   mixins: [domfunctions],
@@ -329,8 +331,11 @@ export default {
           return values
       },
       setField(value, key){
-            this.currentTemplate.fields[key] = value
-            console.log(this.currentTemplate.fields[key])
+            //this.currentTemplate.fields[key] = value
+            this.field_values[key].value = value
+            //console.log(this.currentTemplate.fields[key])
+            console.log(this.field_values[key].value )
+            console.log(this.field_values[key] )
       },
       onInput() {
             // do something with this.color
@@ -360,13 +365,20 @@ export default {
                     field.value = field.default
                 })
                 this.setFieldValues()
-                //this.getBannerPreview()
+                this.getBannerPreview()
                 this.loading = false  
+      },
+      getFileThumbnail(token){
+               console.log(token)
       },
       setFieldValues(){
           this.field_values = this.currentTemplate.fields
                 _.forEach(this.field_values, field => {
-                    field = field.default
+                    if(field.type == 'file'){
+                        this.getFileThumbnail(field.default)
+                        //console.log(field)
+                    }
+                    field.value = field.default
                 })
                 console.log(this.field_values)
       },
@@ -401,10 +413,13 @@ export default {
       }, */
       async getBannerPreview(){
             this.loading = true
-            axios.defaults.headers.common['Accept'] = 'application/json'
+            axios.defaults.baseURL = 'https://stage.api.banners.ee/'
+            axios.defaults.headers.common['Accept'] = 'text/html'
             //axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id          
-            const response = await axios.get('/preview/'+this.banner.token)
-            console.log(response)  
+            const response = await axios.get('/serve/banner/'+this.banner.token)
+            console.log(response) 
+            this.renderedHtml = response.data
+            axios.defaults.baseURL = 'https://stage.api.banners.ee/v1' 
             this.loading = false
       },
        sliderToggle(event, target){

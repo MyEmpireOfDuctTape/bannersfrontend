@@ -43,24 +43,11 @@ export default {
         thumbUrl: { type: String, required: true }, */
         label: { type: String, required: true },
         showFiles: { type: Boolean, required: true },
+        selectFiles: { type: Boolean, required: true },
     },
     mixins: [domfunctions],
     data() {
         return {
-            items: [
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg'
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg'
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg'
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg'
-        }
-      ],
             success: {
                 value: false,
                 message: null,

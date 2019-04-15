@@ -1,7 +1,7 @@
 <template>
     <div class="fullpage container-fluid">
         <div class="row">
-                <sidebar></sidebar>
+                <sidebar v-on:company-changed="methodThatForcesUpdate($event)"></sidebar>
 		        <div class="edit-company main-view container-fluid">
                     <div class="row">
                         <div class="col-lg-5 col-md-12 edit-form">
@@ -123,6 +123,22 @@ export default {
   },
   mixins: [domfunctions],
   methods:{
+        methodThatForcesUpdate(event) {
+            // ...
+            /* console.log(event)
+            this.$forceUpdate() */
+            this.setCurrentCompany(event.id)
+              // Notice we have to use a $ here
+            // ...
+        },
+        setCurrentCompany(id){
+            let index = _.findIndex(this.$store.getters.getUser.companies , company => {
+                return company.id == id
+            });
+            console.log(index)
+            this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[index])
+            this.currentCompany = this.$store.getters.getUser.companies[index]
+        },
         async getUsers(){
             if(typeof this.currentCompany != null){
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken

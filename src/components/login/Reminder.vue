@@ -5,7 +5,7 @@
 			<div class="col-lg-8 offset-lg-2 col-md-12">
 
     <h1> Send password reminder </h1>
-    <form class="auth-form" @submit.prevent="sendEmailReminder">
+    <form class="auth-form" @submit.prevent="sendEmailReminder($event)">
     <div class="block">
         <div class="input-block">
           <span v-on:click="focusInput" class="fake-label">Email</span>
@@ -40,7 +40,10 @@ export default {
   },
   mixins: [domfunctions], 
   methods: {
-    		sendEmailReminder(){
+    		sendEmailReminder(e){
+          e.preventDefault()
+/*           console.log('sending email reminder')
+          console.log(e) */
 			//IF NOT Logged in make Call
 			if(!this.$store.getters.loggedIn){
 					axios.post('/auth/password', {
