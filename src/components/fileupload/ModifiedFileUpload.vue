@@ -186,7 +186,23 @@ export default {
       transition: width 0.6s ease;
     }
   }
-  .thumb-preview {
+  .thumbs{
+    &.select{
+      .thumb-preview {
+        .thumb-preview-item {
+          height: 100px;
+          &.selected{
+            border: 5px solid #70cef3;
+            
+          }
+          &:hover{
+            transform: scale(1);
+            background-size: cover;
+          }
+        }
+      }  
+    }
+    .thumb-preview {
     display: flex;
     flex-flow: row wrap;
     overflow: hidden;
@@ -254,6 +270,8 @@ export default {
       }
     }
   }
+  }
+  
 }
 @keyframes fade {
   from {

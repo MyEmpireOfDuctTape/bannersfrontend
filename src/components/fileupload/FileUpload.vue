@@ -6,26 +6,37 @@
     <!-- <file-upload :url='url' :thumb-url='thumbUrl' :headers="headers" @change="onChange($event)" @success="onSucess" @error="onError" :additional-data="additionalData"></file-upload> -->
     <p class="red"> {{error}}</p>
     <modified-file-upload :url='url' :thumb-url='thumbUrl' @change="onChange" @success="onSucess" @error="onError" :additional-data="additionalData"></modified-file-upload>
-    <div class="thumbs">
-    <template v-for="(file, key) in files">
-        <div class="thumb-preview" :key="key">
-            <div class="thumb-preview-item" v-bind:style="{ 'background-image': 'url(' + file.publicUrl + ')' }" v-on:mouseleave="removeDeleting()">
-            <template v-if="deleting != null && deleting.id == file.id">
-                <div class="over delete-file">
-                    <p>Are you sure you want to delete this file?</p>
-                    <button v-on:click="deleteFile(file.id)">YES</button>
+    <template v-if="selectFiles === true">  
+        <div class="thumbs select">
+            <template v-for="(file, key) in files">
+                <div class="thumb-preview" :key="key">
+                    <div class="thumb-preview-item" v-bind:class="[file == selectedFile ? 'selected' : '']" v-bind:style="{ 'background-image': 'url(' + file.publicUrl + ')' }" v-on:click="selectFile(file)"></div>
                 </div>
             </template>
-            <template v-else>
-                <div class="over edit-file">
-                    <svg v-on:click="setDeleting(file)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>
-                </div>
-            </template>
-        <!-- <img :src='file.publicUrl'> -->
-            </div>
         </div>
     </template>
-  </div>
+    <template v-else-if="showFiles === true">    
+        <div class="thumbs">
+        <template v-for="(file, key) in files">
+            <div class="thumb-preview" :key="key">
+                <div class="thumb-preview-item" v-bind:style="{ 'background-image': 'url(' + file.publicUrl + ')' }" v-on:mouseleave="removeDeleting()">
+                <template v-if="deleting != null && deleting.id == file.id">
+                    <div class="over delete-file">
+                        <p>Are you sure you want to delete this file?</p>
+                        <button v-on:click="deleteFile(file.id)">YES</button>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="over edit-file">
+                        <svg v-on:click="setDeleting(file)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>
+                    </div>
+                </template>
+            <!-- <img :src='file.publicUrl'> -->
+                </div>
+            </div> 
+        </template>
+        </div>
+    </template>
   </div>
 </div>
 </template>
@@ -64,14 +75,15 @@ export default {
             },
             files: null,
             deleting: null,
+            selectedFile: null
         }
     },
     created(){
         this.url = this.baseUrl + '/files'
         console.log(this.url)
-        if(this.showFiles){
+        if(this.showFiles || this.selectFiles){
             this.getFiles()
-            this.getFileById(1)
+            //this.getFileById(1)
         }
     },
     components: { 
@@ -79,6 +91,11 @@ export default {
             ModifiedFileUpload: ModifiedFileUpload,
         },
     methods: {
+        selectFile(file){
+            this.selectedFile = file
+            console.log(this.selectedFile)
+            this.$emit('fileselected', this.selectedFile.id)
+        },
         thumbUrl(file) {
         return (file && file.id) || this.success
             ? 'http://vuejs.org/images/logo.png'

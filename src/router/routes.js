@@ -112,14 +112,6 @@ export default new Router({
       }
     },
     {
-        path: '/banners',
-        name: 'Banners',
-        component: Banners,
-        meta: {
-          requiresAuth: true
-        }
-    },
-    {
       path: '/folders',
       name: 'Folders',
       component: Folders,
@@ -131,6 +123,14 @@ export default new Router({
       path: '/folder/:id',
       name: 'Folder',
       component: Folder,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/banners',
+      name: 'Banners',
+      component: Banners,
       meta: {
         requiresAuth: true
       }

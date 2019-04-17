@@ -14,29 +14,27 @@
                             </div>
                             <div class="right col-lg-9 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
+                                    <input type="text" v-model="searchValue" v-on:keyup="searchTemplates" placeholder="Search by name or description">
                                 </div>
-                                 <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
+                                 <div class="input-bubble dropdown" v-on:click="openSortDropDown($event, 'ratio')"> 
                                     <span> Aspect ratio</span>
-                                    <div class="hidden">
+                                    <template v-if="editingAspectRatio === true">
+                                    <div class="hidden visible">
                                         <ul>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
+                                            <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio(ratio.value)">{{ratio.text}}</li>
                                         </ul>
-                                    </div>                            
+                                    </div>  
+                                    </template>                          
                                 </div>
-                                <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
-                                    <span> Size</span>
-                                    <div class="hidden">
+                                <div class="input-bubble dropdown" v-on:click="openSortDropDown($event, 'size')"> 
+                                    <span>Size</span>
+                                    <template v-if="editingSize === true">
+                                    <div class="hidden visible">
                                         <ul>
-                                            <li>Size 1</li>
-                                            <li>Size 2</li>
-                                            <li>Size 3</li>
-                                            <li>Size 4</li>
+                                            <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId(size.id)" v-text="getSizeText(size)"></li>
                                         </ul>
-                                    </div>                            
+                                    </div>   
+                                    </template>                         
                                 </div>
                             </div>
                         </div>
@@ -44,27 +42,34 @@
                         <div class="recent-templates">
                                 <div class="header row">
                                     <div class="left  col-lg-4 col-md-6 col-sm-6">
-                                        <div class="grey-dd" v-on:click="toggleDropDown">
-                                            <span>Latest updated</span>
-                                            <div class="hidden">
-                                                <ul>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                </ul>
-                                            </div>
+                                        <div class="grey-dd">
+                                            <span>Sort by</span>
+                                            <span v-on:click="openSortDropDown($event, 'value')">{{ sortingOptions[currentSortByIndex].text }}</span>
+                                            <span v-on:click="setSorting($event, false, 'order')" v-html="orderOptions[currentSortByOrderIndex].html"></span>
+                                            <template v-if="editingOrderValue === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(option, key) in sortingOptions" :key="key" v-on:click="setSorting($event, key, 'value')">{{option.text}}</li>
+                                                    </ul>
+                                                </div>
+                                            </template>
+                                            <template v-if="editingOrderOrder === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(option, key) in orderOptions" :key="key" v-on:click="setSorting($event, key, 'order')">{{option.text}}</li>
+                                                    </ul>
+                                                </div>
+                                            </template>
                                         </div>    
                                     </div>
                                 </div>
                                  <template v-for="(template, index) in templates">
-                                    <div class="template-list">
+                                    <div class="template-list" :key="index">
                                     <div class="template row">
                                         <div class="left col-lg-6">
                                             <router-link :to="{ path: '/templates/' + template.id}"><span class="bold">{{ template.name }}</span></router-link>
-                                           <template v-for="size in template.sizes">
-                                            <span class="dimension green">{{ size.width }}x{{ size.height }}</span>
+                                           <template v-for="(size, key) in template.sizes">
+                                            <span class="dimension green" :key="key">{{ size.width }}x{{ size.height }}</span>
                                              </template>  
                                         </div>
                                         <div class="right col-lg-6">
@@ -146,8 +151,6 @@
                             </div> 
                         </div>
                     </div>
-                </div>
-
 </template>
 
 <script>
@@ -155,6 +158,8 @@
 import Sidebar from '../sidebar/Sidebar'
 import Loading from '../loading/Loading'
 import axios from 'axios'
+import domfunctions from '@/mixins/domfunctions.js'
+
 
 export default {
   name: 'Templates',
@@ -162,26 +167,31 @@ export default {
       Sidebar,
       Loading
   },
+  mixins: [domfunctions],
   data () {
     return {
         loading: true,
-      msg: 'Dashboard yo',
-      active: [],
-      activetwo: [],
-      /* templates: {
-          templates:
-              [
+        active: [],
+        activetwo: [],
+        aspectRatios:
+        [
                 {
-                  sizes: ['600x600', '500x500', '300x300'],
+                  value: 'all',
+                  text: 'All',
                 },
                 {
-                  sizes: ['600x600', '500x500', '300x300'],
+                  value: 'square',
+                  text: 'Square',
                 },
                 {
-                  sizes: ['600x600', '500x500', '300x300'],
-                }
-                ]
-        }, */
+                  value: 'portrait',
+                  text: 'Portrait',
+                },
+                {
+                  value: 'landscape',
+                  text: 'Landscape',
+                },
+        ],
         templates: null,
         allTemplates: null,
         popoverstart: '<div class="popoover">',
@@ -190,6 +200,47 @@ export default {
         currentCompany: this.$store.getters.getCurrentCompany || null,
         currentAccessLevel: this.$store.getters.getCurrentAccessLevel || null,
         searchValue: null,
+        allSizes: null,
+        currentSortByIndex: 0,
+        currentSortByOrderIndex: 0,
+        orderOptions: [
+            {
+                value: 'DESC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 21l-12-18h24z"/></svg>',
+                text: 'Descending'
+            },
+            {
+                value: 'ASC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>',
+                text: 'Ascending'
+            }
+        ],
+        sortingOptions: [
+            {
+                value: 'updatedAt',
+                text: 'Date updated'
+            },
+            {
+                value: 'createdAt',
+                text: 'Date created'
+            },
+            {
+                value: 'bannersCount',
+                text: 'Number of banners'
+            },
+            {
+                value: 'name',
+                text: 'Name alphabetically'
+            },
+            {
+                value: 'description',
+                text: 'Description alphabetically'
+            },
+        ],
+        editingOrderValue: false,
+        editingOrderOrder: false,
+        editingAspectRatio: false,
+        editingSize: false,
 
     }
   },
@@ -206,9 +257,49 @@ export default {
             this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
         }
       this.getTemplates()
+      this.getAllSizes()
   },
   methods: {
-        searchFolders(){
+        setSorting($event, key, sortType){
+            if(sortType == 'value'){
+                this.currentSortByIndex = key
+            }
+            else if(sortType == 'order'){
+                if(this.currentSortByOrderIndex == 0){
+                    this.currentSortByOrderIndex = 1
+                }
+                else{
+                    this.currentSortByOrderIndex = 0
+                }
+                
+            }
+            this.editingOrderValue = false
+            this.editingOrderOrder = false
+            this.editingAspectRatio = false
+            this.editingSize = false
+            this.getTemplates(50, 0, this.orderOptions[this.currentSortByOrderIndex].value , this.sortingOptions[this.currentSortByIndex].value)
+            console.log('sorting done')
+            console.log(this.templates)
+        },
+        openSortDropDown(event, boxtype){
+            switch(boxtype){
+                case 'value':
+                this.editingOrderValue = !this.editingOrderValue
+                break
+                case 'order':
+                this.editingOrderOrder = !this.editingOrderOrder
+                break
+                case 'ratio':
+                this.editingAspectRatio = !this.editingAspectRatio
+                break
+                case 'size':
+                this.editingSize = !this.editingSize
+                break
+                default:
+                break
+            }
+        },
+        searchTemplates(){
             //console.log(this.searchValue)
             let searchValue = this.searchValue.toLowerCase()
             let searchResults = []
@@ -231,14 +322,24 @@ export default {
             console.log(searchResults)
             this.templates = searchResults
         },
-      async getTemplates(){
+        async getTemplates(takeAmount = 50, skipAmount = 0, orderByTypeArg = 'DESC ', orderByArg = 'updatedAt'){
           this.loading = true
+          // reset popups
+                this.active = []
+                this.activetwo = []
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
         
                 //IF Logged in make Call
                 if(this.isloggedIn()){
-                    const response = await axios.get('/templates')
+                    let params = {
+                        take: takeAmount,
+                        skip: skipAmount,
+                        orderByType: orderByTypeArg,
+                        orderBy: orderByArg,
+                    };
+                    let serialized = this.serialize(params)
+                    const response = await axios.get('/templates'+serialized)
                     console.log(response.data)
                     this.templates = response.data.templates
                     this.allTemplates = response.data.templates
@@ -246,10 +347,95 @@ export default {
                         this.active.push(false)
                         this.activetwo.push(false)
                     }
+                    _.forEach(this.templates, (template, key) => {
+                        this.active.push(false)
+                        this.activetwo.push(false)
+                        _.forEach(template.sizes, (size) => {
+                            if(typeof this.templates[key].aspectRatio !== Array){
+                                this.templates[key].aspectRatio = []
+                            }
+                            if(typeof this.allTemplates[key].aspectRatio !== Array){
+                                this.allTemplates[key].aspectRatio = []
+                            }
+                            if(size.width == size.height){
+                                this.templates[key].aspectRatio.push('square')
+                                this.allTemplates[key].aspectRatio.push('square')
+                            }
+                            else if(size.width > size.height){
+                                this.templates[key].aspectRatio.push('landscape')
+                                this.allTemplates[key].aspectRatio.push('landscape')
+                            }
+                            else{
+                                this.templates[key].aspectRatio.push('portrait')
+                                this.allTemplates[key].aspectRatio.push('portrait')
+                            }
+                        })
+                    })
+                    console.log(this.templates)
                     console.log(this.active)
                 }
-          this.loading = false
-                
+            this.loading = false
+            },
+            async getAllSizes(){
+                this.loading = true
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                const response = await axios.get('/sizes')
+                console.log(response.data)
+                this.allSizes = response.data.sizes
+                let all = {
+                    width: 'All',
+                    id: 'all'
+                }
+                this.allSizes.unshift(all)
+                this.loading = false
+            },
+            searchByAspectRatio(searchterm){
+                this.templates = []
+                console.log('searching by aspect ratio')
+                this.editingAspectRatio = false
+                this.editingSize = false
+                console.log(this.editingAspectRatio)
+                console.log(this.editingSize)
+
+                if(searchterm == 'all'){
+                    this.templates = this.allTemplates
+                    return
+                }
+                _.forEach(this.allTemplates, (template, key) => {
+                    if(typeof this.allTemplates[key].aspectRatio !== 'undefined' && this.allTemplates[key].aspectRatio.indexOf(searchterm) != -1){
+                        this.templates.push(template)
+                    }
+                })
+            },
+            getSizeText(size){
+                if(typeof size.width !== 'undefined' && typeof size.height !== 'undefined'){
+                    return size.width + 'x' + size.height
+                }
+                return size.width
+            },
+            searchBySizeId(id){
+                this.templates = []
+                this.editingOrderValue = false
+                this.editingOrderOrder = false
+                this.editingAspectRatio = false
+                this.editingSize = false
+                if(id == 'all'){
+                    this.templates = this.allTemplates
+                    return
+                }
+                _.forEach(this.allTemplates, (template, key) => {
+                    if(typeof template.sizes !== 'undefined'){
+                        _.forEach(template.sizes, (size) => {
+                            if(size.id == id){
+                                this.templates.push(template)
+                                return
+                            }
+                        })
+                    }
+                })
+
             },
             isloggedIn(){
                 return this.$store.getters.loggedIn

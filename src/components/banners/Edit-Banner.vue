@@ -74,7 +74,7 @@
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
-                                            <file-upload :label="field.name" :showFiles="false" :selectFiles="true"></file-upload>
+                                            <file-upload v-on:fileselected="setField($event, key)" :label="field.name" :showFiles="false" :selectFiles="true"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
@@ -368,8 +368,14 @@ export default {
                 this.getBannerPreview()
                 this.loading = false  
       },
-      getFileThumbnail(token){
-               console.log(token)
+      async getFileThumbnail(token){
+            this.loading = true
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/files/'+token)
+                console.log(response.data)
+                this.loading = false
       },
       setFieldValues(){
           this.field_values = this.currentTemplate.fields

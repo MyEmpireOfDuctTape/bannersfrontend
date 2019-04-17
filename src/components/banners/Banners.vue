@@ -34,28 +34,6 @@
                                 <div class="input-bubble search">
                                     <input type="text" placeholder="Search by name or description">
                                 </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Aspect ratio</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Size</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>Size 1</li>
-                                            <li>Size 2</li>
-                                            <li>Size 3</li>
-                                            <li>Size 4</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
                             </div>
                         </div>
                         <div class="folders row">
@@ -135,30 +113,46 @@
                                 <div class="header row">
                                     <div class="left  col-lg-4 col-md-6 col-sm-6">
                                         <div class="grey-dd">
-                                            <span>Latest updated</span>
+                                            <span>Sort by</span>
+                                            <span v-on:click="openSortDropDown($event, 'value')">{{ sortingOptions[currentSortByIndex].text }}</span>
+                                            <span v-on:click="setSorting($event, false, 'order')" v-html="orderOptions[currentSortByOrderIndex].html"></span>
+                                            <template v-if="editingOrderValue === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(option, key) in sortingOptions" :key="key" v-on:click="setSorting($event, key, 'value')">{{option.text}}</li>
+                                                    </ul>
+                                                </div>
+                                            </template>
+                                            <template v-if="editingOrderOrder === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(option, key) in orderOptions" :key="key" v-on:click="setSorting($event, key, 'order')">{{option.text}}</li>
+                                                    </ul>
+                                                </div>
+                                            </template>
+                                        </div>     
+                                    </div>
+                                    <div class="right col-lg-8 col-md-8">
+                                        <div class="input-bubble search">
+                                            <input type="text" placeholder="Search by name or description">
+                                        </div>
+                                        <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
+                                            <span> Aspect ratio</span>
                                             <div class="hidden">
                                                 <ul>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
+                                                    <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio(ratio.value)">{{ratio.text}}</li>
                                                 </ul>
-                                            </div>
-                                        </div>    
+                                            </div>                              
+                                        </div>
+                                        <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
+                                            <span> Size</span>
+                                            <div class="hidden">
+                                                <ul>
+                                                    <li v-for="(size, key) in allSizes" :key="key">{{size.width}}x{{size.height}}</li>
+                                                </ul>
+                                            </div>                             
+                                        </div>
                                     </div>
-                                    <div class="right col-lg-8 col-md-6 col-sm-6">
-                                         <div class="input-bubble dropdown"> 
-                                    <span> Size</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>Size 1</li>
-                                            <li>Size 2</li>
-                                            <li>Size 3</li>
-                                            <li>Size 4</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
                                     </div>    
                                 </div>
                                 <div class="banner-slide row">
@@ -216,102 +210,13 @@
                                 <span>{{banner.name}}</span>
                                 </router-link>
                             </div>
-
-                        <!-- <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="preview">
-                                <router-link :to="{ path: '/banners/edit-banner/' + banner.id }">
-                                <div class="square">
-                                    <div class="edit-overlay Aligner">
-                                        <button class="check"></button>
-                                        <input type="checkbox" class="">
-                                        <button class="edit"></button>
-                                        <div class="edit-box">
-                                            <ul>
-                                                <li><a href="#">
-                                                     <svg version="1.1" fill="#ededed" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>
-                                                    Edit</a></li>
-                                                <li><a href="#">
-                                                     <svg version="1.1" id="Layer_1" fill="#ededed" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>Duplicate Solid</title> <desc>Created with Sketch.</desc> <g> <g> <path d="M45.5,14h33H86v7.5v33V62h-8v8h8c4.4,0,8-3.6,8-8v-7.5v-33V14c0-4.4-3.6-8-8-8h-7.5h-33H38c-4.4,0-8,3.6-8,8v8h8v-8H45.5 L45.5,14L45.5,14z M6,38c0-4.4,3.6-8,8-8h48c4.4,0,8,3.6,8,8v48c0,4.4-3.6,8-8,8H14c-4.4,0-8-3.6-8-8V38L6,38L6,38z"/> </g> </g> </svg>
-                                                    Duplicate</a></li>
-                                                <li><a href="#">
-                                                     <svg version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
-                                                    Delete</a></li>
-                                            </ul>
-                                        </div>    
-                                         <img class="Aligner-item land" src="../../assets/img/banner.jpg">
-                                    </div>   
-                                </div>   
-                                </router-link>  
-                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">{{ banner.name }}</span></router-link>
-                                <span class="dimensions">{{banner.size.width}}x{{banner.size.height}}</span>
-                            </div>    
-                        </div> -->
                         </template>
-                         <!-- <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="preview">
-                                <router-link to="/banners/edit-banner/Telia skyscraper campaginr name long">
-                                <div class="square">
-                                    <div class="edit-overlay Aligner">
-                                        <button class="check"></button>
-                                        <input type="checkbox" class="">
-                                        <button class="edit"></button>
-                                        <div class="edit-box">
-                                            <ul>
-                                                <li><a href="#">
-                                                     <svg version="1.1" fill="#ededed" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>
-                                                    Edit</a></li>
-                                                <li><a href="#">
-                                                     <svg version="1.1" id="Layer_1" fill="#ededed" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>Duplicate Solid</title> <desc>Created with Sketch.</desc> <g> <g> <path d="M45.5,14h33H86v7.5v33V62h-8v8h8c4.4,0,8-3.6,8-8v-7.5v-33V14c0-4.4-3.6-8-8-8h-7.5h-33H38c-4.4,0-8,3.6-8,8v8h8v-8H45.5 L45.5,14L45.5,14z M6,38c0-4.4,3.6-8,8-8h48c4.4,0,8,3.6,8,8v48c0,4.4-3.6,8-8,8H14c-4.4,0-8-3.6-8-8V38L6,38L6,38z"/> </g> </g> </svg>
-                                                    Duplicate</a></li>
-                                                <li><a href="#">
-                                                     <svg version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
-                                                    Delete</a></li>
-                                            </ul>
-                                        </div>    
-                                         <img class="Aligner-item land" src="../../assets/img/banner.jpg">
-                                    </div>   
-                                </div>     
-                                </router-link>
-                                <router-link to="banners/edit-banner/Telia skyscraper campaginr name long"> <span class="name">Telia skyscraper campaginr name long</span></router-link>
-                                <span class="dimensions">300x300</span>
-                            </div>    
-                        </div>
-                         <div class="col-lg-3 col-md-6 col-sm-12">
-                            <div class="preview">
-                                <router-link to="banners/edit-banner/Telia skyscraper campaginr name long">
-                                <div class="square">
-                                    <div class="edit-overlay Aligner">
-                                        <button class="check"></button>
-                                        <input type="checkbox" class="">
-                                        <button class="edit"></button>
-                                        <div class="edit-box">
-                                            <ul>
-                                                <li><a href="#">
-                                                     <svg version="1.1" fill="#ededed" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>
-                                                    Edit</a></li>
-                                                <li><a href="#">
-                                                     <svg version="1.1" id="Layer_1" fill="#ededed" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>Duplicate Solid</title> <desc>Created with Sketch.</desc> <g> <g> <path d="M45.5,14h33H86v7.5v33V62h-8v8h8c4.4,0,8-3.6,8-8v-7.5v-33V14c0-4.4-3.6-8-8-8h-7.5h-33H38c-4.4,0-8,3.6-8,8v8h8v-8H45.5 L45.5,14L45.5,14z M6,38c0-4.4,3.6-8,8-8h48c4.4,0,8,3.6,8,8v48c0,4.4-3.6,8-8,8H14c-4.4,0-8-3.6-8-8V38L6,38L6,38z"/> </g> </g> </svg>
-                                                    Duplicate</a></li>
-                                                <li><a href="#">
-                                                     <svg version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
-                                                    Delete</a></li>
-                                            </ul>
-                                        </div>    
-                                         <img class="Aligner-item land" src="../../assets/img/banner.jpg">
-                                    </div>   
-                                </div>  
-                                </router-link>   
-                                <router-link to="banners/edit-banner/Telia skyscraper campaginr name long"><span class="name">Telia skyscraper campaginr name long</span></router-link>
-                                <span class="dimensions">300x300</span>
-                            </div>    
-                        </div> -->
 
                                 </div> 
                                 </div> 
                         </div>
                     </div>
                 </div>    
-            </div>
 
 </template>
 
@@ -348,6 +253,68 @@ export default {
         confirmedtrue: false,
         editName:  null,
         editing: [],
+        allSizes: null,
+        currentSortByIndex: 0,
+        currentSortByOrderIndex: 0,
+                aspectRatios:
+        [
+                {
+                  value: 'all',
+                  text: 'All',
+                },
+                {
+                  value: 'square',
+                  text: 'Square',
+                },
+                {
+                  value: 'portrait',
+                  text: 'Portrait',
+                },
+                {
+                  value: 'landscape',
+                  text: 'Landscape',
+                },
+        ],
+        orderOptions: [
+            {
+                value: 'DESC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 21l-12-18h24z"/></svg>',
+                text: 'Descending'
+            },
+            {
+                value: 'ASC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>',
+                text: 'Ascending'
+            }
+        ],
+        sortingOptions: [
+            {
+                value: 'updatedAt',
+                text: 'Date updated'
+            },
+            {
+                value: 'createdAt',
+                text: 'Date created'
+            },
+            {
+                value: 'name',
+                text: 'Name alphabetically'
+            },
+            {
+                value: 'description',
+                text: 'Description alphabetically'
+            },
+            {
+                value: 'templateId',
+                text: 'Template ID'
+            },
+            {
+                value: 'estimatedBannerSize',
+                text: 'Estimated banner size'
+            },
+        ],
+        editingOrderValue: false,
+        editingOrderOrder: false
     }
   },
   created(){
@@ -364,25 +331,120 @@ export default {
         }
         this.asyncgetBannersDirect()
         this.asyncgetFolders()
+        this.getAllSizes()
   },
 mixins: [domfunctions],
   methods: {
-        async asyncgetBannersDirect(){
+      searchFolders(){
+            //console.log(this.searchValue)
+            let searchValue = this.searchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.folders = this.allFolders
+                return
+            }
+            _.forEach(this.allFolders, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.folders = searchResults
+        },
+      setSorting($event, key, sortType){
+            if(sortType == 'value'){
+                this.currentSortByIndex = key
+            }
+            else if(sortType == 'order'){
+                if(this.currentSortByOrderIndex == 0){
+                    this.currentSortByOrderIndex = 1
+                }
+                else{
+                    this.currentSortByOrderIndex = 0
+                }
+                
+            }
+            this.editingOrderValue = false
+            this.editingOrderOrder = false
+            this.asyncgetBannersDirect(20, 0, this.orderOptions[this.currentSortByOrderIndex].value , this.sortingOptions[this.currentSortByIndex].value)
+            console.log(this.banners)
+        },
+        openSortDropDown(event, boxtype){
+            switch(boxtype){
+                case 'value':
+                this.editingOrderValue = !this.editingOrderValue
+                break
+                case 'order':
+                this.editingOrderOrder = !this.editingOrderOrder
+                break
+                default:
+                break
+            }
+        },
+        async getAllSizes(){
+                this.loading = true
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                const response = await axios.get('/sizes')
+                console.log(response.data)
+                this.allSizes = response.data.sizes
+                console.log(this.allSizes)
+
+                this.loading = false
+            },
+        async asyncgetBannersDirect(takeAmount = 20, skipAmount = 0, orderByTypeArg = 'DESC', orderByArg = 'updatedAt'){
             this.loading = true
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
             let params = {
-                    take: 30,
-                    skip: 0,
+                    take: takeAmount,
+                    skip: skipAmount,
+                    orderByType: orderByTypeArg,
+                    orderBy: orderByArg,
             };
             let serialized = this.serialize(params)
                 const response = await axios.get('/banners'+serialized)
                 console.log(response)
                 this.banners = response.data.banners
-            this.loading = false
+                this.allBanners = response.data.banners
+                _.forEach(this.allBanners, (banner, key) => {
+                            if(typeof this.banners[key].aspectRatio !== Array){
+                                this.banners[key].aspectRatio = []
+                            }
+                            if(typeof this.allBanners[key].aspectRatio !== Array){
+                                this.allBanners[key].aspectRatio = []
+                            }
+                            if(banner.size.width == banner.size.height){
+                                this.banners[key].aspectRatio.push('square')
+                                this.allBanners[key].aspectRatio.push('square')
+                            }
+                            else if(banner.size.width > banner.size.height){
+                                this.banners[key].aspectRatio.push('landscape')
+                                this.allBanners[key].aspectRatio.push('landscape')
+                            }
+                            else{
+                                this.banners[key].aspectRatio.push('portrait')
+                                this.allBanners[key].aspectRatio.push('portrait')
+                            }
+                    })
+                    console.log(this.banners)
+                this.loading = false
 			
         },
+        searchByAspectRatio(searchterm){
+                this.banners = []
+                if(searchterm == 'all'){
+                    this.banners = this.allBanners
+                    return
+                }
+                _.forEach(this.allBanners, (banner, key) => {
+                    if(typeof this.allBanners[key].aspectRatio !== 'undefined' && this.allBanners[key].aspectRatio.indexOf(searchterm) != -1){
+                        this.banners.push(banner)
+                    }
+                })
+            },
         async asyncgetFolderbyID(id){
             this.loading = true
 
@@ -396,7 +458,7 @@ mixins: [domfunctions],
             this.loading = false
 			
         },
-        async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+        async asyncgetFolders(takeAmount = 50, skipAmount = 0, orderByTypeArg = 'ASC', orderByArg = 'id'){
             //POSSIBLE ORDERBYS
             //companyId -> companyId
             //createdAt -> createdAt
@@ -406,7 +468,7 @@ mixins: [domfunctions],
             //token -> ????? 
             // updatedAt -> updated_at
             this.loading = true
-            let take = 50
+/*             let take = 50
             let skip = 0
             let orderBy = orderByArg
             let orderByType = orderByTypeArg
@@ -415,16 +477,16 @@ mixins: [domfunctions],
             }
             if(skipAmount && Number.isInteger(skipAmount)){
                 skip = skipAmount
-            }
+            } */
             // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
             let params = {
-                    take: take,
-                    skip: skip,
-                    orderByType: orderByType,
-                    orderBy: orderBy,
+                    take: takeAmount,
+                    skip: skipAmount,
+                    orderByType: orderByTypeArg,
+                    orderBy: orderByArg,
             };
             let serialized = this.serialize(params)
             const response = await axios.get('/folders'+serialized)
@@ -594,28 +656,6 @@ mixins: [domfunctions],
                         console.log(error.response);      
                      }
                      
-                });
-            },
-            testPromise(){
-                new Promise(function(resolve, reject) {
-
-                setTimeout(() => resolve(1), 1000); // (*)
-
-                }).then(function(result) { // (**)
-
-                alert(result); // 1
-                return result * 2;
-
-                }).then(function(result) { // (***)
-
-                alert(result); // 2
-                return result * 2;
-
-                }).then(function(result) {
-
-                alert(result); // 4
-                return result * 2;
-
                 });
             },
             setEditing($event, index, folder){
