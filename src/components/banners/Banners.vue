@@ -32,7 +32,7 @@
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" placeholder="Search by name or description">
+                                    <input type="text" v-model="folderSearchValue" v-on:keyup="searchFolders" placeholder="Search folders by name or description">
                                 </div>
                             </div>
                         </div>
@@ -133,26 +133,30 @@
                                         </div>     
                                     </div>
                                     <div class="right col-lg-8 col-md-8">
-                                        <div class="input-bubble search">
-                                            <input type="text" placeholder="Search by name or description">
-                                        </div>
-                                        <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
-                                            <span> Aspect ratio</span>
-                                            <div class="hidden">
-                                                <ul>
-                                                    <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio(ratio.value)">{{ratio.text}}</li>
-                                                </ul>
-                                            </div>                              
-                                        </div>
-                                        <div class="input-bubble dropdown" v-on:click="toggleDropDown"> 
-                                            <span> Size</span>
-                                            <div class="hidden">
-                                                <ul>
-                                                    <li v-for="(size, key) in allSizes" :key="key">{{size.width}}x{{size.height}}</li>
-                                                </ul>
-                                            </div>                             
-                                        </div>
-                                    </div>
+                                <div class="input-bubble search">
+                                    <input type="text" v-model="bannerSearchValue" v-on:keyup="searchBanners" placeholder="Search banners by name or description">
+                                </div>
+                                 <div class="input-bubble dropdown" v-bind:class="[editingAspectRatio === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'ratio')"> 
+                                    <span> Aspect ratio : {{ aspectRatios[currentAspectRatioIndex].text}}</span>
+                                    <template v-if="editingAspectRatio === true">
+                                    <div class="hidden visible">
+                                        <ul>
+                                            <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio($event, ratio.value, key)">{{ratio.text}}</li>
+                                        </ul>
+                                    </div>  
+                                    </template>                          
+                                </div>
+                                <div class="input-bubble dropdown" v-bind:class="[editingSize === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'size')"> 
+                                    <span>Size: {{ getSizeTextByIndex(currentSizeIndex) }}</span>
+                                    <template v-if="editingSize === true">
+                                    <div class="hidden visible">
+                                        <ul>
+                                            <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId($event, size.id, key)" v-text="getSizeTextByIndex(key)"></li>
+                                        </ul>
+                                    </div>   
+                                    </template>                         
+                                </div>
+                            </div>
                                     </div>    
                                 </div>
                                 <div class="banner-slide row">
@@ -256,7 +260,11 @@ export default {
         allSizes: null,
         currentSortByIndex: 0,
         currentSortByOrderIndex: 0,
-                aspectRatios:
+        currentAspectRatioIndex: 0,
+        currentSizeIndex: 0,
+        bannerSearchValue: null,
+        folderSearchValue: null,
+        aspectRatios:
         [
                 {
                   value: 'all',
@@ -314,7 +322,9 @@ export default {
             },
         ],
         editingOrderValue: false,
-        editingOrderOrder: false
+        editingOrderOrder: false,
+        editingAspectRatio: false,
+        editingSize: false,
     }
   },
   created(){
@@ -337,7 +347,7 @@ mixins: [domfunctions],
   methods: {
       searchFolders(){
             //console.log(this.searchValue)
-            let searchValue = this.searchValue.toLowerCase()
+            let searchValue = this.folderSearchValue.toLowerCase()
             let searchResults = []
             if(searchValue == null || searchValue == ''){
                 this.folders = this.allFolders
@@ -351,7 +361,23 @@ mixins: [domfunctions],
             })
             this.folders = searchResults
         },
-      setSorting($event, key, sortType){
+        searchBanners(){
+            //console.log(this.searchValue)
+            let searchValue = this.bannerSearchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.banners = this.allBanners
+                return
+            }
+            _.forEach(this.allBanners, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.banners = searchResults
+        },
+      setSorting(event, key, sortType){
             if(sortType == 'value'){
                 this.currentSortByIndex = key
             }
@@ -364,18 +390,30 @@ mixins: [domfunctions],
                 }
                 
             }
+            event.stopPropagation()
             this.editingOrderValue = false
             this.editingOrderOrder = false
+            this.editingAspectRatio = false
+            this.editingSize = false
             this.asyncgetBannersDirect(20, 0, this.orderOptions[this.currentSortByOrderIndex].value , this.sortingOptions[this.currentSortByIndex].value)
-            console.log(this.banners)
+            console.log('sorting done')
+            console.log(this.templates)
         },
         openSortDropDown(event, boxtype){
+            console.log('opensortdropdown')
+            console.log(boxtype)
             switch(boxtype){
                 case 'value':
                 this.editingOrderValue = !this.editingOrderValue
                 break
                 case 'order':
                 this.editingOrderOrder = !this.editingOrderOrder
+                break
+                case 'ratio':
+                this.editingAspectRatio = !this.editingAspectRatio
+                break
+                case 'size':
+                this.editingSize = !this.editingSize
                 break
                 default:
                 break
@@ -389,8 +427,11 @@ mixins: [domfunctions],
                 const response = await axios.get('/sizes')
                 console.log(response.data)
                 this.allSizes = response.data.sizes
-                console.log(this.allSizes)
-
+                let all = {
+                    width: 'All',
+                    id: 'all'
+                }
+                this.allSizes.unshift(all)
                 this.loading = false
             },
         async asyncgetBannersDirect(takeAmount = 20, skipAmount = 0, orderByTypeArg = 'DESC', orderByArg = 'updatedAt'){
@@ -433,17 +474,50 @@ mixins: [domfunctions],
                 this.loading = false
 			
         },
-        searchByAspectRatio(searchterm){
+        searchByAspectRatio(event, searchterm, key){
+                event.stopPropagation()
                 this.banners = []
+                console.log('searching by aspect ratio')
+                this.editingAspectRatio = false
+                this.editingSize = false
+                this.currentAspectRatioIndex = key
                 if(searchterm == 'all'){
                     this.banners = this.allBanners
                     return
                 }
-                _.forEach(this.allBanners, (banner, key) => {
+                _.forEach(this.allBanners, (template, key) => {
                     if(typeof this.allBanners[key].aspectRatio !== 'undefined' && this.allBanners[key].aspectRatio.indexOf(searchterm) != -1){
-                        this.banners.push(banner)
+                        this.banners.push(template)
                     }
                 })
+            },
+            getSizeTextByIndex(key){
+                if(typeof this.allSizes[key].width !== 'undefined' && typeof this.allSizes[key].height !== 'undefined'){
+                    return this.allSizes[key].width + 'x' + this.allSizes[key].height
+                }
+                return this.allSizes[key].width
+            },
+            searchBySizeId(event, id, key){
+                event.stopPropagation()
+                this.banners = []
+                this.editingOrderValue = false
+                this.editingOrderOrder = false
+                this.editingAspectRatio = false
+                this.editingSize = false
+                this.currentSizeIndex = key
+                if(id == 'all'){
+                    this.banners = this.allBanners
+                    return
+                }
+                _.forEach(this.allBanners, (banner, key) => {
+                    console.log(banner.size)
+                    console.log(id)
+                    if(typeof banner.size !== 'undefined' && banner.size.id == id){
+                        this.banners.push(banner)
+                        return
+                    }
+                })
+
             },
         async asyncgetFolderbyID(id){
             this.loading = true
@@ -517,6 +591,7 @@ mixins: [domfunctions],
                 }
             });
             this.folders = banana
+            this.allFolders = banana
             //this.allFolders = banana
             this.loading = false
         },

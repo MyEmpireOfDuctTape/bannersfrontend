@@ -45,9 +45,8 @@
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
+                                    <input type="text" v-model="folderSearchValue" v-on:keyup="searchFolders" placeholder="Search folders by name or description">
                                 </div>
-                                
                             </div>
                         </div>
                         <div class="folders row">
@@ -221,6 +220,74 @@ export default {
         currentFolder: null,
         searchValue: null,
         searchResults: [],
+        allSizes: null,
+        currentSortByIndex: 0,
+        currentSortByOrderIndex: 0,
+        currentAspectRatioIndex: 0,
+        currentSizeIndex: 0,
+        bannerSearchValue: null,
+        folderSearchValue: null,
+        aspectRatios:
+        [
+                {
+                  value: 'all',
+                  text: 'All',
+                },
+                {
+                  value: 'square',
+                  text: 'Square',
+                },
+                {
+                  value: 'portrait',
+                  text: 'Portrait',
+                },
+                {
+                  value: 'landscape',
+                  text: 'Landscape',
+                },
+        ],
+        orderOptions: [
+            {
+                value: 'DESC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 21l-12-18h24z"/></svg>',
+                text: 'Descending'
+            },
+            {
+                value: 'ASC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>',
+                text: 'Ascending'
+            }
+        ],
+        sortingOptions: [
+            {
+                value: 'updatedAt',
+                text: 'Date updated'
+            },
+            {
+                value: 'createdAt',
+                text: 'Date created'
+            },
+            {
+                value: 'name',
+                text: 'Name alphabetically'
+            },
+            {
+                value: 'description',
+                text: 'Description alphabetically'
+            },
+            {
+                value: 'templateId',
+                text: 'Template ID'
+            },
+            {
+                value: 'estimatedBannerSize',
+                text: 'Estimated banner size'
+            },
+        ],
+        editingOrderValue: false,
+        editingOrderOrder: false,
+        editingAspectRatio: false,
+        editingSize: false,
     }
   },
   created(){
@@ -237,7 +304,7 @@ export default {
         }
         this.asyncgetFolders()        
         this.asyncgetBannersDirect()
-       // this.asyncgetFolderbyID(this.$route.params.id)
+       this.asyncgetFolderbyID(this.$route.params.id)
   },
     watch:{
     $route (to, from){
@@ -269,9 +336,8 @@ export default {
            /*  this.asyncgetFolderbyID(this.$route.params.id) */
         },
         searchFolders(){
-            
             //console.log(this.searchValue)
-            let searchValue = this.searchValue.toLowerCase()
+            let searchValue = this.folderSearchValue.toLowerCase()
             let searchResults = []
             if(searchValue == null || searchValue == ''){
                 this.folders = this.allFolders
@@ -279,13 +345,29 @@ export default {
             }
             _.forEach(this.allFolders, function(value){
                 /* console.log(value.name.indexOf(searchValue)) */
-                if(value.name && value.name.toLowerCase().indexOf(searchValue) > -1){
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
                     searchResults.push(value) 
                 }
             })
             this.folders = searchResults
         },
-        async asyncgetBannersDirect(){
+        searchBanners(){
+            //console.log(this.searchValue)
+            let searchValue = this.bannerSearchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.banners = this.allBanners
+                return
+            }
+            _.forEach(this.allBanners, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.banners = searchResults
+        },
+        async asyncgetBannersDirect(takeAmount = 20, skipAmount = 0, orderByTypeArg = 'DESC', orderByArg = 'updatedAt'){
             console.log('async banners start')
             this.loading = true
             let banana = this.banners
@@ -294,18 +376,38 @@ export default {
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
             let params = {
-                    take: 30,
-                    skip: 0,
+                    take: takeAmount,
+                    skip: skipAmount,
+                    orderByType: orderByTypeArg,
+                    orderBy: orderByArg,
                     folderId: this.$route.params.id
             };
+            console.log(params)
             let serialized = this.serialize(params)
                 const response = await axios.get('/banners'+serialized)
                 console.log(response.data.banners)
                 this.allBanners = response.data.banners
                 this.banners = response.data.banners
-                console.log(this.banners)
-                //this.sortBannersById(this.$route.params.id)
-            console.log('async banners end')
+                _.forEach(this.allBanners, (banner, key) => {
+                            if(typeof this.banners[key].aspectRatio !== Array){
+                                this.banners[key].aspectRatio = []
+                            }
+                            if(typeof this.allBanners[key].aspectRatio !== Array){
+                                this.allBanners[key].aspectRatio = []
+                            }
+                            if(banner.size.width == banner.size.height){
+                                this.banners[key].aspectRatio.push('square')
+                                this.allBanners[key].aspectRatio.push('square')
+                            }
+                            else if(banner.size.width > banner.size.height){
+                                this.banners[key].aspectRatio.push('landscape')
+                                this.allBanners[key].aspectRatio.push('landscape')
+                            }
+                            else{
+                                this.banners[key].aspectRatio.push('portrait')
+                                this.allBanners[key].aspectRatio.push('portrait')
+                            }
+                    })
             this.loading = false
 			
         },
@@ -323,6 +425,63 @@ export default {
         hasParentFolder(folderObject){
             return folderObject.parentId != null ? folderObject.parentId : false
         },
+        setSorting(event, key, sortType){
+            if(sortType == 'value'){
+                this.currentSortByIndex = key
+            }
+            else if(sortType == 'order'){
+                if(this.currentSortByOrderIndex == 0){
+                    this.currentSortByOrderIndex = 1
+                }
+                else{
+                    this.currentSortByOrderIndex = 0
+                }
+                
+            }
+            event.stopPropagation()
+            this.editingOrderValue = false
+            this.editingOrderOrder = false
+            this.editingAspectRatio = false
+            this.editingSize = false
+            this.asyncgetBannersDirect(20, 0, this.orderOptions[this.currentSortByOrderIndex].value , this.sortingOptions[this.currentSortByIndex].value)
+            console.log('sorting done')
+            console.log(this.templates)
+        },
+        openSortDropDown(event, boxtype){
+            console.log('opensortdropdown')
+            console.log(boxtype)
+            switch(boxtype){
+                case 'value':
+                this.editingOrderValue = !this.editingOrderValue
+                break
+                case 'order':
+                this.editingOrderOrder = !this.editingOrderOrder
+                break
+                case 'ratio':
+                this.editingAspectRatio = !this.editingAspectRatio
+                break
+                case 'size':
+                this.editingSize = !this.editingSize
+                break
+                default:
+                break
+            }
+        },
+        async getAllSizes(){
+                this.loading = true
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                const response = await axios.get('/sizes')
+                console.log(response.data)
+                this.allSizes = response.data.sizes
+                let all = {
+                    width: 'All',
+                    id: 'all'
+                }
+                this.allSizes.unshift(all)
+                this.loading = false
+            },
         async asyncgetBannersDirectById(id){
             this.loading = true
             // SET HEADERS
@@ -347,6 +506,7 @@ export default {
                 const response = await axios.get('/folders/'+id)
                 console.log(response.data)
                 let hasParentId = this.hasParentFolder(response.data.folder)
+                console.log(this.parentNames)
                 this.parentNames.unshift({
                         name: response.data.folder.name,
                         id: response.data.folder.id
@@ -359,7 +519,7 @@ export default {
                 
 			
         },
-        async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+        async asyncgetFolders(takeAmount = 50, skipAmount = 0, orderByTypeArg = 'ASC', orderByArg = 'id'){
             //POSSIBLE ORDERBYS
             //companyId -> company_id
             //createdAt -> created_at
@@ -369,7 +529,7 @@ export default {
             //token -> ????? 
             // updatedAt -> updated_at
             this.loading = true
-            let take = 50
+            /* let take = 50
             let skip = 0
             let orderBy = orderByArg
             let orderByType = orderByTypeArg
@@ -381,16 +541,16 @@ export default {
             }
             if(skipAmount && Number.isInteger(skipAmount)){
                 skip = skipAmount
-            }
+            } */
             // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
             let params = {
-                    take: take,
-                    skip: skip,
-                    orderByType: orderByType,
-                    orderBy: orderBy,
+                    take: takeAmount,
+                    skip: skipAmount,
+                    orderByType: orderByTypeArg,
+                    orderBy: orderByArg,
                     parentId: this.$route.params.id
             };
             let serialized = this.serialize(params)

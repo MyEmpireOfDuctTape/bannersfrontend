@@ -16,22 +16,22 @@
                                 <div class="input-bubble search">
                                     <input type="text" v-model="searchValue" v-on:keyup="searchTemplates" placeholder="Search by name or description">
                                 </div>
-                                 <div class="input-bubble dropdown" v-on:click="openSortDropDown($event, 'ratio')"> 
-                                    <span> Aspect ratio</span>
+                                 <div class="input-bubble dropdown" v-bind:class="[editingAspectRatio === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'ratio')"> 
+                                    <span> Aspect ratio : {{ aspectRatios[currentAspectRatioIndex].text}}</span>
                                     <template v-if="editingAspectRatio === true">
                                     <div class="hidden visible">
                                         <ul>
-                                            <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio(ratio.value)">{{ratio.text}}</li>
+                                            <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio($event, ratio.value, key)">{{ratio.text}}</li>
                                         </ul>
                                     </div>  
                                     </template>                          
                                 </div>
-                                <div class="input-bubble dropdown" v-on:click="openSortDropDown($event, 'size')"> 
-                                    <span>Size</span>
+                                <div class="input-bubble dropdown" v-bind:class="[editingSize === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'size')"> 
+                                    <span>Size: {{ getSizeTextByIndex(currentSizeIndex) }}</span>
                                     <template v-if="editingSize === true">
                                     <div class="hidden visible">
                                         <ul>
-                                            <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId(size.id)" v-text="getSizeText(size)"></li>
+                                            <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId($event, size.id, key)" v-text="getSizeTextByIndex(key)"></li>
                                         </ul>
                                     </div>   
                                     </template>                         
@@ -203,6 +203,8 @@ export default {
         allSizes: null,
         currentSortByIndex: 0,
         currentSortByOrderIndex: 0,
+        currentAspectRatioIndex: 0,
+        currentSizeIndex: 0,
         orderOptions: [
             {
                 value: 'DESC',
@@ -260,7 +262,7 @@ export default {
       this.getAllSizes()
   },
   methods: {
-        setSorting($event, key, sortType){
+        setSorting(event, key, sortType){
             if(sortType == 'value'){
                 this.currentSortByIndex = key
             }
@@ -273,6 +275,7 @@ export default {
                 }
                 
             }
+            event.stopPropagation()
             this.editingOrderValue = false
             this.editingOrderOrder = false
             this.editingAspectRatio = false
@@ -282,6 +285,8 @@ export default {
             console.log(this.templates)
         },
         openSortDropDown(event, boxtype){
+            console.log('opensortdropdown')
+            console.log(boxtype)
             switch(boxtype){
                 case 'value':
                 this.editingOrderValue = !this.editingOrderValue
@@ -391,14 +396,15 @@ export default {
                 this.allSizes.unshift(all)
                 this.loading = false
             },
-            searchByAspectRatio(searchterm){
+            searchByAspectRatio(event, searchterm, key){
+                event.stopPropagation()
                 this.templates = []
                 console.log('searching by aspect ratio')
                 this.editingAspectRatio = false
                 this.editingSize = false
                 console.log(this.editingAspectRatio)
                 console.log(this.editingSize)
-
+                this.currentAspectRatioIndex = key
                 if(searchterm == 'all'){
                     this.templates = this.allTemplates
                     return
@@ -409,18 +415,20 @@ export default {
                     }
                 })
             },
-            getSizeText(size){
-                if(typeof size.width !== 'undefined' && typeof size.height !== 'undefined'){
-                    return size.width + 'x' + size.height
+            getSizeTextByIndex(key){
+                if(typeof this.allSizes[key].width !== 'undefined' && typeof this.allSizes[key].height !== 'undefined'){
+                    return this.allSizes[key].width + 'x' + this.allSizes[key].height
                 }
-                return size.width
+                return this.allSizes[key].width
             },
-            searchBySizeId(id){
+            searchBySizeId(event, id, key){
+                event.stopPropagation()
                 this.templates = []
                 this.editingOrderValue = false
                 this.editingOrderOrder = false
                 this.editingAspectRatio = false
                 this.editingSize = false
+                this.currentSizeIndex = key
                 if(id == 'all'){
                     this.templates = this.allTemplates
                     return
