@@ -124,14 +124,14 @@ $font-family-base: $font-family-sans-serif;
 
 // Set global options
 $enable-shadows: false;
-$enable-gradients: true;
+$enable-gradients: true;    
 
 #app, body, html{
     background-color: $bgcolor;
     color: $textcolor;
     font-family: $font-family-base;
     font-size: 1em;
-    display: block;
+    display: block !important;
 }
 
 .login{

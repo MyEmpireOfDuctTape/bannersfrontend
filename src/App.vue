@@ -24,8 +24,9 @@ export default {
 /* @import '../node_modules/vuetify/dist/vuetify.min.css'; */
 @import '../node_modules/@radial-color-picker/vue-color-picker/dist/vue-color-picker.min.css';  
 /* @import '../node_modules/vuetify/dist/vuetify.min.css'; */
-@import './build/app.min.css';
 @import './assets/css/animate.css';
+@import './build/app.min.css';
+
 </style>
 
 
