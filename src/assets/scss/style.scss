@@ -1699,7 +1699,6 @@ button{
     }
 
     &.save{
-        margin-top: 2rem;
         padding: 0.7rem 3rem;
         &.saving{
             background-color: $gray-lighter;
@@ -1711,24 +1710,37 @@ button{
         }
         &:focus{
             outline: none;
+            cursor: pointer;
         }
-        
-    }
-    &.saved{
-        margin-top: 2rem;
-        background-image: url($checkwhite);
-        background-position: 10% 55%;
-        background-size: 15px;
-        background-color: #56d589;
-        padding: 0.7rem 2rem 0.7rem 3rem;
         &:hover{
-            background-color: #56d589;
-            box-shadow: none;
+            cursor: pointer;
         }
-        &:focus{
-            outline: none;
+        &.saving{
+            background-color: grey;
+            &:hover{
+                background-color: #56d589;
+                box-shadow: none;
+            }
+            &:focus{
+                outline: none;
+            }
+        }
+        &.saved{
+            background-image: url($checkwhite);
+            background-position: 10% 55%;
+            background-size: 15px;
+            background-color: #56d589;
+            padding: 0.7rem 2rem 0.7rem 3rem;
+            &:hover{
+                background-color: #56d589;
+                box-shadow: none;
+            }
+            &:focus{
+                outline: none;
+            }
         }
     }
+
 
     &.view{
         background-image: url($templategallerywhite);
@@ -2143,7 +2155,7 @@ button{
                     
                 }
             }
-            margin: 2rem 0 4rem 0;
+            margin: 2rem 0;
             border: 1px solid #f1f1f1;
             box-shadow: 0 0 10px 0 #f1f1f1;
             border-radius: 7px; 
@@ -2475,7 +2487,7 @@ input{
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1em 2em;
+    padding: 1em;
     text-decoration: none;
     color: $textcolor !important;
     &:hover{
@@ -2786,4 +2798,8 @@ button{
     overflow: hidden;
     display: block;
     margin: 0 auto;
+}
+
+.banner-save{
+    margin: 1em 0 !important;
 }

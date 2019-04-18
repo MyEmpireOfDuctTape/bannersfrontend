@@ -1,7 +1,11 @@
 <template>
 <div>
   <div class="input-block file-upload">
+    <div class="top">
     <span class="label" v-text="label"></span>
+    <div class="selected-image" v-bind:style="{ 'background-image': 'url(' + selectedPictureurlData + ')' }"></div>
+    <!-- <img :src="selectedPictureurlData"> -->
+    </div>
     <span class="success" v-if="success.value == true">{{success.message}}</span>
     <!-- <file-upload :url='url' :thumb-url='thumbUrl' :headers="headers" @change="onChange($event)" @success="onSucess" @error="onError" :additional-data="additionalData"></file-upload> -->
     <p class="red"> {{error}}</p>
@@ -55,6 +59,7 @@ export default {
         label: { type: String, required: true },
         showFiles: { type: Boolean, required: true },
         selectFiles: { type: Boolean, required: true },
+        selectedPictureurl :{ type: String, required: false },
     },
     mixins: [domfunctions],
     data() {
@@ -75,7 +80,8 @@ export default {
             },
             files: null,
             deleting: null,
-            selectedFile: null
+            selectedFile: null,
+            selectedPictureurlData: this.selectedPictureurl
         }
     },
     created(){
@@ -93,9 +99,20 @@ export default {
     methods: {
         selectFile(file){
             this.selectedFile = file
+            this.getFileThumbnail(this.selectedFile.token)
             console.log(this.selectedFile)
             this.$emit('fileselected', this.selectedFile.id)
         },
+        async getFileThumbnail(token){
+            this.loading = true
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                const response = await axios.get('/files/'+token)
+                console.log(response.data)
+                this.selectedPictureurlData = response.data.file.publicUrl
+                this.loading = false
+      },
         thumbUrl(file) {
         return (file && file.id) || this.success
             ? 'http://vuejs.org/images/logo.png'

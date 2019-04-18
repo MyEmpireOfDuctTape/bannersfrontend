@@ -136,6 +136,25 @@ export default {
 
 <style lang="scss">
 .file-upload {
+  .top{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .selected-image{
+      min-height: 100px;
+      background-position: center;
+      background-size: cover;
+      transition: 1s;
+             &:hover{
+            transform: scale(1.05);
+            
+          }
+    }
+    img{
+      max-width: 100%;
+      height: auto;
+    }
+  }
   .input-wrapper {
     text-align: center;
     position: relative;

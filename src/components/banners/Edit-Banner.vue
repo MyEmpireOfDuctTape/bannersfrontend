@@ -34,7 +34,7 @@
                                 <span v-on:click="dropdownToggle"> {{sizes[0].width}}x{{sizes[0].height}} </span>
                                 <div class="dropdown">
                                     <ul>
-                                        <li v-for="(size, key) in sizes" v-bind:key="key" v-on:click="dropDownElementClicked">{{size.width}}x{{size.height}}</li>
+                                        <li v-for="(size, key) in sizes" v-bind:key="key" v-on:click="selectSize($event, size.id)">{{size.width}}x{{size.height}}</li>
                                     </ul>
                                 </div> 
                                 </template>
@@ -74,7 +74,7 @@
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
-                                            <file-upload v-on:fileselected="setField($event, key)" :label="field.name" :showFiles="false" :selectFiles="true"></file-upload>
+                                            <file-upload v-on:fileselected="setField($event, key)" :label="field.name" :selectedPictureurl="'https://stage.api.banners.ee/storage/uploads/7Yo0843dPdxS5QvRFLqI7NCCiVuST0E90iHs53qO.jpeg'" :showFiles="false" :selectFiles="true"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
@@ -144,6 +144,13 @@
                         </div>
          
                     </div>  
+                    <div class="container-fluid manual-styles">
+                    <div class="row">
+                        <div class="col-lg-12">
+                    <button class="right roundedd blue save" v-on:click="saveBanner($event)">Save</button>
+                    </div>
+                        </div>
+                        </div>
                     <template v-if="customStylesVisible">
                     <div class="container-fluid manual-styles">
                     <div class="row">
@@ -298,6 +305,7 @@ export default {
         file: null,
         renderedHtml: null,
         thumbnails: [],
+        selectedSizeId: null,
     }
   },
   mixins: [domfunctions],
@@ -308,19 +316,58 @@ export default {
         this.getBanner()
         this.getTemplates()
         this.getSizes()
-        
 
   },
   mounted(){
 	this.checkIfAutofilled()
   },
   methods: {   
+      saveBanner(event){
+                event.target.classList.add('saving')
+                console.log(this.field_values);
+                let values = {}
+                _.forEach(this.field_values, (field, key) => {
+                    values[key] = field.value
+                })
+                console.log(values)
+                console.log(this.banner)
+                console.log(this.currentTemplate)
+               
+                console.log('attempting to save banner')
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                let data = {
+                    name: this.banner.name,
+                    folderId: this.banner.folderId,
+                    templateId: this.currentTemplate.id,
+                    sizeId: this.selectedSizeId,
+                    manualStylesEnabled: this.customStylesVisible === true ? 1 : 0,
+                    templateOverwriteEnabled: this.templateHtmlOverwrite === true ? 1 : 0,
+                    field_values: values,
+                };
+                console.log(data)
+                //axios.patch('/banner/'+this.banner.id, data)
+                axios({ url: '/banner/'+this.banner.id , baseURL: 'https://stage.api.banners.ee', method: 'patch', params: data })
+                .then((response) => {
+                    console.log(response)
+                    event.target.classList.add('saved')
+                }) 
+                .catch( (error) => {
+                        console.log(error);
+                })
+      },
       submitForm(event){
           console.log(event.target)
           console.log(this.file)
       },
       getFieldOptions(key){
-          let options = this.currentTemplate.fields[key].options;
+          if(this.currentTemplate.fields === null){
+              return false;
+          }
+          console.log(this.currentTemplate.fields[key])
+          let options = this.currentTemplate.fields[key].options
           let values = []
           _.forEach(options.split('|'), value => {
               values.push({  
@@ -419,13 +466,13 @@ export default {
       }, */
       async getBannerPreview(){
             this.loading = true
-            axios.defaults.baseURL = 'https://stage.api.banners.ee/'
+            //axios.defaults.baseURL = 'https://stage.api.banners.ee/'
             axios.defaults.headers.common['Accept'] = 'text/html'
             //axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id          
-            const response = await axios.get('/serve/banner/'+this.banner.token)
+            const response = await axios({ url: '/serve/banner/'+this.banner.token , baseURL: 'https://stage.api.banners.ee', method: 'get'})//axios.get('/serve/banner/'+this.banner.token)
             console.log(response) 
             this.renderedHtml = response.data
-            axios.defaults.baseURL = 'https://stage.api.banners.ee/v1' 
+            //axios.defaults.baseURL = 'https://stage.api.banners.ee/v1' 
             this.loading = false
       },
        sliderToggle(event, target){
@@ -469,6 +516,12 @@ export default {
             jQuery(e.target).parent().parent().prev().text($(e.target).text())
             jQuery(e.target).parent().parent().slideUp()
         },
+        selectSize(e, size_id){
+            console.log(size_id)
+            this.selectedSizeId = size_id
+            jQuery(e.target).parent().parent().prev().text($(e.target).text())
+            jQuery(e.target).parent().parent().slideUp()
+        },
         async getTemplateById(id){
                 this.sizes = []
                 this.loading = true
@@ -480,8 +533,12 @@ export default {
                 _.forEach(this.currentTemplate.fields, field => {
                     field.value = field.default
                 })
-                console.log(this.currentTemplate)
+                this.setFieldValues()
                 this.sizes = response.data.template.sizes
+                if(this.sizes.length > 0){
+                    this.selectedSizeId = this.sizes[0].id
+                    console.log(this.selectedSizeId)
+                }
                 this.loading = false
                 
             },
