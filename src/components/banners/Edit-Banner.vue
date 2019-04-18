@@ -348,8 +348,8 @@ export default {
                     field_values: values,
                 };
                 console.log(data)
-                //axios.patch('/banner/'+this.banner.id, data)
-                axios({ url: '/banner/'+this.banner.id , baseURL: 'https://stage.api.banners.ee', method: 'patch', params: data })
+                axios.patch('/banner/'+this.banner.id, data)
+                //axios({ url: '/banner/'+this.banner.id , baseURL: 'https://stage.api.banners.ee', method: 'patch', params: data })
                 .then((response) => {
                     console.log(response)
                     event.target.classList.add('saved')
