@@ -15,7 +15,8 @@
                                 <span class="description">{{ template.description }}</span>
                                 <div class="text">
                                                             <span> Times used   <span>{{ template.bannersCount}} banners</span></span>
-                                                            <span> Last used   <span>{{ humanDate(template.updatedAt) }}</span></span>
+                                                            <span> Created at   <span>{{ humanDate(template.createdAt) }}</span></span>
+                                                            <span> Last modified   <span>{{ humanDate(template.updatedAt) }}</span></span>
                              </div> 
                             </div> 
                             <div class="col-lg-3 col-sm-12 right">
@@ -32,11 +33,11 @@
                                 <div class="row template-form">
                         <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
-                                <div class="input-block" v-bind:class="[template.name.length > 0 ? 'focused' : '']">
+                                <div class="input-block" v-bind:class="[template.name !== null ? 'focused' : '']"> 
                                     <span v-on:click="focusInput" class="fake-label" data-initial="Template name">Template name</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.name" name="name" type="text">
                                 </div>
-                                <div class="input-block" v-bind:class="[template.description.length > 0 ? 'focused' : '']">
+                                <div class="input-block" v-bind:class="[template.description !== null ? 'focused' : '']">
                                     <span v-on:click="focusInput" class="fake-label" data-initial="Description">Description</span>
                                     <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.description" name="description" class="comment"></textarea>
                                 </div>
@@ -58,70 +59,63 @@
                     <span id="success"></span>
                     <div class="header row">
                         <div class="col-lg-4 col-md-6">
-                            <h1>Form Preview</h1>
+                            <h1>Default Values Preview</h1>
                         </div>    
                          <div class="col-lg-8 col-md-6 right">
-                            <button class="viewwhite roundedd">View gallery</button>  
+                             <div class="big-dd">
+                                <template v-if="undefined !== template.sizes">
+                                <span v-on:click="dropdownToggle"> {{selectedSize.width}}x{{selectedSize.height}} </span>
+                                <div class="dropdown">
+                                    <ul>
+                                        <li v-for="(size, key) in template.sizes" v-bind:key="key" v-on:click="selectSize($event, key)">{{size.width}}x{{size.height}}</li>
+                                    </ul>
+                                </div> 
+                                </template>
+                                <template v-else>
+                                    <span>This template has no sizes</span>
+                                </template>
+                            </div>   
+                            <!-- <button class="viewwhite roundedd">View gallery</button>   -->
                         </div> 
                     </div>
                     <div class="row template-form">
                         <div class="col-lg-6 col-md-12 ">
-                            <div class="form-wrapper">
+                            <div class="form-wrapper nomarg">
                                 <template v-for="(field, key) in template.fields">
                                     <template v-if="field.type == 'select'">
-                                         <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" ></dropDown>
+                                         <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" v-bind:dropdowndisabled="true"></dropDown>
                                     </template>
                                     <template v-else-if="field.type == 'input'">
                                          <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
                                             <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
-                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text">
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text" disabled>
                                         </div>
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
                                             <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
-                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text">
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text" disabled>
                                         </div>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
                                             <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
-                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text">
-                                                <color-picker v-on:color-selected="setField($event, key)" v-bind="color" v-bind:inputHex="field.value"></color-picker>
+                                            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text" disabled>
+                                                <color-picker v-on:color-selected="setField($event, key)" v-bind="color" v-bind:inputHex="field.value" v-bind:colorPickerDisabled="true"></color-picker>
                                          </div>
                                     </template>
                                 </template>
-                                <!-- <div class="input-block">
-                                    <input type="text" placeholder="Background image">
-                                </div>
-                                <div class="input-block">
-                                    <input type="text" placeholder="Button text">
-                                </div>
-                                <div class="input-block select">
-                                    <span>Button colour</span>
-                                    <div class="options">
-                                        <ul>
-                                            <li>Color 1</li>
-                                            <li>Color 2</li>
-                                            <li>Color 3</li>
-                                            <li>Color 4</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="input-block select">
-                                    <span>Button animation</span>
-                                    <div class="options">
-                                        <ul>
-                                            <li>Animation 1</li>
-                                            <li>Animation 2</li>
-                                            <li>Animation 3</li>
-                                            <li>Animation 4</li>
-                                        </ul>
-                                    </div>
-                                </div> -->
                             </div>    
                         </div>
                         <div class="col-lg-6 col-md-12">
+                            <div class="row nomarg html-preview">
+                                <div id="bannerpreview" v-html="renderedHtml">
+                                   <!--  <template v-html="renderedHtml"> </template> -->
+                                </div>
+                                <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-6 col-md-12">
                             <div class="editor-wrapper">
                                <div class="file-upload">
                                 <form class="box" method="post" action="http://localhost:8888/test/return.php" enctype="multipart/form-data">
@@ -137,7 +131,7 @@
                                 </div>
                             </div>
                             <div class="uploaded-files">
-                                <!-- <div class="uploaded-file">
+                                <div class="uploaded-file">
                                     <div class="row">
                                         <div class="col-3 thumb">
                                             <img src="../../assets/img/banner.jpg">
@@ -174,9 +168,9 @@
                                         <input type="text" :value="'{{ file: xyz}}'" disabled>
                                         </div>    
                                     </div> 
-                                </div>  -->  
+                                </div> 
                             </div>     
-                        </div>
+                        </div>-->
                     </div>
                                 </div>   
                             </div> 
@@ -219,7 +213,10 @@ export default {
                 saturation: 100,
                 luminosity: 50,
                 alpha: 1
-            }
+        },
+        renderedHtml: null,   
+        sizes: null,
+        selectedSize: null,
     }
   },
   created(){
@@ -250,6 +247,23 @@ export default {
 } ,
     mixins: [domfunctions],
   methods: {
+      selectSize(e, key){
+            this.selectedSize = {width: this.template.sizes[key].width, height: this.template.sizes[key].height }
+            jQuery(e.target).parent().parent().slideUp()
+            this.getTemplatePreview(this.template.token , this.selectedSize)
+      },
+      async getTemplatePreview(token, sizes){
+           this.loading = true
+            //axios.defaults.baseURL = 'https://stage.api.banners.ee/'
+            axios.defaults.headers.common['Accept'] = 'text/html'
+            //axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id          
+            const response = await axios({ url: '/serve/template/'+token , baseURL: 'https://stage.api.banners.ee', method: 'get', params: { width: sizes.width, height: sizes.height}})//axios.get('/serve/banner/'+this.banner.token)
+            console.log(response) 
+            this.renderedHtml = response.data
+            //axios.defaults.baseURL = 'https://stage.api.banners.ee/v1' 
+            this.loading = false
+      },
+
       getFieldOptions(key){
           let options = this.template.fields[key].options;
           let values = []
@@ -290,6 +304,9 @@ export default {
                 })
                 console.log(this.template) 
                 this.getBannersByTemplate(this.template.id)
+                this.selectedSize = {width: this.template.sizes[0].width, height: this.template.sizes[0].height}
+                this.getTemplatePreview(this.template.token, this.selectedSize)
+                console.log(this.selectedSize)
                 this.loading = false
 
       },

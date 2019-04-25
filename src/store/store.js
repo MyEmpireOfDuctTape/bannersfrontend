@@ -14,6 +14,7 @@ export default new Vuex.Store({
 			user: JSON.parse(VueCookie.get('user')) || null,
 			currentCompany: JSON.parse(VueCookie.get('currentCompany')) || null,
 			currentAccessLevel: null,
+			//expiresIn: JSON.parse(VueCookie.get('accessToken')).expiresIn || null,
 /* 		folders: undefined,
 		templates: undefined,
 		sizes: undefined, */
@@ -35,6 +36,9 @@ export default new Vuex.Store({
 		},
 		getCurrentAccessLevel(state){
 			return state.currentAccessLevel
+		},
+		getExpiresIn(state){
+			return state.expiresIn
 		},
 
 /* 		getBanners(state){
@@ -63,13 +67,19 @@ export default new Vuex.Store({
 		},
 		destroyToken(state){
 			state.token = null;
+			state.user = null;
+			state.currentCompany = null;
 		},
 		setCurrentCompany(state, company){
 			state.currentCompany = company;
-			VueCookie.set('currentCompany', JSON.stringify(company));
 		},
 		setCurrentAccessLevel(state, accessLevel){
 			state.currentAccessLevel = accessLevel;
+		},
+		setExpiresIn(state, timestamp){
+			let date = new Date()
+			date.setTime(timestamp)
+			state.expiresIn = date;
 		}
 /* 		setFolders(state, folders){
 			state.folders = folders
@@ -81,25 +91,34 @@ export default new Vuex.Store({
 			state.sizes = sizes
 		} */
 	},
-    actions: {
-        retrieveToken(context, credentials){
-			
+  actions: {
+      retrieveToken(context, credentials){
 			return new Promise((resolve, reject) => {
 
-          axios.post('/auth/login', credentials)
+					axios.post('/auth/login', credentials)
+					.then((response) => {
+							let date = new Date()
+							date.setTime(response.data.token.expiresIn)
+							console.log(response)
+							console.log(date)
+							VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
+							VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
+							context.commit('retrieveToken', response.data.token)
+							context.commit('retrieveUser', response.data.user)
+							context.commit('setExpiresIn', date)
+
+							axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token.accessToken,
+							axios.defaults.headers.common['Company'] = response.data.user.companies[0].id
+							return axios.get('/companies')
+					})
           .then((response) => {
+						console.log(context.getters.getExpiresIn)
 						let date = new Date()
-						date.setTime(response.data.expiresIn)
-						//date.setTime(1549152000)
-						console.log(response)
-						VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
-						VueCookie.set('user', JSON.stringify(response.data.user), date.toUTCString());
-						VueCookie.set('currentCompany', JSON.stringify(response.data.user.companies[0]), date.toUTCString());
-						context.commit('retrieveToken', response.data.token)
-						context.commit('retrieveUser', response.data.user)
-						context.commit('setCurrentCompany', response.data.user.companies[0])
+						date.setTime(context.getters.getExpiresIn)
+						VueCookie.set('currentCompany', JSON.stringify(response.data.companies[0]), date.toUTCString());
+						context.commit('setCurrentCompany', response.data.companies[0])
 						resolve(response);
-          })
+					})
           .catch((error) => {
 				  	reject(error);
 			  	})
@@ -107,7 +126,6 @@ export default new Vuex.Store({
 		},
 		destroyToken(context, credentials){
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + credentials.bearer
-			if(context.getters.loggedIn){
 				return new Promise((resolve, reject) => {
 					axios.post('/auth/logout')
               		.then(function (response) {
@@ -115,6 +133,7 @@ export default new Vuex.Store({
 						console.log(response)
 						VueCookie.delete('accessToken')
 						VueCookie.delete('user')
+						VueCookie.delete('currentCompany')
 						context.commit('destroyToken')
 						resolve(response)
 					})
@@ -123,11 +142,11 @@ export default new Vuex.Store({
 						console.log(error.response)						
 						VueCookie.delete('accessToken')
 						VueCookie.delete('user')
+						VueCookie.delete('currentCompany')
 						context.commit('destroyToken')
 						reject(error)
 					})
 				})
-			}
 		},
 		resetToken(context, credentials){
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + credentials.bearer

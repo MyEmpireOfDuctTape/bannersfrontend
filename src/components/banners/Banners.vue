@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <div class="linebreak"></div>
-                        <div class="recent-templates file-view">
+                            <div class="recent-templates file-view">
                                 <div class="header row">
                                     <div class="left  col-lg-4 col-md-6 col-sm-6">
                                         <div class="grey-dd">
@@ -133,33 +133,33 @@
                                         </div>     
                                     </div>
                                     <div class="right col-lg-8 col-md-8">
-                                <div class="input-bubble search">
-                                    <input type="text" v-model="bannerSearchValue" v-on:keyup="searchBanners" placeholder="Search banners by name or description">
-                                </div>
-                                 <div class="input-bubble dropdown" v-bind:class="[editingAspectRatio === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'ratio')"> 
-                                    <span> Aspect ratio : {{ aspectRatios[currentAspectRatioIndex].text}}</span>
-                                    <template v-if="editingAspectRatio === true">
-                                    <div class="hidden visible">
-                                        <ul>
-                                            <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio($event, ratio.value, key)">{{ratio.text}}</li>
-                                        </ul>
-                                    </div>  
-                                    </template>                          
-                                </div>
-                                <div class="input-bubble dropdown" v-bind:class="[editingSize === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'size')"> 
-                                    <span>Size: {{ getSizeTextByIndex(currentSizeIndex) }}</span>
-                                    <template v-if="editingSize === true">
-                                    <div class="hidden visible">
-                                        <ul>
-                                            <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId($event, size.id, key)" v-text="getSizeTextByIndex(key)"></li>
-                                        </ul>
-                                    </div>   
-                                    </template>                         
-                                </div>
+                                        <div class="input-bubble search">
+                                            <input type="text" v-model="bannerSearchValue" v-on:keyup="searchBanners" placeholder="Search banners by name or description">
+                                        </div>
+                                        <div class="input-bubble dropdown" v-bind:class="[editingAspectRatio === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'ratio')"> 
+                                            <span> Aspect ratio : {{ aspectRatios[currentAspectRatioIndex].text}}</span>
+                                            <template v-if="editingAspectRatio === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio($event, ratio.value, key)">{{ratio.text}}</li>
+                                                    </ul>
+                                                </div>  
+                                            </template>                          
+                                        </div>
+                                        <div class="input-bubble dropdown" v-bind:class="[editingSize === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'size')"> 
+                                            <span>Size: {{ getSizeTextByIndex(currentSizeIndex) }}</span>
+                                            <template v-if="editingSize === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId($event, size.id, key)" v-text="getSizeTextByIndex(key)"></li>
+                                                    </ul>
+                                                </div>   
+                                            </template>                         
+                                        </div>
+                                    </div>
+                                </div>    
                             </div>
-                                    </div>    
-                                </div>
-                                <div class="banner-slide row">
+                            <div class="banner-slide row">
                                     
                                
                         <!-- 

@@ -339,7 +339,8 @@ export default {
                 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
                 axios.defaults.headers.common['Accept'] = 'application/json'
                 let data = {
-                    name: this.banner.name,
+                    name: this.name,
+                    description: this.description,
                     folderId: this.banner.folderId,
                     templateId: this.currentTemplate.id,
                     sizeId: this.selectedSizeId,
@@ -348,14 +349,16 @@ export default {
                     field_values: values,
                 };
                 console.log(data)
-                axios.patch('/banner/'+this.banner.id, data)
+                axios.patch('/banners/'+this.banner.id, data)
                 //axios({ url: '/banner/'+this.banner.id , baseURL: 'https://stage.api.banners.ee', method: 'patch', params: data })
                 .then((response) => {
                     console.log(response)
                     event.target.classList.add('saved')
                 }) 
                 .catch( (error) => {
-                        console.log(error);
+                        console.log(error.response);
+                    event.target.classList.add('saved')
+
                 })
       },
       submitForm(event){

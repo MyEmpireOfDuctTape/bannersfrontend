@@ -47,6 +47,9 @@ export default {
   },
   mixins: [domfunctions],
   created(){
+    if(this.$store.getters.loggedIn){
+      this.$router.push({ path: `/dashboard` });
+    }
     this.checkIfValidToken()
   },  
   methods : {
@@ -57,7 +60,7 @@ export default {
         })
         .catch(error => {
             console.log(error.response)
-            if(error.response.status == 404){
+            if(typeof error.response != 'undefined' && error.response.status == 404){
               this.$router.push({ path: `/login` });
             }
         })
@@ -76,7 +79,7 @@ export default {
             this.responseType = response.data.messages[0].message
 					})
           .catch(error => {
-            if(error.response.status == 404){
+            if(typeof error.response != 'undefined' && error.response.status == 404){
               this.$router.push({ path: `/login` });
             }
             else{

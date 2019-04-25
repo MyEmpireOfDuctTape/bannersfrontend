@@ -177,11 +177,10 @@ export default {
                         this.hidePopup()
                     }).catch(function (error) {
                         console.log(error.response); 
-                        console.log(error.response);
-                        if(typeof error.response.data.message != 'undefined'){
+                        if(typeof error.response != 'undefined' && typeof error.response.data.message != 'undefined'){
                             document.getElementById('error').innerHTML = error.response.data.message
                         }
-                        if(typeof error.response.data.errors != 'undefined'){
+                        if(typeof error.response != 'undefined' && typeof error.response.data.errors != 'undefined'){
 						let errors = error.response.data.errors;
 							for (var key in errors) {
 								if (errors.hasOwnProperty(key)) {
@@ -204,7 +203,7 @@ export default {
 						        }
 							}, 5000);
 						}
-						if(typeof error.response.data.message != 'undefined'){
+						if(typeof error.response != 'undefined' && typeof error.response.data.message != 'undefined'){
 										document.getElementById('error').innerHTML = error.response.data.message;
 									}           
                     });

@@ -1,17 +1,29 @@
 <template>
  <div v-bind:class="[active == true ? 'active' : '']" class="colorpickerwrapper">
-   <color-picker
+   <color-picker v-if="colorPickerDisabled != true"
             :hue="color.hue"
             :saturation="color.saturation"
             :luminosity="color.luminosity"
             :alpha="color.alpha"
             :mouse-scroll="useScroll"
             :step="step"
-            :variant="step"
+            :variant="variant"
             :initiallyCollapsed="true"
             @input="onInput"
             @change="onChange"
             @toggle="onToggle"
+            
+        />
+        </color-picker>
+        <color-picker v-else
+            :hue="color.hue"
+            :saturation="color.saturation"
+            :luminosity="color.luminosity"
+            :alpha="color.alpha"
+            :mouse-scroll="useScroll"
+            :step="step"
+            :variant="variant"
+            :initiallyCollapsed="true"
             
         />
         </color-picker>
@@ -44,6 +56,7 @@ export default {
     },
     props: {
         inputHex: String,
+        colorPickerDisabled: Boolean,
     },
     data() {
         return {

@@ -1,7 +1,8 @@
 <template>
         <div class="input-block half-width select">
                 <span v-on:click="focusInput" :data-initial="name" class="fake-label">{{name}}</span>
-                <span v-on:click="dropdownToggle">{{ defaultValue }}</span>
+                <span v-if="dropdowndisabled == true">{{ defaultValue }}</span>
+                <span v-else v-on:click="dropdownToggle">{{ defaultValue }}</span>
             <div class="options">
                 <ul>
                     <li v-for="option in optionsArray" v-on:click="optionSelected($event, option.value)">{{ option.name }}</li>
@@ -22,7 +23,7 @@ var jQuery = require("jquery")
 
 export default {
   name: 'Dropdown',
-  props: ['name', 'defaultValue', 'optionsArray'],
+  props: ['name', 'defaultValue', 'optionsArray', 'dropdowndisabled'],
   mixins: [domfunctions],
   created(){
       /* console.log('dropDown created')

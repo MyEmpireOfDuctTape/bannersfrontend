@@ -9,6 +9,7 @@
 		        <div class="edit-company main-view container-fluid">
                     <div class="row">
                         <div class="col-lg-5 col-md-12 edit-form">
+                            <form @submit="editCompany($event)">
                             <h1>Edit Company</h1>
                             <div class="company-form">
                                 <div class="input-block focused">
@@ -16,12 +17,16 @@
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" name="name" type="text">
                                 </div>
                                 <div class="input-block focused">
+                                    <span v-on:click="focusInput" class="fake-label">Company Email</span>
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="email">
+                                </div>
+                                <div class="input-block focused">
                                     <span v-on:click="focusInput" class="fake-label">Registration code</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="registrationCode" name="registrationCode" type="text">
                                 </div>
                                 <div class="input-block focused">
                                     <span v-on:click="focusInput" class="fake-label">VAT Code</span>
-                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="vat_number" name="vat_number" type="text">
+                                    <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="vatNumber" name="vat_number" type="text">
                                 </div>
                                 <div class="input-block focused">
                                     <span v-on:click="focusInput" class="fake-label">Country</span>
@@ -41,6 +46,7 @@
                                 </div> -->
                             </div>  
                             <button class="blue save roundedd">Save</button>  
+                            </form>
                         </div>
                         <!-- <template v-for="(user, key, index) in users">
                             <span>{{user}}</span>
@@ -232,9 +238,10 @@ export default {
       msg: 'Edit Company',
       name:  '',
       registrationCode:  '',
-      vat_number:  '',
+      vatNumber:  '',
       country: '',
       city:  '',
+      email:  '',
       address:  '',
       users: null,
       currentUser: this.$store.getters.getUser,
@@ -255,13 +262,16 @@ export default {
             this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
     }
     this.name = this.currentCompany.name
+    this.email = this.currentCompany.email
     this.registrationCode = this.currentCompany.registrationCode
-    this.vat_number = this.currentCompany.vatNumber
+    this.vatNumber = this.currentCompany.vatNumber
     this.country = this.currentCompany.country
     this.city = this.currentCompany.city
     this.address = this.currentCompany.address
-
     this.getUsers()
+    this.getAllCompanies()
+    console.log(this.currentCompany)
+
   },
   mixins: [domfunctions],
   methods:{
@@ -290,11 +300,58 @@ export default {
                     console.log(this.currentCompany.id)
             }    
         },
+        editCompany(event){
+            event.preventDefault()
+                console.log(this.selectedCompany)
+                console.log(this.body)
+                    axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                    axios.defaults.headers.common['Accept'] = 'application/json',
+                    axios.defaults.headers.common['Content-Type'] = 'application/json',
+                    axios.defaults.headers.common['Company'] = this.currentCompany.id
+                    let modifiedCompany = {
+                        name: this.name, 
+                        registrationCode: this.registrationCode, 
+                        vatNumber: this.vatNumber, 
+                        country: this.country, 
+                        city: this.city, 
+                        address: this.address, 
+                        email: this.email, 
+                        //users: this.users
+                    }
+                    let serialized = this.serialize(modifiedCompany)
+                    axios.patch('/companies/'+this.currentCompany.id, modifiedCompany)
+                    .then(function (response) {
+                        console.log(response)
+                    }).catch(function (error) {
+                        console.log(error.response); 
+                    })
+        },
         showOverlay(){
                 document.querySelector('.overlay').classList.add('open', 'animated', 'slideInRight')
                 //document.querySelector('.overlay .popup').classList.add('animated', 'flipInY')
         },
+        async getAllCompanies(){
+            this.loading = true
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
 
+            const response = await axios.get('/companies')
+            console.log(response.data)
+        
+            this.loading = false
+        },
+        async getCompanyById(id){
+            this.loading = true
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+
+            const response = await axios.get('/companies/'+id)
+            console.log(response.data)
+        
+            this.loading = false
+        },
         editUser(event){
             event.preventDefault()
             let elemt = document.querySelector('.edit-user.overlay')

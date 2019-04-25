@@ -45,7 +45,7 @@
                             </div>
                             <div class="right col-lg-7 col-md-8">
                                 <div class="input-bubble search">
-                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
+                                    <input type="text" v-model="folderSearchValue" v-on:keyup="searchFolders" placeholder="Search folders by name or description">
                                 </div>
                                 
                             </div>
@@ -58,11 +58,11 @@
                                             <form class="auth-form" id="addFolder" @submit.prevent="createFolder($event)"> 
                                             <div class="input-block white nomarg lesspadd">
                                                 <span v-on:click="focusInput" data-initial="Folder name" class="fake-label">Folder name</span>
-                                                <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="createName" type="text" name="name">
+                                                <input id="createFolderInput" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="createName" type="text" name="name">
                                             </div>
                                             <div class="buttons">
                                             <button v-on:click="toggleCreating" class="left">CANCEL</button>
-                                            <button class="right">CREATE</button>
+                                            <button type="submit" class="right">CREATE</button>
                                             </div>
                                             </form>
                                             <span id="error"></span>
@@ -70,101 +70,88 @@
                                 </div>
                                     </div>
                             </template>
-                            <template v-for="(folder, key) in folders" >
-                                <div class="col-lg-2 col-md-3 col-sm-6">
-                                    <div class="folder">
-                                    <svg version='1.1' class="taust" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 800 800' style='enable-background:new 0 0 800 800;' xml:space='preserve'> <path id='Shape-Copy' class='st0' d='M304.7,196.1l47.7,47.7c13.6,13.6,30.6,20.4,47.7,20.4h272.4v340.5H127.6V196.1H304.7z M331.9,128H127.6c-37.5,0-68.1,30.6-68.1,68.1v408.6c0,37.5,30.6,68.1,68.1,68.1h544.8c37.5,0,68.1-30.6,68.1-68.1V264.2 c0-37.5-30.6-68.1-68.1-68.1H400L331.9,128z'/> </svg>
-                                    <button class="edit" v-on:click="editPopup($event)"></button>
-                                            <div class="edit-box">
-                                                <ul>
-                                                    <li><a v-on:click="setEditing($event, key, folder)" href="#">
-                                                        <svg version="1.1" fill="#ededed" id="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>
-                                                        Edit</a></li>
-                                                    <li><a v-on:click="deleteFolder($event, folder.id)" href="#">
-                                                        <svg version="1.1" id="" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
-                                                        Delete </a></li>
-                                                </ul>
-                                            </div>
-                                    <div class="folder-bg">
-                                        <template v-if="editing == folder.id">      
-                                            <form class="auth-form oneline" id="editFolder" @submit.prevent="editFolder($event, folder)"> 
-                                                <div class="input-block white nomarg lesspadd focused">
-                                                    <span v-on:click="focusInput" data-initial="Folder name" class="fake-label">Folder name</span>
-                                                    <input id="editfolderinput" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="editName" type="text" name="editName">
+                            <template v-if="folders.length > 0">
+                                <template v-for="(folder, key) in folders" >
+                                    <div class="col-lg-2 col-md-3 col-sm-6">
+                                        <div class="folder">
+                                        <svg version='1.1' class="taust" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 800 800' style='enable-background:new 0 0 800 800;' xml:space='preserve'> <path id='Shape-Copy' class='st0' d='M304.7,196.1l47.7,47.7c13.6,13.6,30.6,20.4,47.7,20.4h272.4v340.5H127.6V196.1H304.7z M331.9,128H127.6c-37.5,0-68.1,30.6-68.1,68.1v408.6c0,37.5,30.6,68.1,68.1,68.1h544.8c37.5,0,68.1-30.6,68.1-68.1V264.2 c0-37.5-30.6-68.1-68.1-68.1H400L331.9,128z'/> </svg>
+                                        <button class="edit" v-on:click="editPopup($event)"></button>
+                                                <div class="edit-box">
+                                                    <ul>
+                                                        <li><a v-on:click="setEditing($event, key, folder)" href="#">
+                                                            <svg version="1.1" fill="#ededed" id="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>60 all</title> <g> <path d="M76.6,51.8v24.8H23.4V23.4h24.8V12.7H18.1c-3,0-5.4,2.4-5.4,5.4V82c0,3,2.4,5.4,5.4,5.4H82c3,0,5.4-2.4,5.4-5.4V51.8H76.6z "/> <path d="M44,44.6l-4.2,11.1c-0.5,1.9,0.6,3.9,2.5,4.4c0.6,0.1,1.3,0.1,1.9,0L55.4,56c0.6-0.1,1.2-0.5,1.5-1l28.6-28.6 c1.4-1.4,2.3-2.9,0.8-4.2l-7.7-7.9c-1.4-1.4-3.7-1.4-5,0L45,43C44.5,43.4,44.2,44,44,44.6z"/> </g> </svg>
+                                                            Edit</a></li>
+                                                        <li><a v-on:click="deleteFolder($event, folder.id)" href="#">
+                                                            <svg version="1.1" id="" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
+                                                            Delete </a></li>
+                                                    </ul>
                                                 </div>
-                                                <div class="buttons">
-                                                        <button class="right">SAVE</button>
-                                                </div>
-                                            </form>
-                                        </template>
-                                        <template v-else>      
-                                           <router-link :to="{ path: '/folder/' + folder.id }">
-                                                <span class="contents">{{folder.name}}</span>
-                                                <span class="date">Created at <br />{{humanDate(folder.createdAt)}}</span>
-                                                <span class="date">Updated at <br />{{humanDate(folder.updatedAt)}}</span>
-                                            </router-link>
-                                        </template>
+                                        <div class="folder-bg">
+                                            <template v-if="editing == folder.id">      
+                                                <form class="auth-form oneline" id="editFolder" @submit.prevent="editFolder($event, folder)"> 
+                                                    <div class="input-block white nomarg lesspadd focused">
+                                                        <span v-on:click="focusInput" data-initial="Folder name" class="fake-label">Folder name</span>
+                                                        <input id="editfolderinput" v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="editName" type="text" name="editName">
+                                                    </div>
+                                                    <div class="buttons">
+                                                            <button class="right">SAVE</button>
+                                                    </div>
+                                                </form>
+                                            </template>
+                                            <template v-else>      
+                                            <router-link :to="{ path: '/folder/' + folder.id }">
+                                                    <span class="contents">{{folder.name}}</span>
+                                                    <span class="date">Created at <br />{{humanDate(folder.createdAt)}}</span>
+                                                    <span class="date">Updated at <br />{{humanDate(folder.updatedAt)}}</span>
+                                                </router-link>
+                                            </template>
+                                        </div>
                                     </div>
+                                        </div>
+                                    </template>
+                            </template>
+                            <template v-else>
+                                <div class="col-12">
+                                     <span> No sub-folders found in {{currentFolder.name}} </span>
                                 </div>
-                                    </div>
-                                </template>
+                            </template> 
                             </div>
                         </div>
                         <div class="linebreak"></div>
                         <div class="recent-templates file-view">
                                 <div class="header row">
-                                    <div class="col-lg-9 col-sm-12">
+                                    <div class="col-lg-4 col-sm-12">
                                         <span class="before">Banners</span>
                                     </div>
-                                    <div class="col-lg-3 col-sm-12">
-                                        <router-link :to="{ path: '/create-banner'}">
-                                                    <button class="right roundedd blue duplicate">Create Banner</button>
-                                                </router-link>
-                                
-                                    </div>
-                                    <div class="left  col-lg-4 col-md-6 col-sm-6">
-                                        <div class="grey-dd">
-                                            <span>Latest updated</span>
-                                            <div class="hidden">
-                                                <ul>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                    <li>Most used</li>
-                                                </ul>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                    <div class="right col-lg-8 col-md-6 col-sm-6">
+                                    <div class="right col-lg-8 col-md-8">
                                         <div class="input-bubble search">
-                                    <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
-                                </div>
-                                <div class="input-bubble dropdown"> 
-                                    <span> Aspect ratio</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                            <li>600x300</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
-                                         <div class="input-bubble dropdown"> 
-                                    <span> Size</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li>Size 1</li>
-                                            <li>Size 2</li>
-                                            <li>Size 3</li>
-                                            <li>Size 4</li>
-                                        </ul>
-                                    </div>                            
-                                </div>
+                                            <input type="text" v-model="bannerSearchValue" v-on:keyup="searchBanners" placeholder="Search banners by name or description">
+                                        </div>
+                                        <div class="input-bubble dropdown" v-bind:class="[editingAspectRatio === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'ratio')"> 
+                                            <span> Aspect ratio : {{ aspectRatios[currentAspectRatioIndex].text}}</span>
+                                            <template v-if="editingAspectRatio === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(ratio, key) in aspectRatios" :key="key" v-on:click="searchByAspectRatio($event, ratio.value, key)">{{ratio.text}}</li>
+                                                    </ul>
+                                                </div>  
+                                            </template>                          
+                                        </div>
+                                        <div class="input-bubble dropdown" v-bind:class="[editingSize === true ? 'open' : '']" v-on:click="openSortDropDown($event, 'size')"> 
+                                            <span>Size: {{ getSizeTextByIndex(currentSizeIndex) }}</span>
+                                            <template v-if="editingSize === true">
+                                                <div class="hidden visible">
+                                                    <ul>
+                                                        <li v-for="(size, key) in allSizes" :key="key" v-on:click="searchBySizeId($event, size.id, key)" v-text="getSizeTextByIndex(key)"></li>
+                                                    </ul>
+                                                </div>   
+                                            </template>                         
+                                        </div>
+                                    </div>
                                     </div>    
                                 </div>
                                 <div class="banner-slide row">
+                        <template v-if="folders.length > 0">
                         <template v-for="(banner, key) in banners">
                             <div class="col-lg-2 col-md-3 col-sm-6">
                                 <router-link :to="{ path: '/banners/edit-banner/' + banner.id }">
@@ -184,6 +171,10 @@
                                 </router-link>
                             </div>
                         </template>
+                        </template>
+                         <template v-else>
+                                    <span> No banners found in {{currentFolder.name}} </span>
+                         </template>
                                 </div> 
                                 </div> 
                         </div>
@@ -230,6 +221,74 @@ export default {
         currentFolder: null,
         searchValue: null,
         searchResults: [],
+        allSizes: null,
+        currentSortByIndex: 0,
+        currentSortByOrderIndex: 0,
+        currentAspectRatioIndex: 0,
+        currentSizeIndex: 0,
+        bannerSearchValue: null,
+        folderSearchValue: null,
+        aspectRatios:
+        [
+                {
+                  value: 'all',
+                  text: 'All',
+                },
+                {
+                  value: 'square',
+                  text: 'Square',
+                },
+                {
+                  value: 'portrait',
+                  text: 'Portrait',
+                },
+                {
+                  value: 'landscape',
+                  text: 'Landscape',
+                },
+        ],
+        orderOptions: [
+            {
+                value: 'DESC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 21l-12-18h24z"/></svg>',
+                text: 'Descending'
+            },
+            {
+                value: 'ASC',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>',
+                text: 'Ascending'
+            }
+        ],
+        sortingOptions: [
+            {
+                value: 'updatedAt',
+                text: 'Date updated'
+            },
+            {
+                value: 'createdAt',
+                text: 'Date created'
+            },
+            {
+                value: 'name',
+                text: 'Name alphabetically'
+            },
+            {
+                value: 'description',
+                text: 'Description alphabetically'
+            },
+            {
+                value: 'templateId',
+                text: 'Template ID'
+            },
+            {
+                value: 'estimatedBannerSize',
+                text: 'Estimated banner size'
+            },
+        ],
+        editingOrderValue: false,
+        editingOrderOrder: false,
+        editingAspectRatio: false,
+        editingSize: false,
     }
   },
   created(){
@@ -246,7 +305,8 @@ export default {
         }
         this.asyncgetFolders()        
         this.asyncgetBannersDirect()
-        //this.asyncgetFolderbyID(this.$route.params.id)
+        this.getAllSizes()
+        this.asyncgetFolderbyID(this.$route.params.id)
   },
     watch:{
     $route (to, from){
@@ -261,13 +321,147 @@ export default {
         this.sortFoldersById(to.params.id)
         this.asyncgetFolders()        
         this.asyncgetBannersDirect()
-        //this.asyncgetFolderbyID(to.params.id)
-/*         console.log(this.banners) */
+        this.asyncgetFolderbyID(to.params.id)
+       console.log(this.parentNames) 
 
     }
 } ,
     mixins: [domfunctions],
   methods: {
+      searchFolders(){
+            //console.log(this.searchValue)
+            let searchValue = this.folderSearchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.folders = this.allFolders
+                return
+            }
+            _.forEach(this.allFolders, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.folders = searchResults
+        },
+        searchBanners(){
+            //console.log(this.searchValue)
+            let searchValue = this.bannerSearchValue.toLowerCase()
+            let searchResults = []
+            if(searchValue == null || searchValue == ''){
+                this.banners = this.allBanners
+                return
+            }
+            _.forEach(this.allBanners, function(value){
+                /* console.log(value.name.indexOf(searchValue)) */
+                if(value.name.toLowerCase().indexOf(searchValue) > -1){
+                    searchResults.push(value) 
+                }
+            })
+            this.banners = searchResults
+        },
+      setSorting(event, key, sortType){
+            if(sortType == 'value'){
+                this.currentSortByIndex = key
+            }
+            else if(sortType == 'order'){
+                if(this.currentSortByOrderIndex == 0){
+                    this.currentSortByOrderIndex = 1
+                }
+                else{
+                    this.currentSortByOrderIndex = 0
+                }
+                
+            }
+            event.stopPropagation()
+            this.editingOrderValue = false
+            this.editingOrderOrder = false
+            this.editingAspectRatio = false
+            this.editingSize = false
+            this.asyncgetBannersDirect(20, 0, this.orderOptions[this.currentSortByOrderIndex].value , this.sortingOptions[this.currentSortByIndex].value)
+            console.log('sorting done')
+            console.log(this.templates)
+        },
+        openSortDropDown(event, boxtype){
+            console.log('opensortdropdown')
+            console.log(boxtype)
+            switch(boxtype){
+                case 'value':
+                this.editingOrderValue = !this.editingOrderValue
+                break
+                case 'order':
+                this.editingOrderOrder = !this.editingOrderOrder
+                break
+                case 'ratio':
+                this.editingAspectRatio = !this.editingAspectRatio
+                break
+                case 'size':
+                this.editingSize = !this.editingSize
+                break
+                default:
+                break
+            }
+        },
+      searchByAspectRatio(event, searchterm, key){
+                event.stopPropagation()
+                this.banners = []
+                console.log('searching by aspect ratio')
+                this.editingAspectRatio = false
+                this.editingSize = false
+                this.currentAspectRatioIndex = key
+                if(searchterm == 'all'){
+                    this.banners = this.allBanners
+                    return
+                }
+                _.forEach(this.allBanners, (template, key) => {
+                    if(typeof this.allBanners[key].aspectRatio !== 'undefined' && this.allBanners[key].aspectRatio.indexOf(searchterm) != -1){
+                        this.banners.push(template)
+                    }
+                })
+            },
+            getSizeTextByIndex(key){
+                if(typeof this.allSizes[key].width !== 'undefined' && typeof this.allSizes[key].height !== 'undefined'){
+                    return this.allSizes[key].width + 'x' + this.allSizes[key].height
+                }
+                return this.allSizes[key].width
+            },
+            searchBySizeId(event, id, key){
+                event.stopPropagation()
+                this.banners = []
+                this.editingOrderValue = false
+                this.editingOrderOrder = false
+                this.editingAspectRatio = false
+                this.editingSize = false
+                this.currentSizeIndex = key
+                if(id == 'all'){
+                    this.banners = this.allBanners
+                    return
+                }
+                _.forEach(this.allBanners, (banner, key) => {
+                    console.log(banner.size)
+                    console.log(id)
+                    if(typeof banner.size !== 'undefined' && banner.size.id == id){
+                        this.banners.push(banner)
+                        return
+                    }
+                })
+
+            },
+      async getAllSizes(){
+                this.loading = true
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                axios.defaults.headers.common['Accept'] = 'application/json'
+                const response = await axios.get('/sizes')
+                console.log(response.data)
+                this.allSizes = response.data.sizes
+                let all = {
+                    width: 'All',
+                    id: 'all'
+                }
+                this.allSizes.unshift(all)
+                this.loading = false
+            },
         methodThatForcesUpdate(event) {
             //this.currentCompany = event
 
@@ -277,45 +471,45 @@ export default {
            /*  this.asyncgetBannersDirect() */
            /*  this.asyncgetFolderbyID(this.$route.params.id) */
         },
-        searchFolders(){
-            
-            //console.log(this.searchValue)
-            let searchValue = this.searchValue.toLowerCase()
-            let searchResults = []
-            if(searchValue == null || searchValue == ''){
-                this.folders = this.allFolders
-                return
-            }
-            _.forEach(this.allFolders, function(value){
-                /* console.log(value.name.indexOf(searchValue)) */
-                if(value.name && value.name.toLowerCase().indexOf(searchValue) > -1){
-                    searchResults.push(value) 
-                }
-            })
-            this.folders = searchResults
-        },
-        async asyncgetBannersDirect(){
-            console.log('async banners start')
+        async asyncgetBannersDirect(takeAmount = 20, skipAmount = 0, orderByTypeArg = 'DESC', orderByArg = 'updatedAt'){
             this.loading = true
-            let banana = this.banners
-            //let id = this.$route.params.id
             // SET HEADERS
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
             let params = {
-                    take: take,
-                    skip: skip,
-                    orderByType: orderByType,
-                    orderBy: orderBy,
-                    folderId: this.$route.params.id
+                    take: takeAmount,
+                    skip: skipAmount,
+                    orderByType: orderByTypeArg,
+                    orderBy: orderByArg,
+                    folderId: this.$route.params.id                    
             };
             let serialized = this.serialize(params)
                 const response = await axios.get('/banners'+serialized)
-                console.log(response.data.banners)
+                console.log(response)
+                this.banners = response.data.banners
                 this.allBanners = response.data.banners
-                //this.sortBannersById(this.$route.params.id)
-            console.log('async banners end')
-            this.loading = false
+                _.forEach(this.allBanners, (banner, key) => {
+                            if(typeof this.banners[key].aspectRatio !== Array){
+                                this.banners[key].aspectRatio = []
+                            }
+                            if(typeof this.allBanners[key].aspectRatio !== Array){
+                                this.allBanners[key].aspectRatio = []
+                            }
+                            if(banner.size.width == banner.size.height){
+                                this.banners[key].aspectRatio.push('square')
+                                this.allBanners[key].aspectRatio.push('square')
+                            }
+                            else if(banner.size.width > banner.size.height){
+                                this.banners[key].aspectRatio.push('landscape')
+                                this.allBanners[key].aspectRatio.push('landscape')
+                            }
+                            else{
+                                this.banners[key].aspectRatio.push('portrait')
+                                this.allBanners[key].aspectRatio.push('portrait')
+                            }
+                    })
+                    console.log(this.banners)
+                this.loading = false
 			
         },
         sortBannersById(id){
@@ -466,7 +660,13 @@ export default {
            
         },
         toggleCreating(){
+            
             this.creating = !this.creating
+            if(this.creating){
+                //document.getElementById('createFolderInput').focus()
+                console.log(document.getElementById('createFolderInput'))
+
+            }
         },
         createFolder(event){
                 console.log('attempting to create folder')

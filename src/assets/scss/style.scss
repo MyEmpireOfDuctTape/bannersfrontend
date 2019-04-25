@@ -1183,7 +1183,8 @@ $enable-gradients: true;
                             //left: 0;
                             right: 0;
                             top: 3rem;
-                            z-index: 2;
+                            z-index: 13;
+                            box-shadow: 0 4px 10px 0 white;
                             border: 1px solid $gray-lighter;
                             border-radius: 5px;
                             width: 100%;
@@ -1867,7 +1868,8 @@ button{
             background-color: $properpaleblue;
             display: none;
             position: absolute;
-            z-index: 2;
+            z-index: 13;
+            box-shadow: 0 4px 10px 0 white;
             left: 0;
             top: 100%;
             border-radius: 0 0 20px 20px;
@@ -2303,7 +2305,7 @@ input{
         li{
             padding: 0.3rem 1rem;
             font-weight: 700;
-            font-size: 0.8em;
+            //font-size: 0.8em;
             a{
                 color: #b2b2b2; //$textcolor;
                 svg{
@@ -2334,7 +2336,7 @@ input{
     overflow: scroll;
     max-height:80vh;
     position: relative;
-
+    overflow: visible;
     button[type="submit"]{
         transition: 1s;
         background-color: $bluebutton;
@@ -2802,4 +2804,75 @@ button{
 
 .banner-save{
     margin: 1em 0 !important;
+}
+
+a.underline{
+    text-decoration: underline !important;
+}
+a.underline:hover{
+    text-decoration: underline !important;    
+}
+
+.big-dd{
+    margin:  1rem auto;
+    position: relative;
+    span{
+        display: block;
+        background-color: white;
+        width: 100%;
+        padding: 1.5rem 3rem;
+        border: 1px solid $gray-lighter;
+        border-radius: 10px;
+        -webkit-box-shadow: 0 0 10px 0 #f1f1f1;
+        box-shadow: 0 0 10px 0 #f1f1f1;
+        background-position: 95% center;
+        background-image: url($dropdownthingray);
+        background-repeat: no-repeat;
+        background-size: 15px;
+        &:hover{
+            text-decoration: none;
+            cursor: pointer;
+            color: black;
+            background-image: url($dropdownthin);
+        }
+    }
+    .dropdown{
+        display: none;
+        z-index: 200;
+        width: 100%;
+        background-color: white;
+        border-radius: 0 0 10px 10px;
+        position: absolute;
+        top: 4rem;
+        box-shadow: 0 5px 10px 0 #f1f1f1;
+        border: 1px solid $gray-lighter;
+        border-top: none;
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            li{
+                padding: 1rem 3rem;
+                    color: $textcolor;
+                    svg{
+                        max-width: 20px;
+                        display: inline-block;
+                        margin-right: 1rem;
+                    }
+                    &:hover{
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: black;
+                        svg{
+                            fill: black;
+                        }
+                    }
+            }
+        }
+    }
+    
+}
+
+.form-wrapper.nomarg{
+    margin: 0;
 }

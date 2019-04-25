@@ -32,13 +32,15 @@
                                 <div class="input-bubble search">
                                     <input type="text" v-model="searchValue" v-on:keyup="searchFolders" placeholder="Search by name or description">
                                 </div>
-                                <div class="input-bubble dropdown" v-on:click="toggleDropDown($event)"> 
-                                    <span>Order By</span>
-                                    <div class="hidden">
-                                        <ul>
-                                            <li v-for="(value, key) in orderByOptions" :key="key" v-on:click="updateFolders(take, skip, orderByType, value)">{{key}}</li>
-                                        </ul>
-                                    </div>                            
+                                <div class="input-bubble dropdown" v-bind:class="[ordering === true ? 'open' : '']" v-on:click="toggleOrderby($event)"> 
+                                    <span>Order By: {{ orderByOptions[orderingIndex].name }}</span>
+                                    <template v-if="ordering === true">
+                                        <div class="hidden visible">
+                                            <ul>
+                                                <li v-for="(value, key) in orderByOptions" :key="key" v-on:click="updateFolders($event, take, skip, orderByType, value.value, key)">{{value.name}}</li>
+                                            </ul>
+                                        </div>                   
+                                    </template>             
                                 </div>
                             </div>
                         </div>
@@ -162,20 +164,17 @@ export default {
         editName: null,
         editing: [],
         searchValue: null,
-        orderByOptions: {
-            'Date Created': 'createdAt',
-            'Name': 'name',
-            'Date Updated': 'updatedAt',
-            //id -> id  // duh
-            //name -> name
-            // parentId -> parent_id
-            //token -> ????? 
-            // updatedAt -> updated_at
-        },
+        orderByOptions: [
+            { name: 'Date Created', value: 'createdAt'},
+            { name: 'Name', value: 'name'},
+            { name: 'Date Updated', value: 'updatedAt'},
+        ],
         orderBy: 'id',
         orderByType: 'ASC',
         take: 60,
         skip: 0,
+        orderingIndex: 0,
+        ordering: false,
         //searchResults: [],
     }
   },
@@ -197,8 +196,13 @@ export default {
   },
 mixins: [domfunctions],
   methods: {
-
-        updateFolders(take, skip, orderByTypeArg, orderByArg){
+        toggleOrderby(event){
+            this.ordering = !this.ordering
+        },
+        updateFolders(event, take, skip, orderByTypeArg, orderByArg, key){
+            event.stopPropagation()
+            this.ordering = false
+            this.orderingIndex = key
             // "updateFolders(take, skip, orderByType, value)"
             console.log(take)
             console.log(skip)
@@ -250,7 +254,7 @@ mixins: [domfunctions],
                 
 			
         },
-        async asyncgetFolders(takeAmount = false, skipAmount = false, orderByTypeArg = 'ASC', orderByArg = 'id'){
+        async asyncgetFolders(takeAmount = 50, skipAmount = 0, orderByTypeArg = 'DESC', orderByArg = 'updatedAt'){
             //POSSIBLE ORDERBYS
             //companyId -> companyId
             //createdAt -> createdAt
@@ -259,7 +263,7 @@ mixins: [domfunctions],
             // parentId -> parentId
             //token -> ????? 
             // updatedAt -> updated_at
-            this.loading = true
+            /* this.loading = true
             let take = 50
             let skip = 0
             let orderBy = orderByArg
@@ -269,16 +273,16 @@ mixins: [domfunctions],
             }
             if(skipAmount && Number.isInteger(skipAmount)){
                 skip = skipAmount
-            }
+            } */
             // SET HEADERS
             console.log('asyncfolders start')
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
             let params = {
-                    take: take,
-                    skip: skip,
-                    orderByType: orderByType,
-                    orderBy: orderBy,
+                    take: takeAmount,
+                    skip: skipAmount,
+                    orderByType: orderByTypeArg,
+                    orderBy: orderByArg,
             };
             let serialized = this.serialize(params)
             const response = await axios.get('/folders'+serialized)
@@ -286,6 +290,7 @@ mixins: [domfunctions],
             this.folders = response.data.folders
             this.allFolders = response.data.folders
             this.hideAllPopups()
+            this.sortFoldersByNoParent()
             this.loading = false
 
                 // nothing useful in here
@@ -296,7 +301,15 @@ mixins: [domfunctions],
                 } */
 
         },
-        
+        sortFoldersByNoParent(){
+            let folders = []
+            _.forEach(this.allFolders, (folder) => {
+                if(folder.parentId === null){
+                    folders.push(folder)
+                }
+            })
+            this.folders = folders
+        },
         showBannerOverlay(){
             document.querySelector('.overlay.add-banner').classList.add('open', 'animated', 'slideInLeft')
             setTimeout(function(){

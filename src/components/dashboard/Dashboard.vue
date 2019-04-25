@@ -4,14 +4,15 @@
          
         <div class="row">
                 <sidebar v-on:company-changed="methodThatForcesUpdate($event)"></sidebar>
-               <add-banner></add-banner>
+                <add-banner></add-banner>
                 <template v-if="loading">
                     <Loading></Loading>
                 </template>
+                <template v-else>
 		<div class="dashboard main-view container-fluid">
                 <div class="banners-by-company row">
-                   <template v-for="company in user.companies">
-                        <div v-on:click="setCurrentCompany(company.id)" v-bind:class="isCurrentCompany(company.id)" class="banner-by-company col-lg-3 col-md-6 col-sm-12">
+                   <template v-for="(company, key) in user.companies">
+                        <div :key="key" v-on:click="setCurrentCompany(company.id)" v-bind:class="isCurrentCompany(company.id)" class="banner-by-company col-lg-3 col-md-6 col-sm-12">
                             <span class="allcaps">{{ company.name }}</span><br />
                             <span class="small">{{ company.bannersCount }} banners, {{ company.templatesCount }} templates</span>
                         </div>
@@ -20,7 +21,7 @@
                 <div class="recent-banners">
                     <div class="header row">
                         <div class="left col-lg-8">
-                            <h1>My recent Banners ({{banners.totalCount}})</h1>
+                            <h1 v-text="'My recent Banners (' + banners.totalCount + ')'"></h1>
                         </div>
                         <div class="right col-lg-4">
                                 <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
@@ -29,7 +30,7 @@
                          </div>   
                     </div>
                     <div class="banner-slide row">
-                       <div v-for="banner in banners.banners" class="col-lg-2 col-md-3 col-sm-6">
+                       <div v-for="(banner, key) in banners.banners" class="col-lg-2 col-md-3 col-sm-6" :key="key">
                             <!-- <div class="preview">
                                 <div class="square">
                                     <div class="edit-overlay Aligner">
@@ -81,7 +82,7 @@
                 <div class="recent-templates">
                     <div class="header row">
                         <div class="left col-lg-8">
-                            <h1>My recent Templates ({{templates.totalCount}})</h1>
+                            <h1 v-text="'My recent Templates (' + templates.totalCount + ')'"></h1>
                         </div>
                         <div class="right col-lg-4">
                             <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
@@ -92,7 +93,7 @@
                         <div v-for="(template, index) in templates.templates" :key="index" class="template row">
                             <div class="left col-lg-6">
                                 <router-link :to="{ path: '/templates/' + template.id}"><span class="bold">{{template.name}}</span></router-link>
-                                <span v-for="size in template.sizes" :key="size" class="dimension">{{size.width}} x {{size.height}}</span>
+                                <span v-for="(size, key) in template.sizes" :key="key" class="dimension">{{size.width}} x {{size.height}}</span>
                             </div>
                             <div class="right col-lg-6">
                                 <div class="images">
@@ -127,6 +128,8 @@
                     </div>    
    
                 </div>
+                </template>
+
 			</div>
 			</div>
 
@@ -194,6 +197,21 @@ export default {
               // Notice we have to use a $ here
             // ...
         },
+        async getCompanyById(id){
+            this.loading = true
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+
+			//IF Logged in make Call
+			/* if(this.isloggedIn()){ */
+                const response = await axios.get('/companies/'+1)
+                console.log(response.data)
+                //this.test = response.data
+                
+            /* } */
+            this.loading = false
+        },
         async asyncgetBannersDirect(){
             this.loading = true
             // SET HEADERS
@@ -201,13 +219,12 @@ export default {
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
 
 			//IF Logged in make Call
-			if(this.isloggedIn()){
+			/* if(this.isloggedIn()){ */
                 const response = await axios.get('/banners')
-                console.log(this)
                 console.log(response.data)
                 this.banners = response.data
                 
-            }
+            /* } */
             this.loading = false
             
         },
@@ -219,15 +236,15 @@ export default {
 			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
 
 			//IF Logged in make Call
-			if(this.isloggedIn()){
+			/* if(this.isloggedIn()){ */
                 const response = await axios.get('/templates')
-                console.log(response)
+                console.log(response.data.templates.length)
                 this.templates = response.data
-            }
-            for(let i = 0; i < response.data.templates.length; i++){
-                        this.active.push(false)
-                        this.activetwo.push(false)
-                    }
+            /* } */
+            _.forEach( this.templates.length, (template) => {
+                this.active.push(false)
+                this.activetwo.push(false)
+            })
             this.loading = false
             
         },
