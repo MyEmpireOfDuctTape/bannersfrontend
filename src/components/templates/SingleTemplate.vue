@@ -59,11 +59,11 @@
                     <span id="success"></span>
                     <div class="header row">
                         <div class="col-lg-4 col-md-6">
-                            <h1>Default Values Preview</h1>
+                            <h1>Template Preview</h1>
                         </div>    
                          <div class="col-lg-8 col-md-6 right">
-                             <div class="big-dd">
-                                <template v-if="undefined !== template.sizes">
+                             <div class="big-dd nomarg">
+                                <template v-if="template.sizes.length > 0">
                                 <span v-on:click="dropdownToggle"> {{selectedSize.width}}x{{selectedSize.height}} </span>
                                 <div class="dropdown">
                                     <ul>
@@ -79,8 +79,23 @@
                         </div> 
                     </div>
                     <div class="row template-form">
-                        <div class="col-lg-6 col-md-12 ">
-                            <div class="form-wrapper nomarg">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="row html-preview">
+                                <div id="bannerpreview" v-html="renderedHtml">
+                                   <!--  <template v-html="renderedHtml"> </template> -->
+                                </div>
+                                <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header row">
+                        <div class="col-lg-12 col-md-6">
+                            <h1>Default Field Values Preview</h1>
+                        </div>    
+                    </div>
+                    <div class="row template-form">
+                        <div class="col-lg-12 col-md-12 ">
+                            <div class="form-wrapper">
                                 <template v-for="(field, key) in template.fields">
                                     <template v-if="field.type == 'select'">
                                          <dropDown v-on:element-selected="setField($event, key)" v-bind:defaultValue="field.default" v-bind:name="key" v-bind:optionsArray="getFieldOptions(key)" v-bind:dropdowndisabled="true"></dropDown>
@@ -107,14 +122,7 @@
                                 </template>
                             </div>    
                         </div>
-                        <div class="col-lg-6 col-md-12">
-                            <div class="row nomarg html-preview">
-                                <div id="bannerpreview" v-html="renderedHtml">
-                                   <!--  <template v-html="renderedHtml"> </template> -->
-                                </div>
-                                <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
-                            </div>
-                        </div>
+                        
                         <!-- <div class="col-lg-6 col-md-12">
                             <div class="editor-wrapper">
                                <div class="file-upload">
@@ -216,7 +224,7 @@ export default {
         },
         renderedHtml: null,   
         sizes: null,
-        selectedSize: null,
+        selectedSize: null, //{width: 100, height: 300 },
     }
   },
   created(){
@@ -231,7 +239,8 @@ export default {
             this.currentAccessLevel = this.$store.getters.getUser.companies[index].pivot.role
             this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
         }
-        this.getTemplate()        
+        this.getTemplate()  
+        console.log(this.$components.editor)      
   },
    watch:{
     $route (to, from){
@@ -249,7 +258,7 @@ export default {
   methods: {
       selectSize(e, key){
             this.selectedSize = {width: this.template.sizes[key].width, height: this.template.sizes[key].height }
-            jQuery(e.target).parent().parent().slideUp()
+            $(e.target).parent().parent().slideUp()
             this.getTemplatePreview(this.template.token , this.selectedSize)
       },
       async getTemplatePreview(token, sizes){
@@ -265,6 +274,7 @@ export default {
       },
 
       getFieldOptions(key){
+          console.log(key)
           let options = this.template.fields[key].options;
           let values = []
           _.forEach(options.split('|'), value => {
@@ -286,12 +296,13 @@ export default {
             console.log(this.color)
         },
         editorInit() {
-            require('brace/ext/language_tools') //language extension prerequsite...
+            console.log(this)
+            /* require('brace/ext/language_tools')  *///language extension prerequsite...
             require('brace/mode/html')                
-            require('brace/mode/javascript')    //language
-            require('brace/mode/less')
+            /* require('brace/mode/javascript')    //language
+            require('brace/mode/less') */
             require('brace/theme/dreamweaver')
-            require('brace/snippets/javascript') //snippet
+            /* require('brace/snippets/javascript') */ //snippet
         },
             async getTemplate(){
                 this.loading = true
@@ -326,7 +337,8 @@ export default {
 
             this.loading = false
       },
-      saveTemplate(){
+      saveTemplate(event){
+                event.target.classList.add('saving')
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
                 axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
                 /* let timeout
@@ -337,14 +349,29 @@ export default {
                     html: this.template.html,
                 }
                 let serialized = this.serialize(params)
-                const response = axios.patch('/templates/'+this.template.id, params)
-                .then(response => {
+                axios.patch('/templates/'+this.template.id, params)
+                .then((response) => {
                     console.log(response.data)
+                    
 					if(typeof response.data.messages != 'undefined'){
                        document.getElementById('success').innerHTML = response.data.messages[0].message  
                     }
-                }).catch(error => {
+                    event.target.classList.add('saved')
+                    setTimeout(function(){ 
+                        event.target.classList.remove('not-saved', 'saving', 'saved')
+                    }, 5000);
+                    
+                    this.template = response.data.template
+                    _.forEach(this.template.fields, field => {
+                    field.value = field.default
+                    })
+                    this.getBannersByTemplate(this.template.id)
+                    this.selectedSize = {width: this.template.sizes[0].width, height: this.template.sizes[0].height}
+                    this.getTemplatePreview(this.template.token, this.selectedSize)
+
+                }).catch((error) => {
                     console.log(error.response)
+                    event.target.classList.add('not-saved')
                     if(error.response.status == 422){
 						if(typeof error.response.data.errors != 'undefined'){
                             if(typeof error.response.data.message != 'undefined'){
@@ -359,6 +386,7 @@ export default {
 								}
 							}
                             setTimeout(function(){ 
+                                event.target.classList.remove('not-saved', 'saving')
 								document.querySelector('.input-block').classList.remove('input-error','animated', 'shake');
                                 document.querySelector('.editor-wrapper').classList.remove('input-error','animated', 'shake')
                                 for (var key in errors) {

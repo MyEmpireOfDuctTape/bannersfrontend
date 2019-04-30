@@ -60,6 +60,7 @@ export default {
         showFiles: { type: Boolean, required: true },
         selectFiles: { type: Boolean, required: true },
         selectedPictureurl :{ type: String, required: false },
+        initialToken :{ type: String, required: false },
     },
     mixins: [domfunctions],
     data() {
@@ -81,7 +82,8 @@ export default {
             files: null,
             deleting: null,
             selectedFile: null,
-            selectedPictureurlData: this.selectedPictureurl
+            selectedPictureurlData: this.selectedPictureurl,
+            initialTokenData: this.initialToken
         }
     },
     created(){
@@ -91,6 +93,11 @@ export default {
             this.getFiles()
             //this.getFileById(1)
         }
+        console.log(this.initialTokenData)
+        // -> real default value OWKCs9VkUNOSFdrXRjlw - > doesnt work
+        // "uZlF2wBEf3EhIUV4tcaD" 
+     //   this.getFileThumbnail(this.initialTokenData)
+        this.getFileThumbnail('uZlF2wBEf3EhIUV4tcaD')
     },
     components: { 
             FileUpload: FileUpload,

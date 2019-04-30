@@ -85,7 +85,7 @@
                             <h1 v-text="'My recent Templates (' + templates.totalCount + ')'"></h1>
                         </div>
                         <div class="right col-lg-4">
-                            <button v-on:click="showOverlay" class="create blue roundedd">Create banner</button>
+                            <router-link class="blue-link" to="/add-template"><button class="blue create roundedd">Create template</button></router-link>
                             <router-link to="/templates"><button class="view blue roundedd">View all</button></router-link>
                          </div>   
                     </div>
@@ -93,7 +93,7 @@
                         <div v-for="(template, index) in templates.templates" :key="index" class="template row">
                             <div class="left col-lg-6">
                                 <router-link :to="{ path: '/templates/' + template.id}"><span class="bold">{{template.name}}</span></router-link>
-                                <span v-for="(size, key) in template.sizes" :key="key" class="dimension">{{size.width}} x {{size.height}}</span>
+                                <span v-for="(size, key) in template.sizes" :key="key" v-bind:class="returnAspectRatio(size.width, size.height) + ' dimension'">{{size.width}} x {{size.height}}</span>
                             </div>
                             <div class="right col-lg-6">
                                 <div class="images">

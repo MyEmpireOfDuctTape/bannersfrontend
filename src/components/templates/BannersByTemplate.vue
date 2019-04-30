@@ -17,7 +17,8 @@
                                 <span class="description">{{ template.description }}</span>
                                 <div class="text">
                                                             <span> Times used   <span>{{ template.bannersCount}} banners</span></span>
-                                                            <span> Last used   <span>{{ humanDate(template.updatedAt) }}</span></span>
+                                                            <span> Created at   <span>{{ humanDate(template.createdAt) }}</span></span>
+                                                            <span> Last modified   <span>{{ humanDate(template.updatedAt) }}</span></span>
                              </div> 
                             </div> 
                             <div class="col-lg-3 col-sm-12 right">

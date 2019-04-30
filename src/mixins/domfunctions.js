@@ -26,6 +26,7 @@ export default {
 
         },
         highLightParent(event){
+            console.log(event.target)
 			event.target.parentNode.classList.remove('input-error');
             event.target.parentNode.classList.add('highlighted', 'focused');
             event.stopPropagation();

@@ -1,20 +1,20 @@
 <template>
         <div class="input-block half-width select">
                 <span v-on:click="focusInput" :data-initial="name" class="fake-label">{{name}}</span>
-                <span v-if="dropdowndisabled == true">{{ defaultValue }}</span>
-                <span v-else v-on:click="dropdownToggle">{{ defaultValue }}</span>
-            <div class="options">
-                <ul>
-                    <li v-for="option in optionsArray" v-on:click="optionSelected($event, option.value)">{{ option.name }}</li>
-                </ul>
-            </div>
+                <template v-if="dropdowndisabled == true">
+                    <span>{{ defaultValue }}</span>
+                </template>
+                <template v-else>
+                    <span v-on:click="dropdownToggle">{{ defaultValue }}</span>
+                    <div class="options">
+                        <ul>
+                            <li v-for="(option, key) in optionsArray" :key="key" v-on:click="optionSelected($event, option.value)">{{ option.name }}</li>
+                        </ul>
+                    </div>
+                </template>
             <!-- <input type="hidden" name="folderId" v-model="folderid"> -->
         </div>
 </template>
-
-<style lang="scss" scoped>
-    
-</style>
 
 <script>
 import domfunctions from '@/mixins/domfunctions.js'

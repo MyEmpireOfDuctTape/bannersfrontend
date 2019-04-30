@@ -153,7 +153,7 @@ export default new Vuex.Store({
 			if(context.getters.loggedIn){
 				return new Promise((resolve, reject) => {
 					axios.get('/auth/user')
-              		.then(function (response) {
+          .then(function (response) {
 						console.log(response)
 						console.log(axios.defaults.headers.common)
 						let date = new Date()

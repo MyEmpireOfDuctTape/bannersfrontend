@@ -1350,6 +1350,15 @@ $enable-gradients: true;
                                     cursor: pointer;
                                 }
                             }
+                            &.tower{
+                                background-color: #eceff9;
+                            }
+                            &.rectangle{
+                                background-color: #fae8dc;
+                            }
+                            &.squaree{
+                                background-color: #e6f0de;
+                            }
                         }
                         
                     }
@@ -2278,9 +2287,10 @@ input{
   animation-iteration-count: 1;
 }
 
-#error{
+.error{
     margin: 0 auto;
     color: red;
+    display: block;
 }
 
 .edit-box{
@@ -2873,6 +2883,7 @@ a.underline:hover{
     
 }
 
-.form-wrapper.nomarg{
+.form-wrapper.nomarg, .big-dd.nomarg{
     margin: 0;
 }
+

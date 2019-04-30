@@ -114,15 +114,13 @@ export default {
                       terms: this.terms,
                     }).then(function (response) {
                         console.log(response)
-                        if(typeof response.data.token != undefined){
-                              let date = new Date()
-					                    date.setTime(token.expiresIn)
-                              this.$store.commit('retrieveToken', response.data.token)
-                              this.$store.commit('retrieveUser', response.data.token)
-                              this.$cookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString())
-                              this.$cookie.set('user', JSON.stringify(response.data.user), date.toUTCString())
-                              this.$router.push({ path: `/dashboard` })
-                        } 
+                        let date = new Date()
+					              date.setTime(token.expiresIn)
+                        this.$store.commit('retrieveToken', response.data.token)
+                        this.$store.commit('retrieveUser', response.data.token)
+                        this.$cookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString())
+                        this.$cookie.set('user', JSON.stringify(response.data.user), date.toUTCString())
+                        this.$router.push({ path: `/dashboard` })
                     }).catch(function (error) {
                         console.log(error.response);       
                     });

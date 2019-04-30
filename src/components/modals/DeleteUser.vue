@@ -79,22 +79,22 @@ export default {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
             let payload = {
-                    confirmed: this.confirmedtrue,
+                    confirmed: this.confirmed,
                     email: this.$store.getters.getUser.email,
                     password: this.password,
                     _method: 'delete'
             }
             console.log(payload)
             axios.post('/auth/user', payload)
-            .then(function (response) {
+            .then((response) => {
                 console.log(response)
                 this.$cookie.delete('accessToken')
                 this.$cookie.delete('user')
                 this.$store.commit('retrieveToken', null)
 				this.$store.commit('retrieveUser', null)
                 this.$router.push({ path: `/login` })
-            }).catch(function (error) {
-                console.log(error.response);       
+            }).catch((error) => {
+                console.log(error)   
             });
         },
         showDelete(event){

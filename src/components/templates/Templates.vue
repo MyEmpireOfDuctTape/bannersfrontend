@@ -69,7 +69,7 @@
                                         <div class="left col-lg-6">
                                             <router-link :to="{ path: '/templates/' + template.id}"><span class="bold">{{ template.name }}</span></router-link>
                                            <template v-for="(size, key) in template.sizes">
-                                            <span class="dimension green" :key="key">{{ size.width }}x{{ size.height }}</span>
+                                            <span v-bind:class="returnAspectRatio(size.width, size.height) + ' dimension'" :key="key">{{ size.width }}x{{ size.height }}</span>
                                              </template>  
                                         </div>
                                         <div class="right col-lg-6">

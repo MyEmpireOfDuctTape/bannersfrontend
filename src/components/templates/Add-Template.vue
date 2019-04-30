@@ -9,11 +9,11 @@
                     <div class="row template-form">
                         <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
-                                <div class="input-block">
+                                <div class="input-block" v-bind:class="[name !== null ? 'focused' : '']"> 
                                     <span v-on:click="focusInput" class="fake-label" data-initial="Template name">Template name</span>
                                     <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="name" name="name" type="text">
                                 </div>
-                                <div class="input-block">
+                                <div class="input-block" v-bind:class="[description !== null ? 'focused' : '']">
                                     <span v-on:click="focusInput" class="fake-label" data-initial="Description">Description</span>
                                     <textarea v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="description" name="description" class="comment"></textarea>
                                 </div>
@@ -33,16 +33,45 @@
                     <button @click="createTemplate" class="blue save roundedd">Save</button>  
                     <span id="error"></span>
                     <span id="success"></span>
+                    <template v-if="templateSaved == true">
                     <div class="header row">
                         <div class="col-lg-4 col-md-6">
-                            <h1>Form Preview</h1>
+                            <h1>Template Preview</h1>
                         </div>    
                          <div class="col-lg-8 col-md-6 right">
-                            <button class="viewwhite roundedd">View gallery</button>  
+                             <div class="big-dd nomarg">
+                                <template v-if="template.sizes.length > 0">
+                                <span v-on:click="dropdownToggle"> {{selectedSize.width}}x{{selectedSize.height}} </span>
+                                <div class="dropdown">
+                                    <ul>
+                                        <li v-for="(size, key) in template.sizes" v-bind:key="key" v-on:click="selectSize($event, key)">{{size.width}}x{{size.height}}</li>
+                                    </ul>
+                                </div> 
+                                </template>
+                                <template v-else>
+                                    <span>This template has no sizes</span>
+                                </template>
+                            </div>   
+                            <!-- <button class="viewwhite roundedd">View gallery</button>   -->
                         </div> 
                     </div>
                     <div class="row template-form">
-                        <div class="col-lg-6 col-md-12 ">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="row html-preview">
+                                <div id="bannerpreview" v-html="renderedHtml">
+                                   <!--  <template v-html="renderedHtml"> </template> -->
+                                </div>
+                                <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header row">
+                        <div class="col-lg-12 col-md-6">
+                            <h1>Default Field Values Preview</h1>
+                        </div>    
+                    </div>
+                    <div class="row template-form">
+                        <div class="col-lg-12 col-md-12 ">
                             <div class="form-wrapper">
                                 <div class="input-block">
                                     <input type="text" placeholder="Background image">
@@ -74,7 +103,7 @@
                                 </div>
                             </div>    
                         </div>
-                        <div class="col-lg-6 col-md-12">
+                        <!-- <div class="col-lg-6 col-md-12">
                             <div class="editor-wrapper">
                                <div class="file-upload">
                                 <form class="box" method="post" action="http://localhost:8888/test/return.php" enctype="multipart/form-data">
@@ -89,7 +118,7 @@
                                 </form>
                                 </div>
                             </div>
-                            <div class="uploaded-files">
+                            <div class="uploaded-files"> -->
                                 <!-- <div class="uploaded-file">
                                     <div class="row">
                                         <div class="col-3 thumb">
@@ -128,15 +157,19 @@
                                         </div>    
                                     </div> 
                                 </div>  -->  
-                            </div>     
+                            <!-- </div>  -->   
+                            
                         </div>
+                        </template> 
                     </div>
-                    <div class="header">
+
+                    
+                    <!-- <div class="header">
                                 <h1>Banner Preview</h1>   
                     </div>
                     <div class="html-preview">
                         <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe>
-                    </div>    
+                    </div>     -->
                 </div>
 			</div>
 		</div>
@@ -147,7 +180,13 @@
 <script>
 
 import Sidebar from '../sidebar/Sidebar'
+import Loading from '../loading/Loading'
+import ColorPicker from '../color/ColorPicker';
+import dropDown from '@/components/htmlComponents/dropDown'
+
+import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
+
 const Editor = require('vue2-ace-editor')
 
 export default {
@@ -159,40 +198,152 @@ export default {
   data () {
     return {
       msg: 'AddTemplate',
-      name: '',
-      description: '',
-      html: '<!DOCTYPE html>',
+      name: null,
+      description: null,
+      templateSaved: false,
+      html: `<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{name}}</title>
+		<template>
+      <size width="160" height="600" />
+			<size width="300" height="250" />
+			<size width="200" height="600" />
+			<size width="728" height="90" />
+			<size width="970" height="90" />
+			<size width="970" height="250" />
+			<size width="995" height="200" />
+			<size width="995" height="300" />
+			<size width="995" height="400" />
+			<size width="1000" height="200" />
+			<size width="1000" height="300" />
+			<size width="1000" height="400" />
+
+			<field code="bg" name="Background" type="file" default="wBpzNLb8968dCR6bX3gm" validation="required" />
+			<field code="text" name="Text" type="input" default="Osta lohe, võidad lohe!" validation="required" />
+			<field code="text_color" name="Text color" type="color" default="#C87300" validation="required" />
+			<field code="cta_text" name="Call to action text" type="input" default="Vaata kohe!" validation="required" />
+			<field code="cta_color" name="Call to action color" type="color" default="#C87300" validation="required" />
+			<field code="cta_text_color" name="Call to action text color" type="color" default="#fff" validation="required" />
+			<field code="logo" name="Logo" type="file" default="OWKCs9VkUNOSFdrXRjlw" validation="required" />
+			<field code="animation" name="Animation" type="select" options="simple|slideHorisontally|slideVertically|bounce" default="simple" validation="required" />
+			<field code="animation_duration" name="Animation duration" description="Animation duration in seconds." type="input" default="10" validation="required" />
+		</template>
+
+    <link href="https://fonts.googleapis.com/css?family=Kodchasan:700" rel="stylesheet">
+
+    <style>
+  		html, body, div, h1, img, button {
+  			cursor: pointer;
+  			margin: 0;
+  			padding: 0;
+  		}
+  		button:focus {
+  			outline: none;
+  		}
+      #canvas {
+        position: relative;
+        width: {{width}}px;
+        height: {{height}}px;
+        background: url('{{bg}}') center;
+        background-size: cover;
+      }
+      #slide-one, #slide-two {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+
+
+      #text {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        width: 80%;
+        transform: translateX(-50%) translateY(-50%);
+        color: {{text_color}};
+        text-align: center;
+        font-family: 'Kodchasan', sans-serif;
+        font-weight: 700;
+      }
+      #cta {
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: {{cta_text_color}};
+        background-color: {{cta_color}};
+        border: none;
+        padding: 10px;
+        text-align: center;
+        font-family: 'Kodchasan', sans-serif;
+        font-weight: 700;
+        font-size: 1em;
+      }
+      #logo {
+        position: absolute;
+        max-width: 80%;
+        max-height: 80%;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+
+      #slide-one {
+        animation-name: {{animation}};
+        animation-duration: {{animation_duration}}s;
+        animation-iteration-count: infinite;
+        animation-delay: 0s;
+      }
+
+      #slide-two {
+        animation-name: {{animation}};
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-delay: calc({{animation_duration}}s * -0.5);
+
+      }
+
+      @keyframes simple {
+        0% { top: 0; }
+        50% { top: 0; }
+        51% { top: -1000px; }
+        100% { top: -1000px; }
+      }
+
+  		.hidden {
+  			display: none;
+  		}
+    </style>
+	</head>
+	<body onclick="banner.click()">
+		<div id="canvas">
+      <div id="slide-one">
+        <h1 id="text">{{text}}</h1>
+        <button id="cta">{{cta_text}}</button>
+      </div>
+      <div id="slide-two">
+        <img id="logo" src="{{logo}}" />
+      </div>
+		</div>
+	</body>
+</html>`,
+    template: {name: null, description: null, sizes: []}
     }
   },
+  mixins: [domfunctions],
   created(){
       if(this.$store.getters.getCurrentCompany == null){
         this.$store.commit('setCurrentCompany', this.$store.getters.getUser.companies[0].id)
       }
   },
   methods:{
-        highLightParent(event){
-			event.target.parentNode.classList.remove('input-error');
-            event.target.parentNode.classList.add('highlighted');
-            event.stopPropagation();
-		},
-		unHighLightParent(event){
-			event.target.parentNode.classList.remove('highlighted');
-        },
-        /* renderEditor(){
-            var editor = ace.edit("editor")
-            console.log(ace.config.get('themePath'))
-            console.log(ace.config)
-            console.log(editor)
-            editor.setTheme("ace/theme/github")
-            editor./* session getSession().setMode("ace/mode/html")
-        }, */
          editorInit() {
-            require('brace/ext/language_tools') //language extension prerequsite...
+            require('brace/ext/language_tools')  //language extension prerequsite...
             require('brace/mode/html')                
-            require('brace/mode/javascript')    //language
-            require('brace/mode/less')
             require('brace/theme/dreamweaver')
-            require('brace/snippets/javascript') //snippet
         },
        createTemplate(){
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
@@ -203,12 +354,15 @@ export default {
                     name: this.name,
                     description: this.description,
                     html: this.html,
-                }).then(response => {
+                }).then((response) => {
                     console.log(response.data)
 					if(typeof response.data.messages != 'undefined'){
                        document.getElementById('success').innerHTML = response.data.messages[0].message  
                     }
-                }).catch(error => {
+                    if(typeof response.data.template != 'undefined'){
+                        this.$router.push({ path: `/template/`+response.data.template.id });
+                    }
+                }).catch((error) => {
                     console.log(error.response)
                     if(error.response.status == 422){
 						if(typeof error.response.data.errors != 'undefined'){

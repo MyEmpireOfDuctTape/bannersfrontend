@@ -74,7 +74,7 @@
                                     </template>
                                     <template v-else-if="field.type == 'file'">
                                          <!-- <file-upload v-bind:url="'testing123'" v-bind:thumbUrl="'testing123'"></file-upload> -->
-                                            <file-upload v-on:fileselected="setField($event, key)" :label="field.name" :selectedPictureurl="'https://stage.api.banners.ee/storage/uploads/7Yo0843dPdxS5QvRFLqI7NCCiVuST0E90iHs53qO.jpeg'" :showFiles="false" :selectFiles="true"></file-upload>
+                                            <file-upload v-on:fileselected="setField($event, key)" :label="field.name" :initialToken="field.default" :selectedPictureurl="'https://stage.api.banners.ee/storage/uploads/7Yo0843dPdxS5QvRFLqI7NCCiVuST0E90iHs53qO.jpeg'" :showFiles="false" :selectFiles="true"></file-upload>
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
@@ -148,6 +148,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                     <button class="right roundedd blue save" v-on:click="saveBanner($event)">Save</button>
+                    <span class="error" v-for="(error, key) in savingErrors" :key="key" v-text="error"></span>
                     </div>
                         </div>
                         </div>
@@ -273,6 +274,7 @@ export default {
   data () {
     return {
         loading: true,
+        savingErrors: [],
         msg: 'Edit banner',
         templates: null,
         sizes: ['test'],
@@ -315,8 +317,7 @@ export default {
         }
         this.getBanner()
         this.getTemplates()
-        this.getSizes()
-
+        //this.getSizes()
   },
   mounted(){
 	this.checkIfAutofilled()
@@ -324,6 +325,7 @@ export default {
   methods: {   
       saveBanner(event){
                 event.target.classList.add('saving')
+                this.savingErrors = []
                 console.log(this.field_values);
                 let values = {}
                 _.forEach(this.field_values, (field, key) => {
@@ -354,11 +356,24 @@ export default {
                 .then((response) => {
                     console.log(response)
                     event.target.classList.add('saved')
+                    this.getBannerPreview()
+                    setTimeout(() => {
+                        event.target.classList.remove('saved', 'saving')
+                    }, 5000);
                 }) 
                 .catch( (error) => {
                         console.log(error.response);
-                    event.target.classList.add('saved')
-
+                        if(typeof error.response != 'undefined' && typeof error.response.data.errors != 'undefined'){
+                            _.forEach(error.response.data.errors, (error) => {
+                                this.savingErrors.push(error[0])
+                            })
+                        }
+                        console.log(this.savingErrors)
+                    event.target.classList.add('not-saved')
+                    setTimeout(() => {
+                        this.savingErrors = []
+                        event.target.classList.remove('not-saved' ,'saving')
+                    }, 5000);
                 })
       },
       submitForm(event){
@@ -409,12 +424,12 @@ export default {
                 this.name = response.data.banner.name
                 this.description = response.data.banner.description
                 this.fieldValues = response.data.banner.fieldValues
-                this.currentTemplate = response.data.banner.template
-                this.sizes = response.data.banner.template.sizes
+                //this.currentTemplate = response.data.banner.template
+                /* this.sizes = response.data.banner.template.sizes
                 _.forEach(this.currentTemplate.fields, field => {
                     field.value = field.default
-                })
-                this.setFieldValues()
+                }) */
+                this.getTemplateById(response.data.banner.template.id)
                 this.getBannerPreview()
                 this.loading = false  
       },
@@ -467,16 +482,21 @@ export default {
             jQuery(e.target).next().slideUp();
         }   
       }, */
-      async getBannerPreview(){
-            this.loading = true
+      getBannerPreview(){
+            //this.loading = true
             //axios.defaults.baseURL = 'https://stage.api.banners.ee/'
             axios.defaults.headers.common['Accept'] = 'text/html'
             //axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id          
-            const response = await axios({ url: '/serve/banner/'+this.banner.token , baseURL: 'https://stage.api.banners.ee', method: 'get'})//axios.get('/serve/banner/'+this.banner.token)
-            console.log(response) 
-            this.renderedHtml = response.data
+            axios({ url: '/serve/banner/'+this.banner.token , baseURL: 'https://stage.api.banners.ee', method: 'get'})//axios.get('/serve/banner/'+this.banner.token)
+            .then((response) => {
+                 console.log(response) 
+                this.renderedHtml = response.data
+            })
+            .catch((error) => {
+                console.log(error)
+            })
             //axios.defaults.baseURL = 'https://stage.api.banners.ee/v1' 
-            this.loading = false
+            //this.loading = false
       },
        sliderToggle(event, target){
             if(target == 'styles'){
@@ -511,19 +531,21 @@ export default {
             this.customStyles.push(newRow)
         },
         removeStyleRow(index){
-            this.customStyles.splice(index,1)
+            if(this.customStyles.length > 1){
+                this.customStyles.splice(index,1)
+            }
         },
         selectTemplate(e, template_id){
             console.log(template_id)
             this.getTemplateById(template_id)
-            jQuery(e.target).parent().parent().prev().text($(e.target).text())
-            jQuery(e.target).parent().parent().slideUp()
+            $(e.target).parent().parent().prev().text($(e.target).text())
+            $(e.target).parent().parent().slideUp()
         },
         selectSize(e, size_id){
             console.log(size_id)
             this.selectedSizeId = size_id
-            jQuery(e.target).parent().parent().prev().text($(e.target).text())
-            jQuery(e.target).parent().parent().slideUp()
+            $(e.target).parent().parent().prev().text($(e.target).text())
+            $(e.target).parent().parent().slideUp()
         },
         async getTemplateById(id){
                 this.sizes = []
