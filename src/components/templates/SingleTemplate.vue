@@ -6,12 +6,13 @@
             <template v-if="loading">
                 <Loading></Loading>
             </template>
+            <template v-else>
                 <div class="template-single main-view container-fluid">
                         <div class="row">
                             <div class="col-lg-9 col-sm-12">
                                     <span class="before">Edit Template </span>
                                 <svg class="subset" version="1.1" id="Layer_1" fill="#acb2bc" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 800 800" style="enable-background:new 0 0 800 800;" xml:space="preserve"> <path id="Shape" d="M369.1,518.3L194.2,343.5c-8.5-8.5-12.8-19.7-12.8-30.9s4.3-22.4,12.8-30.9c17.1-17.1,44.8-17.1,61.8,0 L400,425.6l143.9-143.9c17.1-17.1,44.8-17.1,61.8,0c17.1,17.1,17.1,44.7,0,61.8L430.9,518.3C413.8,535.4,386.2,535.4,369.1,518.3z" /> </svg>
-                                <span class="after">{{ template.name }}</span>
+                                <span class="after" v-text="template.name"></span>
                                 <span class="description">{{ template.description }}</span>
                                 <div class="text">
                                                             <span> Times used   <span>{{ template.bannersCount}} banners</span></span>
@@ -80,12 +81,48 @@
                     </div>
                     <div class="row template-form">
                         <div class="col-lg-12 col-md-12">
-                            <div class="row html-preview">
-                                <div id="bannerpreview" v-html="renderedHtml">
-                                   <!--  <template v-html="renderedHtml"> </template> -->
-                                </div>
-                                <!-- <iframe class="template-preview" src="https://steven.punkdigital.ee/whiskas/et/html/"></iframe> -->
+                            <template v-if="selectedSize.width > selectedSize.height">
+                             <div class="row html-preview landscape">
+                                    <div class="filler-wrapper">
+                                        <div v-for="index in 3" :key="index" class="filler"></div>                                        
+                                    </div>
+                                <div id="bannerpreview" class="landscape" v-html="renderedHtml"></div>
+                                <div class="filler-wrapper">
+                                        <div v-for="index in 3" :key="index" class="filler"></div>                                        
+                                    </div>
+                            </div> 
+                            </template>
+                            <template v-else-if="selectedSize.height > selectedSize.width">
+                            <div class="row html-preview portrait">
+                                    <div class="filler-wrapper">
+                                        <div v-for="index in 10" :key="index" class="filler"></div>                                        
+                                    </div>
+                                <div id="bannerpreview" class="portrait" v-html="renderedHtml"></div>
+                            </div> 
+                            </template>
+                            <template v-else>
+                                <div class="row html-preview square-banner">
+                                    <div class="line">
+                                        <div class="filler-wrapper">
+                                            <div v-for="index in 3" :key="index" class="filler"></div>                                        
+                                        </div>
+                                    </div>
+                                    <div class="line middle">
+                                     <div class="filler-wrapper">
+                                            <div v-for="index in 4" :key="index" class="filler"></div>                                        
+                                        </div>
+                                       <div id="bannerpreview" class="square-banner"  v-html="renderedHtml"></div> 
+                                         <div class="filler-wrapper">
+                                            <div v-for="index in 4" :key="index" class="filler"></div>                                        
+                                        </div>                                 
+                                    </div>                                    
+                                    <div class="line">
+                                        <div class="filler-wrapper">
+                                            <div v-for="index in 3" :key="index" class="filler"></div>                                        
+                                        </div>
+                                    </div>
                             </div>
+                            </template>
                         </div>
                     </div>
                     <div class="header row">
@@ -94,7 +131,7 @@
                         </div>    
                     </div>
                     <div class="row template-form">
-                        <div class="col-lg-12 col-md-12 ">
+                        <div class="col-lg-6 col-md-12 ">
                             <div class="form-wrapper">
                                 <template v-for="(field, key) in template.fields">
                                     <template v-if="field.type == 'select'">
@@ -107,10 +144,10 @@
                                         </div>
                                     </template>
                                     <template v-else-if="field.type == 'file'">
-                                         <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
+                                         <!-- <div class="input-block" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
                                             <span v-on:click="focusInput" class="fake-label" :data-initial="key">{{key}}</span>
                                             <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="template.fields[key].value" type="text" disabled>
-                                        </div>
+                                        </div> -->
                                     </template>
                                     <template v-else-if="field.type == 'color'">
                                          <div class="input-block color" v-bind:class="[field.default.length > 0 ? 'focused' : '']">
@@ -123,9 +160,10 @@
                             </div>    
                         </div>
                         
-                        <!-- <div class="col-lg-6 col-md-12">
-                            <div class="editor-wrapper">
+                        <div class="col-lg-6 col-md-12">
+                           <div class="editor-wrapper">
                                <div class="file-upload">
+                                   <just-file-upload v-on:error="showError" v-on:success="addFile"></just-file-upload>
                                 <form class="box" method="post" action="http://localhost:8888/test/return.php" enctype="multipart/form-data">
                                     <div class="box__input">
                                         <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
@@ -139,25 +177,27 @@
                                 </div>
                             </div>
                             <div class="uploaded-files">
-                                <div class="uploaded-file">
-                                    <div class="row">
-                                        <div class="col-3 thumb">
-                                            <img src="../../assets/img/banner.jpg">
-                                        </div>    
-                                        <div class="col-7 info">
-                                            <span class="bold big"> Filename-1 </span>
-                                            <span class="bold"> PNG </span> <span class="size">32kb</span>
+                                 <template v-for="(file, key) in template.files">
+                                    <div class="uploaded-file">
+                                        <div class="row">
+                                            <div class="col-3 thumb">
+                                                <img :src="file.publicUrl">
+                                            </div>    
+                                            <div class="col-7 info">
+                                                <span v-if="fileNames[key]" class="bold big"> {{ fileNames[key] }} </span>
+                                                <span class="bold"> {{ returnFileType(file.type) }} </span> <span class="size">{{ returnFileSize(file.size) }}</span>
+                                            </div> 
+                                            <div class="col-2 trash right">
+                                                <svg version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
+                                            </div>
+                                        </div>   
+                                        <div class="row">
+                                            <div class="col-12 thumb">
+                                            <input type="text" :value="'{{ file: '+file.token+' }}'" disabled>
+                                            </div>    
                                         </div> 
-                                        <div class="col-2 trash right">
-                                            <svg version="1.1" id="Layer_1" fill="#e0e0e0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 125" style="enable-background:new 0 0 100 125;" xml:space="preserve"> <title>09</title> <path d="M22.8,28.6l0.1,45.2c0,7.2,5.8,13,13,13h28.3c7.2,0,13-5.8,13-13l0.1-45.2h7.4c1.7,0,3-1.3,3-3s-1.3-3-3-3H63.6v-2.5 c0-3.9-3.1-7-7-7H43.4c-3.9,0-7,3.1-7,7v2.5H15.3c-1.7,0-3,1.3-3,3s1.3,3,3,3H22.8z M53,69.8c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9 c0-1.7,1.3-3,3-3s3,1.3,3,3V69.8z M58,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z M42.4,20.2 c0-0.6,0.4-1,1-1h13.2c0.6,0,1,0.4,1,1v2.5H42.4V20.2z M36,40.9c0-1.7,1.3-3,3-3s3,1.3,3,3v28.9c0,1.7-1.3,3-3,3s-3-1.3-3-3V40.9z" /> </svg>
-                                        </div>
-                                    </div>   
-                                    <div class="row">
-                                        <div class="col-12 thumb">
-                                        <input type="text" :value="'{{ file: xyz}}'" disabled>
-                                        </div>    
                                     </div> 
-                                </div>   
+                                </template>
                                 <div class="uploaded-file">
                                     <div class="row">
                                         <div class="col-3 thumb">
@@ -178,10 +218,12 @@
                                     </div> 
                                 </div> 
                             </div>     
-                        </div>-->
+                        </div>
                     </div>
                                 </div>   
                             </div> 
+            </template>
+
                         </div>
                     </div>
           
@@ -194,6 +236,7 @@ import Sidebar from '../sidebar/Sidebar'
 import Loading from '../loading/Loading'
 import ColorPicker from '../color/ColorPicker';
 import dropDown from '@/components/htmlComponents/dropDown'
+import JustFileUpload from '@/components/fileupload/JustFileUpload'
 
 import domfunctions from '@/mixins/domfunctions.js'
 import axios from 'axios'
@@ -206,7 +249,8 @@ export default {
       Loading,
       editor: Editor,
       ColorPicker: ColorPicker,
-      dropDown
+      dropDown,
+      JustFileUpload
   },
   data () {
     return {
@@ -225,6 +269,8 @@ export default {
         renderedHtml: null,   
         sizes: null,
         selectedSize: null, //{width: 100, height: 300 },
+        displayFiles: [],
+        fileNames: [],
     }
   },
   created(){
@@ -240,7 +286,7 @@ export default {
             this.$store.commit('setCurrentAccessLevel', this.$store.getters.getUser.companies[index].pivot.role)
         }
         this.getTemplate()  
-        console.log(this.$components.editor)      
+        //console.log(this.$components.editor)      
   },
    watch:{
     $route (to, from){
@@ -256,6 +302,27 @@ export default {
 } ,
     mixins: [domfunctions],
   methods: {
+    returnFileType(typestring){
+        return typestring.substr(typestring.indexOf('/')+ 1).toUpperCase()
+    },
+    returnFileSize(sizeinbytes){
+        let divisibleBy1K = (Number(sizeinbytes) / 1000) > 1 ? true : false
+        let append = divisibleBy1K ? 'mb' : 'kb'
+        let filesize = divisibleBy1K ? (Number(sizeinbytes) / 1000).toFixed(2) : (Number(sizeinbytes) / 100).toFixed(2)
+        return filesize+append;
+    },
+      addFile(event){
+          console.log(event)
+          this.template.files.push(event.originalFile);
+          this.displayFiles.push(event.displayData);
+          this.fileNames = event.names
+          console.log(this.template)
+          console.log(this.displayFiles)
+          this.updateTemplateFiles()
+      },
+       showError(event){
+          console.log(event)
+      },
       selectSize(e, key){
             this.selectedSize = {width: this.template.sizes[key].width, height: this.template.sizes[key].height }
             $(e.target).parent().parent().slideUp()
@@ -337,6 +404,39 @@ export default {
 
             this.loading = false
       },
+      updateTemplateFiles(){
+                console.log('updatingtemplate')
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+                axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+                /* let timeout
+                clearTimeout(timeout) */
+                let files = [];
+                _.forEach(this.template.files,(file) => {
+                    files.push(file.token)
+                })
+                let params = {
+                    name: this.template.name,
+                    description: this.template.description,
+                    html: this.template.html,
+                    filesTokens: files
+                }
+                console.log(params)
+                let serialized = this.serialize(params)
+                axios.patch('/templates/'+this.template.id, params)
+                .then((response) => {
+                    console.log(response.data)
+                    this.template = response.data.template
+                    _.forEach(this.template.fields, field => {
+                        field.value = field.default
+                    })
+                    this.selectedSize = {width: this.template.sizes[0].width, height: this.template.sizes[0].height}
+                    this.getTemplatePreview(this.template.token, this.selectedSize)
+
+                }).catch((error) => {
+                    console.log(error.response)
+                })
+			    
+        },
       saveTemplate(event){
                 event.target.classList.add('saving')
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken

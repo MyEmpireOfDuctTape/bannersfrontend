@@ -19,27 +19,27 @@
               <div class="col-lg-6 col-sm-12">
                   <div class="input-block half-width">
                       <span v-on:click="focusInput" class="fake-label">First Name</span>
-                      <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="firstName" name="firstName" type="text">
+                      <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="firstName" name="firstName" type="text" autocomplete="nope">
                   </div>
               </div>
               <div class="col-lg-6 col-sm-12">
                   <div class="input-block half-width">
                       <span v-on:click="focusInput" class="fake-label">Last Name</span>
-                      <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="lastName" name="lastName" type="text">
+                      <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="lastName" name="lastName" type="text" autocomplete="nope">
                   </div>
               </div>    
           </div>  
           <div class="input-block focused disabled">
             <span v-on:click="focusInput" class="fake-label">Email</span>
-            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="text" disabled>
+            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="email" name="email" type="email" disabled autocomplete="nope">
           </div>
           <div class="input-block">
             <span v-on:click="focusInput" class="fake-label">Password</span>
-            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="password" name="password" type="password">
+            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="password" name="password" type="password" autocomplete="nope">
           </div>
           <div class="input-block">
             <span v-on:click="focusInput" class="fake-label">Confirm Password</span>
-            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="passwordConfirmation" name="passwordConfirmation" type="password">
+            <input v-on:focusin="highLightParent" v-on:focusout="unHighLightParent" v-model="passwordConfirmation" name="passwordConfirmation" type="password" autocomplete="nope">
           </div>
         <div class="checkbox-group normal">
                   <span v-on:click="checkBox"></span><label for="data_accept">I accept the <a href="" target="_blank">terms &amp; conditions</a></label>

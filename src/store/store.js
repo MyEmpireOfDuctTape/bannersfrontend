@@ -98,7 +98,7 @@ export default new Vuex.Store({
 					axios.post('/auth/login', credentials)
 					.then((response) => {
 							let date = new Date()
-							date.setTime(response.data.token.expiresIn)
+							date.setTime(date.getTime() + response.data.token.expiresIn)
 							console.log(response)
 							console.log(date)
 							VueCookie.set('accessToken', JSON.stringify(response.data.token) , date.toUTCString());
@@ -155,9 +155,8 @@ export default new Vuex.Store({
 					axios.get('/auth/user')
           .then(function (response) {
 						console.log(response)
-						console.log(axios.defaults.headers.common)
 						let date = new Date()
-						date.setTime(response.data.expiresIn)
+						date.setTime(date.getTime() + response.data.expiresIn)
 						VueCookie.set('accessToken', response.data.token.accessToken, date.toUTCString());
 						VueCookie.set('user', response.data.user, date.toUTCString());
 						context.commit('retrieveToken', response.data.token)
@@ -185,7 +184,7 @@ export default new Vuex.Store({
 						//console.log(axios.defaults.headers)
 						context.commit('retrieveBanners', response.data)
 						let date = new Date()
-						date.setTime(response.data.expiresIn)
+						date.setTime(date.getTime() + response.data.expiresIn)
 						//date.setTime(1549152000)
 						VueCookie.set('banners', JSON.stringify(response.data) , date.toUTCString());
 						resolve(response)

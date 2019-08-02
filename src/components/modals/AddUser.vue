@@ -63,7 +63,7 @@ export default {
 
         //params to send
         selectedCompanyId : null,
-        selectedCompany: {
+        selectedCompany: null,/* {
             name: null,
             registrationCode: 12345678, //null,
             vat_number: 123456789, //null,
@@ -74,7 +74,7 @@ export default {
             users: [
                 
             ]
-        },
+        }, */
         responseText: '',
         respType: 'error',
         selectedAccessLevel: null,
@@ -102,22 +102,31 @@ export default {
             //console.log(this.availableCompanies)
   },
   methods : {
+        async getCompanyById(id){
+            this.loading = true
+            // SET HEADERS
+			axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
+			axios.defaults.headers.common['Company'] = this.$store.getters.getCurrentCompany.id
+            const response = await axios.get('/companies/'+id)
+            console.log(response.data)
+            this.selectedCompany = response.data.company
+            this.loading = false
+        },
             selectCompany(id){
-                //this.selectedCompany = id
-                let companies = this.$store.getters.getUser.companies 
-                let company = _.find(this.availableCompanies, company => {
-                    return company.value == id
+                this.selectedCompanyId = id
+                this.getCompanyById(id)
+                .then((response) => {
+                    console.log(this.selectedCompany)
+                    let users = this.selectedCompany.users
+                    this.selectedCompany.users = []
+                _.forEach(users, (user) => {
+                    this.selectedCompany.users.push({
+                    email: user.email,
+                    role: user.pivot.role
+                    })
                 })
-                console.log(company)
-                this.selectedCompanyId = company.value
-                this.selectedCompany.name = company.name == null ? this.selectedCompany.name : company.name
-                this.selectedCompany.registrationCode = company.registrationCode == null ? this.selectedCompany.registrationCode : company.registrationCode
-                this.selectedCompany.vat_number = company.vatNumber == null ? this.selectedCompany.vat_number : company.vatNumber
-                this.selectedCompany.country = company.country == null ? this.selectedCompany.country : company.country
-                this.selectedCompany.city = company.city == null ? this.selectedCompany.city : company.city
-                this.selectedCompany.address = company.address == null ? this.selectedCompany.address : company.address
-                this.selectedCompany.email = company.email == null ? this.selectedCompany.email : company.email
                 console.log(this.selectedCompany)
+                })
             },
             selectAccessLevel(accessLevelName){
                 this.selectedAccessLevel = accessLevelName
@@ -125,6 +134,7 @@ export default {
                     email: this.email,
                     role: this.selectedAccessLevel
                 })
+                console.log(this.selectedCompany.users)
             },
             setAvailableCompanies(){
                 let companies = this.$store.getters.getUser.companies 
@@ -172,11 +182,13 @@ export default {
                     console.log(this.selectedCompany)
                     console.log(this.selectedCompanyId)
                     axios.patch('/companies/'+this.selectedCompanyId, this.selectedCompany)
-                    .then(function (response) {
+                    .then((response) => {
                         console.log(response)
+                        this.$emit('company-changed', this.currentCompany)
                         this.hidePopup()
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         console.log(error.response); 
+                        console.log(error); 
                         if(typeof error.response != 'undefined' && typeof error.response.data.message != 'undefined'){
                             document.getElementById('error').innerHTML = error.response.data.message
                         }

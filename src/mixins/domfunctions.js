@@ -74,19 +74,28 @@ export default {
         hidePopup(event){
             //event.preventDefault()
             console.log('hidepopup')
-            if(event.target.classList.contains('overlay')){
-                let allOverlays = document.querySelectorAll('.overlay')
-                for(var overlay of allOverlays){
-                    overlay.classList.add('animated', 'slideOutRight')
-                }
-                setTimeout(function(){
+            if(typeof event != 'undefined'){
+                if(event.target.classList.contains('overlay')){
+                    let allOverlays = document.querySelectorAll('.overlay')
                     for(var overlay of allOverlays){
-                        overlay.classList.remove('animated', 'slideOutRight')
-                        overlay.classList.remove('open')
+                        overlay.classList.add('animated', 'slideOutRight')
                     }
-                    
-                }, 2000)
+                    setTimeout(function(){
+                        for(var overlay of allOverlays){
+                            overlay.classList.remove('animated', 'slideOutRight')
+                            overlay.classList.remove('open')
+                        }
+                        
+                    }, 2000)
+                }
             }
+            else{
+                let allOverlays = document.querySelectorAll('.overlay')
+                    for(var overlay of allOverlays){
+                        overlay.classList.add('animated', 'slideOutRight')
+                    }
+            }
+            
             
         },
         dropdownToggle(e){
@@ -122,6 +131,7 @@ export default {
             }
         }, */
         editPopup(event){
+            //this.hideAllUserPopups()
             console.log(event.target.tagName)
             if(event.target.tagName != 'path'){
 			    event.target.nextElementSibling.classList.toggle('visible');
@@ -129,6 +139,12 @@ export default {
             else{
                 event.target.parentNode.nextElementSibling.classList.toggle('visible');
             }
+        },
+        hideAllUserPopups(){
+            let edits = document.querySelectorAll('.edit-box')
+            _.forEach(edits, (edit) => {
+                edit.classList.remove('visible')
+            })
         },
         dismissPopup(event){
             $(event.target).parent().parent().slideUp()
@@ -148,12 +164,13 @@ export default {
             })
         },
         animateCss(event, element, animationName, callback) {
-            event.preventDefault()
+            if(typeof event != 'undefined'){
+                event.preventDefault()
+            }
             const node = document.querySelector(element)
             node.classList.add('animated', animationName)
             console.log(node)
             function handleAnimationEnd() {
-                console.log('handleAnimationend')
                 node.classList.remove('animated', animationName)
                 node.removeEventListener('animationend', handleAnimationEnd)
         
@@ -176,12 +193,9 @@ export default {
                   }
                 }
             }  
-              let transitionEvent = whichAnimationEvent()
-              console.log(transitionEvent)
-                node.addEventListener(transitionEvent, handleAnimationEnd)
-                node.addEventListener(transitionEvent, function(){
-                console.log('animation ended')
-                })
+            let transitionEvent = whichAnimationEvent()
+            console.log(transitionEvent)
+            node.addEventListener(transitionEvent, handleAnimationEnd)
         },
         serialize(input){
             let serialized = '?'

@@ -10,22 +10,22 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "ace-builds": "^1.4.3",
+    "ace-builds": "^1.4.4",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "es6-promise": "^4.2.6",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "lodash": "^4.17.11",
     "popper": "^1.0.1",
     "request": "^2.88.0",
     "v-file-upload": "^3.1.7",
     "vue": "^2.6.10",
     "vue-cookie": "^1.1.4",
-    "vue-router": "^3.0.2",
+    "vue-router": "^3.0.6",
     "vue-typed-js": "^0.1.2",
     "vue-upload-component": "^2.8.20",
-    "vuetify": "^1.5.7",
-    "vuex": "^3.1.0"
+    "vuetify": "^1.5.14",
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@radial-color-picker/vue-color-picker": "^2.1.0",
@@ -71,7 +71,7 @@
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.3",
     "sass-loader": "^7.1.0",
-    "semver": "^5.3.0",
+    "semver": "^5.7.0",
     "shelljs": "^0.7.6",
     "style-loader": "^0.23.1",
     "uglifyjs-webpack-plugin": "^1.1.1",

@@ -24,6 +24,7 @@
             :step="step"
             :variant="variant"
             :initiallyCollapsed="true"
+            @click="preventOpen"
             
         />
         </color-picker>
@@ -89,7 +90,12 @@ export default {
 
     },
     methods: {
-            recalculateHex(){
+        preventOpen(event){
+            event.preventDefault()
+            console.log('prevent')
+            return
+        },
+        recalculateHex(){
                 console.log(this.outputHex)
                 this.convertInputtoHSL(this.outputHex)
             },

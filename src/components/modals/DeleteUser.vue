@@ -4,8 +4,8 @@
         <div class="popup-header">
          <h3>{{ msg }}</h3>
          </div>
-        <form class="auth-form" @submit.prevent="deleteUser"> 
-            <span class="error-big">Delete user {{firstName}} {{lastName}} ?</span>
+        <form class="auth-form" @submit.prevent="deleteUser()"> 
+            <span class="error-big">Delete user {{user.firstName}} {{user.lastName}} ?</span>
             <div class="danger-popup">
             <span>Are you sure?</span>
                 <div class="buttons">
@@ -58,11 +58,15 @@ import axios from 'axios'
 import domfunctions from '@/mixins/domfunctions.js'
 export default {
     name: 'DeleteUserModal',
-    props: [ 'firstName', 'lastName'],
+    props: {
+        user: { type: Object, required: true },
+    },
     data () {
         return {
             msg: 'Delete user',
             confirmed: false,
+            userData: this.user,
+            loading: false,
             /* firstName: null,
             lastName: null,
             password: null,
@@ -72,15 +76,28 @@ export default {
     mixins: [domfunctions],
     created(){
         //this.checkIfAutofilled()
+        console.log(this.userData)
+        this.getUserById(this.userData.id)
     },
     methods : {
-        deleteUser(userid){
+        async getUserById(id){
+            this.loading = true
+            // todo
+            axios.defaults.headers.common['Accept'] = 'application/json'
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken
+            const response = await axios.get('/auth/user')
+            console.log(response.data)
+            
+            
+            this.loading = false
+        },
+        deleteUser(){
             axios.defaults.headers.common['Accept'] = 'application/json'
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.$store.getters.getToken.accessToken,
             axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
             let payload = {
                     confirmed: this.confirmed,
-                    email: this.$store.getters.getUser.email,
+                    email: this.userData.email,
                     password: this.password,
                     _method: 'delete'
             }
@@ -91,8 +108,10 @@ export default {
                 this.$cookie.delete('accessToken')
                 this.$cookie.delete('user')
                 this.$store.commit('retrieveToken', null)
-				this.$store.commit('retrieveUser', null)
-                this.$router.push({ path: `/login` })
+                this.$store.commit('retrieveUser', null)
+                this.$store.commit('setCurrentCompany', null)
+                this.$emit('company-changed', this.currentCompany)
+                //this.$router.push({ path: `/login` })
             }).catch((error) => {
                 console.log(error)   
             });
@@ -103,6 +122,7 @@ export default {
             document.querySelector('button#delete').style.display = 'block'
         },
         dissmissDelete(event){
+            this.confirmed = false
                 /* console.log(document.querySelector('#delete-user-modal'))
                 document.querySelector('#delete-user-modal').classList.add('animated', 'slideOutRight')
                 setTimeout(function(){
@@ -110,7 +130,10 @@ export default {
                     
                 }, 2000) */
                 console.log('animatecss')
-                this.animateCss('#delete-user-modal', 'slideOutLeft'); /* , function() {
+                this.animateCss(event, '#delete-user-modal', 'slideOutRight', () => {
+                    let node = document.querySelector('#delete-user-modal')
+                    node.classList.remove('open')
+                }); /* , function() {
                      document.querySelector('#delete-user-modal').classList.remove('animated', 'slideOutRight', 'open')
                 });   */
             

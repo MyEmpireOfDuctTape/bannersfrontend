@@ -609,7 +609,7 @@ mixins: [domfunctions],
                     document.querySelector('.overlay.add-banner').classList.remove('animated', 'slideInLeft')
             }, 2000)
         }, 
-        returnAspectRatio(width, height, ){
+        returnAspectRatio(width, height ){
                 if(width == height){
                 return 'squaree';
                 }
