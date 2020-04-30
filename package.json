@@ -14,7 +14,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "es6-promise": "^4.2.6",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.11",
     "popper": "^1.0.1",
     "request": "^2.88.0",
